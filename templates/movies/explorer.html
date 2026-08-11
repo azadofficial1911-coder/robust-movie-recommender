@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Movie Explorer · RMRS{% endblock %}
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="mb-4">
+            <div class="eyebrow">Browse the catalogue</div>
+            <h1 class="display-6 fw-bold">Movie Explorer</h1>
+            <p class="text-secondary mb-0">Browse the movie catalogue and refine results using search, filters, and sorting controls.</p>
+        </div>
+
+        <form class="filter-panel shadow-sm mb-5" method="get">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label fw-semibold" for="movie-search">Search movies</label>
+                    <input class="form-control form-control-lg" id="movie-search" type="search" name="q" value="{{ selected.query }}" placeholder="Search by title...">
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <label class="form-label" for="genre">Genre</label>
+                    <select class="form-select" id="genre" name="genre">
+                        <option value="">All Genres</option>
+                        {% for genre in genres %}<option value="{{ genre }}">{{ genre }}</option>{% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3 col-xl-2">
+                    <label class="form-label" for="year-from">Year from</label>
+                    <input class="form-control" id="year-from" name="year_from" type="number" min="1900" max="2100" value="{{ selected.year_from }}" placeholder="From">
+                </div>
+                <div class="col-md-3 col-xl-2">
+                    <label class="form-label" for="year-to">Year to</label>
+                    <input class="form-control" id="year-to" name="year_to" type="number" min="1900" max="2100" value="{{ selected.year_to }}" placeholder="To">
+                </div>
+                <div class="col-md-6 col-xl-2">
+                    <label class="form-label" for="rating">Rating</label>
+                    <select class="form-select" id="rating" name="rating">
+                        <option value="">Any rating</option>
+                        <option value="4">4+ Stars</option>
+                        <option value="3">3+ Stars</option>
+                    </select>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <label class="form-label" for="sort">Sort By</label>
+                    <select class="form-select" id="sort" name="sort">
+                        <option value="highest">Highest Rated</option>
+                        <option value="newest">Newest</option>
+                        <option value="title">Title A–Z</option>
+                    </select>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mt-3">
+                <button class="btn btn-primary" type="submit">Apply filters</button>
+                <a class="btn btn-outline-secondary" href="{% url 'movies:explorer' %}">Reset</a>
+            </div>
+        </form>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h3 fw-bold mb-0">Movies</h2>
+            <span class="text-secondary">{{ movies|length }} demo titles</span>
+        </div>
+        <div class="row g-4">
+            {% for movie in movies %}
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">{% include "components/movie_card.html" with movie=movie %}</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

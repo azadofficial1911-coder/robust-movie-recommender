@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" role="img" aria-labelledby="title desc">
+<title id="title">THE DARK KNIGHT placeholder poster</title><desc id="desc">Local Week 1 abstract placeholder artwork.</desc>
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101a32"/><stop offset="1" stop-color="#4f75bd"/></linearGradient></defs>
+<rect width="400" height="600" fill="url(#g)"/><circle cx="305" cy="135" r="105" fill="white" opacity=".08"/><circle cx="92" cy="440" r="145" fill="white" opacity=".05"/>
+<path d="M0 420 L150 270 L255 360 L400 210 L400 600 L0 600Z" fill="#fff" opacity=".07"/>
+<text x="28" y="470" fill="white" opacity=".65" font-family="Arial,sans-serif" font-size="15" letter-spacing="3">RMRS · WEEK 1</text>
+<text x="28" y="510" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="24">THE DARK KNIGHT</text>
+<text x="28" y="548" fill="white" opacity=".72" font-family="Arial,sans-serif" font-size="14">DEMO MOVIE POSTER</text>
+</svg>

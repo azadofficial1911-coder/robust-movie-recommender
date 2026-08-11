@@ -1,0 +1,16 @@
+<section class="page-section">
+    <div class="container">
+        <div class="research-placeholder mx-auto">
+            <div class="eyebrow mb-2">Research module</div>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+                <h1 class="display-6 fw-bold mb-0">{{ page_title }}</h1>
+                <span class="status-chip">{{ status_label }}</span>
+            </div>
+            <p class="lead text-secondary mb-4">{% block placeholder_message %}{% endblock %}</p>
+            <div class="integration-box">
+                <strong>Prepared for integration</strong>
+                <p class="mb-0 mt-1 text-secondary">The URL, navigation and template are already working. Future algorithm output should be connected through the research service layer instead of placing research logic directly in this template.</p>
+            </div>
+        </div>
+    </div>
+</section>
