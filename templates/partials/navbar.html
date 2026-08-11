@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-xl navbar-dark rmrs-navbar sticky-top" aria-label="Main navigation">
+    <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{% url 'core:home' %}">
+            <span class="brand-mark" aria-hidden="true">R</span>
+            <span>RMRS</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav ms-auto gap-xl-1">
+                <li class="nav-item"><a class="nav-link" href="{% url 'core:home' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'movies:explorer' %}">Movie Explorer</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'recommendations:index' %}">Recommendations</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'research:attack_lab' %}">Attack Lab</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'research:detection' %}">Detection</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'research:defence' %}">Defence</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'research:evaluation' %}">Evaluation</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

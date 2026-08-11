@@ -1,0 +1,92 @@
+/* RMRS design system -------------------------------------------------------
+   Week 1 visual direction: white/light surfaces, dark navy navigation,
+   blue + teal accents, rounded cards, readable typography and responsive UI.
+*/
+:root {
+    --rmrs-navy: #0b1736;
+    --rmrs-navy-2: #122653;
+    --rmrs-blue: #246bfd;
+    --rmrs-teal: #10a7a5;
+    --rmrs-bg: #f6f8fc;
+    --rmrs-surface: #ffffff;
+    --rmrs-text: #15203b;
+    --rmrs-muted: #65718b;
+    --rmrs-border: #e5e9f2;
+    --rmrs-radius: 1rem;
+    --rmrs-radius-lg: 1.5rem;
+}
+
+html { scroll-behavior: smooth; }
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--rmrs-bg);
+    color: var(--rmrs-text);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+main { flex: 1; }
+
+.rmrs-navbar {
+    background: linear-gradient(100deg, var(--rmrs-navy), var(--rmrs-navy-2));
+    box-shadow: 0 8px 24px rgba(11, 23, 54, .12);
+}
+.rmrs-navbar .nav-link { color: rgba(255,255,255,.78); font-weight: 500; border-radius: .65rem; }
+.rmrs-navbar .nav-link:hover, .rmrs-navbar .nav-link:focus { color: #fff; background: rgba(255,255,255,.08); }
+.brand-mark {
+    width: 2rem; height: 2rem; display: inline-grid; place-items: center; border-radius: .65rem;
+    background: linear-gradient(135deg, var(--rmrs-blue), var(--rmrs-teal)); color: white;
+}
+
+.hero-section { background: radial-gradient(circle at 85% 10%, #e8f3ff 0, transparent 35%), var(--rmrs-bg); }
+.py-lg-6 { padding-top: 5rem !important; padding-bottom: 5rem !important; }
+.hero-title { max-width: 760px; letter-spacing: -.035em; }
+.hero-copy { max-width: 700px; }
+.eyebrow { color: var(--rmrs-teal); text-transform: uppercase; letter-spacing: .09em; font-size: .78rem; font-weight: 800; }
+.search-panel, .filter-panel, .results-card, .hero-research-card, .research-placeholder {
+    background: var(--rmrs-surface); border: 1px solid var(--rmrs-border); border-radius: var(--rmrs-radius-lg);
+}
+.search-panel { padding: 1rem; max-width: 760px; }
+.filter-panel, .results-card, .research-placeholder { padding: 1.5rem; }
+.hero-research-card { padding: 1.75rem; }
+.research-icon {
+    width: 3rem; height: 3rem; display: grid; place-items: center; border-radius: 1rem; font-weight: 800; color: white;
+    background: linear-gradient(135deg, var(--rmrs-blue), var(--rmrs-teal));
+}
+.metric-card { background: #f8fafc; border: 1px solid var(--rmrs-border); border-radius: 1rem; padding: 1rem .5rem; }
+.metric-card strong { display: block; font-size: 1.5rem; color: var(--rmrs-navy); }
+.metric-card span { display: block; color: var(--rmrs-muted); font-size: .8rem; }
+
+.page-section { padding: 3.5rem 0; }
+.movie-card { border-radius: var(--rmrs-radius); overflow: hidden; transition: transform .2s ease, box-shadow .2s ease; }
+.movie-card:hover { transform: translateY(-3px); box-shadow: 0 .9rem 2rem rgba(20, 35, 70, .12) !important; }
+.movie-poster { aspect-ratio: 2 / 3; object-fit: cover; background: #dfe6f3; }
+.rating-line { display: flex; align-items: center; gap: .5rem; }
+.rating-stars { color: #f5a623; letter-spacing: .04em; font-size: .9rem; }
+.grid-template-buttons { grid-template-columns: 1fr 1fr; }
+
+.btn { border-radius: .75rem; font-weight: 650; }
+.btn-primary { background: var(--rmrs-blue); border-color: var(--rmrs-blue); }
+.btn-primary:hover { background: #1559e8; border-color: #1559e8; }
+.form-control, .form-select { border-radius: .75rem; border-color: #d9dfeb; min-height: 44px; }
+.form-control:focus, .form-select:focus { border-color: #8db2ff; box-shadow: 0 0 0 .25rem rgba(36,107,253,.12); }
+
+.status-chip, .score-pill {
+    display: inline-flex; align-items: center; border-radius: 999px; padding: .38rem .7rem;
+    background: #e8f7f6; color: #087b79; font-size: .78rem; font-weight: 800;
+}
+.recommendation-table thead th { color: var(--rmrs-muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; border-bottom-width: 1px; }
+.integration-box { border: 1px dashed #b9c8e7; background: #f8fbff; border-radius: 1rem; padding: 1rem; }
+.research-placeholder { max-width: 900px; }
+.site-footer { border-top: 1px solid var(--rmrs-border); background: #fff; }
+
+@media (max-width: 1199.98px) {
+    .rmrs-navbar .navbar-nav { padding-top: .8rem; }
+    .rmrs-navbar .nav-link { padding-left: .75rem; padding-right: .75rem; }
+}
+@media (max-width: 767.98px) {
+    .page-section { padding: 2.25rem 0; }
+    .py-lg-6 { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+    .hero-title { font-size: clamp(2.25rem, 12vw, 3.25rem); }
+    .filter-panel, .results-card, .research-placeholder { padding: 1.1rem; }
+}
