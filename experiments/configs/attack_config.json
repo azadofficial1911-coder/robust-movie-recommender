@@ -1,0 +1,11 @@
+{
+  "attack_type": "random",
+  "target_movie_id": null,
+  "attack_size_percent": null,
+  "filler_size_percent": null,
+  "target_rating": 5,
+  "random_seed": 42,
+  "rating_min": 1,
+  "rating_max": 5,
+  "status": "week1_design"
+}
