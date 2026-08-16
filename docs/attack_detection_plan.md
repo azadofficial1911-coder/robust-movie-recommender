@@ -438,3 +438,78 @@ The Week 1 Attack and Detection foundation currently includes:
 
 Full synthetic attack generation and the final suspicious-user detector
 will be implemented during the later implementation and experiment stages.
+
+---
+
+## 20. Attack Validation and Test Plan
+
+Before attack results are used in experiments, the generated synthetic
+profiles must pass a set of validation checks.
+
+### 20.1 Random Push Validation
+
+The Random Push implementation must verify that:
+
+- the correct number of fake users is generated;
+- every fake user has a unique user ID;
+- fake-user IDs do not overlap with genuine MovieLens user IDs;
+- every fake profile contains the selected target movie;
+- the target movie receives the maximum push rating of 5;
+- filler items are valid MovieLens movie IDs;
+- the target movie is not accidentally selected as a filler item;
+- the number of filler items matches the selected filler-size setting;
+- all generated ratings remain within the valid rating range of 1 to 5;
+- filler ratings follow the planned global-average rating logic;
+- the original clean ratings dataset is never overwritten;
+- generated fake profiles are stored separately from clean data;
+- the same random seed and configuration reproduce the same attack.
+
+### 20.2 Average Push Validation
+
+The Average Push implementation must satisfy the same structural checks as
+Random Push.
+
+In addition, it must verify that:
+
+- each filler rating is generated using the genuine mean rating of the
+  selected filler movie;
+- the per-movie statistics come from the processed genuine MovieLens data;
+- filler generation does not use the global mean where an item-specific
+  mean is required.
+
+### 20.3 Ground-Truth Validation
+
+The generated fake-user labels must verify that:
+
+- every synthetic fake user has a ground-truth label;
+- every fake-user ID in the attacked dataset appears in the fake-user label
+  file;
+- genuine users are not incorrectly labelled as fake;
+- the attack type is recorded for each synthetic user;
+- the target movie ID is recorded for the attack experiment.
+
+### 20.4 Detection Interface Validation
+
+Before the final detector is implemented, the current detection interface
+must verify that:
+
+- suspicion scores are restricted to the range 0.0 to 1.0;
+- invalid suspicion scores raise an error;
+- classification thresholds are restricted to the range 0.0 to 1.0;
+- invalid thresholds raise an error;
+- scores at or above the threshold are classified as suspicious;
+- scores below the threshold are classified as genuine;
+- detection results use the agreed standard output structure.
+
+### 20.5 Integration Validation
+
+Before Member 4 uses the attack and detection outputs, the project must
+verify that:
+
+- the attacked dataset remains compatible with the recommender;
+- fake-user labels remain separate from recommender training fields;
+- attack configuration is saved with the experiment;
+- detection results include the user ID, suspicion score and predicted
+  label;
+- the clean dataset remains unchanged and available as the experiment
+  baseline.
