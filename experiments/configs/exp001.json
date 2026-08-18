@@ -1,0 +1,14 @@
+{
+  "experiment_id": "EXP001",
+  "condition": "clean",
+  "attack_type": null,
+  "attack_size": null,
+  "filler_size": null,
+  "target_movie": null,
+  "target_rating": null,
+  "random_seed": 42,
+  "detector_threshold": null,
+  "defence_method": "none",
+  "top_k": 10,
+  "status": "week1_template"
+}
