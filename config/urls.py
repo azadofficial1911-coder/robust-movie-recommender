@@ -9,5 +9,5 @@ urlpatterns = [
     path("movies/", include("apps.movies.urls")),
     path("recommendations/", include("apps.recommendations.urls")),
     # Research routes intentionally live at short public paths required by Week 1.
-    path("", include("apps.research.urls")),
+    path("research/", include("apps.research.urls")),
 ]

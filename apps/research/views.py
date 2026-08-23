@@ -4,6 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 
+from apps.movies.services.catalog import get_all_movies
+
+from .services.attacks import AttackConfig, validate_attack_config
+
 
 def staff_required(view_func):
     """Require a genuine authenticated staff/research account."""
@@ -24,12 +28,93 @@ def lab(request):
 
 @staff_required
 def attack_lab(request):
+    """
+    Staff-only interface for configuring attack experiments.
+
+    Django handles the form and validates the configuration.
+    The actual Random Push and Average Push generation remains
+    in the research backend.
+    """
+
+    movies = get_all_movies()
+
+    errors = []
+    attack_requested = False
+    config_valid = False
+
+    form_data = {
+        "attack_type": "random",
+        "target_movie_id": "",
+        "attack_size_percent": 5,
+        "filler_size_percent": 20,
+        "random_seed": 42,
+    }
+
+    if request.method == "POST":
+        attack_requested = True
+
+        form_data = {
+            "attack_type": request.POST.get(
+                "attack_type",
+                "random",
+            ),
+            "target_movie_id": request.POST.get(
+                "target_movie_id",
+                "",
+            ),
+            "attack_size_percent": request.POST.get(
+                "attack_size_percent",
+                "5",
+            ),
+            "filler_size_percent": request.POST.get(
+                "filler_size_percent",
+                "20",
+            ),
+            "random_seed": request.POST.get(
+                "random_seed",
+                "42",
+            ),
+        }
+
+        try:
+            config = AttackConfig(
+                attack_type=form_data["attack_type"],
+                target_movie_id=int(
+                    form_data["target_movie_id"]
+                ),
+                attack_size_percent=float(
+                    form_data["attack_size_percent"]
+                ),
+                filler_size_percent=float(
+                    form_data["filler_size_percent"]
+                ),
+                random_seed=int(
+                    form_data["random_seed"]
+                ),
+            )
+
+            errors = validate_attack_config(config)
+
+            if not errors:
+                config_valid = True
+
+        except (TypeError, ValueError):
+            errors.append(
+                "Please enter valid values for the attack configuration."
+            )
+
     return render(
         request,
         "research/attack_lab.html",
-        {"page_title": "Attack Laboratory", "status_label": "Integration Ready"},
+        {
+            "page_title": "Attack Laboratory",
+            "movies": movies,
+            "errors": errors,
+            "attack_requested": attack_requested,
+            "config_valid": config_valid,
+            "form_data": form_data,
+        },
     )
-
 
 @staff_required
 def detection(request):

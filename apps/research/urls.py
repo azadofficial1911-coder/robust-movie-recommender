@@ -5,7 +5,7 @@ from . import views
 app_name = "research"
 
 urlpatterns = [
-    path("research/", views.lab, name="lab"),
+    path("", views.lab, name="lab"),
     # Keep the original Week 1 paths/names so teammate links are less likely to break.
     path("attack/", views.attack_lab, name="attack_lab"),
     path("detection/", views.detection, name="detection"),
