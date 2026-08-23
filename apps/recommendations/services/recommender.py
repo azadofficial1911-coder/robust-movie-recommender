@@ -1,10 +1,20 @@
-"""Interface for the future real recommender engine."""
+"""Stable integration boundary between Django and the real recommender."""
 from typing import Protocol
 
 
 class RecommenderEngine(Protocol):
-    """Contract the web layer can depend on regardless of algorithm choice."""
-
     def recommend(self, user_id: int, limit: int = 10) -> list[dict]:
-        """Return ranked recommendations for a user."""
         ...
+
+
+def get_recommendations(user_id: int, top_n: int = 10) -> list[dict]:
+    """
+    Integration contract expected by the Django presentation layer.
+
+    Replace only this implementation/import when the real recommender is ready.
+    Expected rows:
+        {"movie_id": 123, "title": "Movie", "predicted_rating": 4.72}
+
+    Never hand-type fake predicted scores here.
+    """
+    return []
