@@ -11,7 +11,7 @@ from .services.detection import (
     CANDIDATE_FEATURES,
     validate_threshold,
 )
-
+from .services.evaluation import EXPECTED_METRICS
 
 def staff_required(view_func):
     """Require a genuine authenticated staff/research account."""
@@ -184,8 +184,20 @@ def defence(request):
 
 @staff_required
 def evaluation(request):
+    """
+    Staff-only evaluation dashboard.
+
+    Django prepares the presentation layer for clean, attacked and
+    defended experiment metrics. Metric calculations remain in the
+    evaluation backend.
+    """
+
     return render(
         request,
         "research/evaluation.html",
-        {"page_title": "Evaluation Dashboard", "status_label": "Integration Ready"},
+        {
+            "page_title": "Evaluation Dashboard",
+            "integration_ready": True,
+            "expected_metrics": EXPECTED_METRICS,
+        },
     )

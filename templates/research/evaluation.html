@@ -1,10 +1,196 @@
 {% extends "base.html" %}
-{% block title %}Evaluation · RMRS{% endblock %}
+
+{% block title %}Evaluation Dashboard | RMRS{% endblock %}
+
 {% block content %}
-<section class="page-section"><div class="container"><div class="research-placeholder mx-auto">
-    <div class="eyebrow mb-2">Robustness Analysis</div>
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3"><h1 class="display-6 fw-bold mb-0">{{ page_title }}</h1><span class="status-chip">{{ status_label }}</span></div>
-    <p class="lead text-secondary mb-4">Clean, attacked and defended system performance, including RMSE and MAE, will be presented here.</p>
-    <div class="integration-box"><strong>Prepared for integration</strong><p class="mb-0 mt-1 text-secondary">Add evaluation functions to <code>apps/research/services/evaluation.py</code> and pass structured metrics to this page.</p></div>
-</div></div></section>
+
+<div class="container py-5">
+
+    <div class="eyebrow mb-2">
+        ROBUSTNESS ANALYSIS
+    </div>
+
+    <h1 class="display-6 fw-bold">
+        Evaluation Dashboard
+    </h1>
+
+    <p class="text-secondary mb-4">
+        Compare recommendation quality across clean, attacked and defended
+        experimental conditions.
+    </p>
+
+
+    <div class="row g-4">
+
+        <!-- Evaluation Design -->
+        <div class="col-lg-5">
+
+            <div class="profile-card">
+
+                <h2 class="h4 fw-bold mb-4">
+                    Evaluation Framework
+                </h2>
+
+
+                <div class="mb-4">
+
+                    <div class="fw-semibold">
+                        1. Clean Baseline
+                    </div>
+
+                    <div class="text-secondary">
+                        Measure recommendation performance before an attack
+                        is introduced.
+                    </div>
+
+                </div>
+
+
+                <div class="mb-4">
+
+                    <div class="fw-semibold">
+                        2. Attacked System
+                    </div>
+
+                    <div class="text-secondary">
+                        Measure recommendation performance after attack data
+                        affects the recommender.
+                    </div>
+
+                </div>
+
+
+                <div class="mb-4">
+
+                    <div class="fw-semibold">
+                        3. Defended System
+                    </div>
+
+                    <div class="text-secondary">
+                        Measure performance after the approved defence method
+                        has been applied.
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <div class="fw-semibold mb-2">
+                        Expected Metrics
+                    </div>
+
+                    <ul class="mb-0">
+
+                        {% for metric in expected_metrics %}
+                            <li class="mb-2">
+                                {{ metric }}
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Results -->
+        <div class="col-lg-7">
+
+            <div class="integration-notice">
+
+                <strong>
+                    Evaluation Integration Ready
+                </strong>
+
+                <p class="mb-0 mt-2 text-secondary">
+                    The dashboard is prepared to display real clean,
+                    attacked and defended evaluation metrics when the
+                    evaluation backend is connected to RMRS.
+                </p>
+
+            </div>
+
+
+            <div class="profile-card mt-4">
+
+                <h2 class="h5 fw-bold mb-3">
+                    Experiment Comparison
+                </h2>
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle mb-0">
+
+                        <thead>
+                            <tr>
+                                <th>Condition</th>
+                                <th>RMSE</th>
+                                <th>MAE</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td class="fw-semibold">
+                                    Clean
+                                </td>
+
+                                <td class="text-secondary">
+                                    Pending
+                                </td>
+
+                                <td class="text-secondary">
+                                    Pending
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="fw-semibold">
+                                    Attacked
+                                </td>
+
+                                <td class="text-secondary">
+                                    Pending
+                                </td>
+
+                                <td class="text-secondary">
+                                    Pending
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="fw-semibold">
+                                    Defended
+                                </td>
+
+                                <td class="text-secondary">
+                                    Pending
+                                </td>
+
+                                <td class="text-secondary">
+                                    Pending
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}
