@@ -3,8 +3,10 @@
 Week 1 deliberately uses service-layer demo data so migrations are not required
 for the frontend foundation.
 """
+
 from django.conf import settings
 from django.db import models
+
 
 class WebsiteRating(models.Model):
     """
@@ -47,3 +49,32 @@ class WebsiteRating(models.Model):
 
     def __str__(self):
         return f"{self.user} - Movie {self.movie_id}: {self.rating}/5"
+
+
+class WatchlistItem(models.Model):
+    """
+    Stores a movie saved to a real website user's My List.
+    """
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="watchlist_items",
+    )
+
+    movie_id = models.PositiveIntegerField()
+
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-added_at"]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "movie_id"],
+                name="unique_watchlist_item_per_user_movie",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.user} - Movie {self.movie_id}"
