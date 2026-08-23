@@ -1,61 +1,93 @@
 {% extends "base.html" %}
-{% block title %}Recommendations · RMRS{% endblock %}
+
+{% block title %}Recommendations | RMRS{% endblock %}
+
 {% block content %}
-<section class="page-section">
-    <div class="container">
-        <div class="row g-4 g-lg-5">
-            <div class="col-lg-5">
-                <div class="eyebrow">Recommendation interface</div>
-                <h1 class="display-6 fw-bold">Personalised Recommendations</h1>
-                <p class="text-secondary">This page establishes the web contract for the future collaborative-filtering model. No real recommendation algorithm runs in Week 1.</p>
 
-                <form class="filter-panel shadow-sm" method="get">
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold" for="user">Select User</label>
-                        <select class="form-select" id="user" name="user">
-                            <option value="196" {% if selected_user == '196' %}selected{% endif %}>User 196</option>
-                            <option value="42" {% if selected_user == '42' %}selected{% endif %}>User 42</option>
-                            <option value="7" {% if selected_user == '7' %}selected{% endif %}>User 7</option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold" for="limit">Number of Recommendations</label>
-                        <select class="form-select" id="limit" name="limit">
-                            <option value="5" {% if selected_limit == 5 %}selected{% endif %}>5</option>
-                            <option value="10" {% if selected_limit == 10 %}selected{% endif %}>10</option>
-                            <option value="20" {% if selected_limit == 20 %}selected{% endif %}>20</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-primary w-100" type="submit">Generate Recommendations</button>
-                </form>
-            </div>
+<div class="container py-5">
 
-            <div class="col-lg-7">
-                <div class="results-card shadow-sm">
-                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-                        <h2 class="h3 fw-bold mb-0">Your Recommendations</h2>
-                        <span class="status-chip">Demo results</span>
-                    </div>
-                    <div class="alert alert-info border-0 small" role="alert">
-                        These scores are temporary frontend data, not model predictions.
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table align-middle recommendation-table">
-                            <thead><tr><th scope="col">#</th><th scope="col">Movie</th><th scope="col" class="text-end">Predicted Score</th></tr></thead>
-                            <tbody>
-                                {% for item in demo_results %}
-                                <tr>
-                                    <td class="text-secondary">{{ forloop.counter }}</td>
-                                    <td class="fw-semibold">{{ item.title }}</td>
-                                    <td class="text-end"><span class="score-pill">{{ item.predicted_score }}</span></td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="eyebrow mb-2">
+        PERSONALISED DISCOVERY
     </div>
-</section>
+
+    <h1 class="display-6 fw-bold">
+        Recommendations
+    </h1>
+
+    <p class="text-secondary mb-4">
+        RMRS uses your saved movie preferences to support personalised recommendations.
+    </p>
+
+    {% if rating_count < 10 %}
+        <div class="alert alert-warning">
+            You currently have {{ rating_count }} saved rating(s).
+            For a stronger preference profile,
+            <a href="{% url 'movies:onboarding' %}" class="alert-link">
+                rate at least 10 movies
+            </a>.
+        </div>
+    {% endif %}
+
+    {% if results %}
+
+        <div class="recommendation-panel">
+
+            <div class="table-responsive">
+
+                <table class="table align-middle mb-0">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Movie</th>
+                            <th>Predicted Score</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in results %}
+
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+
+                                <td class="fw-semibold">
+                                    {{ item.title }}
+                                </td>
+
+                                <td>
+                                    {{ item.predicted_rating|floatformat:2 }}
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    {% else %}
+
+        <div class="integration-notice">
+
+            <strong>
+                Recommendation Integration Ready
+            </strong>
+
+            <p class="mb-0 mt-2 text-secondary">
+                Your movie ratings are stored successfully.
+                Personalised recommendation results will appear here when
+                the recommendation backend is connected to RMRS.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
 {% endblock %}
