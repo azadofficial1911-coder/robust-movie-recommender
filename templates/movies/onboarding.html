@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Tell Us What You Like · RMRS{% endblock %}
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="mb-4">
+            <div class="eyebrow mb-2">PERSONALISE RMRS</div>
+            <h1 class="display-6 fw-bold">Tell us what you like</h1>
+            <p class="text-secondary">Rate at least 10 movies. These ratings are saved to your account for future recommendation integration.</p>
+            <div class="progress" style="height: 24px;">
+                <div class="progress-bar" role="progressbar" style="width: {% widthratio rating_count 10 100 %}%" aria-valuenow="{{ rating_count }}" aria-valuemin="0" aria-valuemax="10">
+                    {{ rating_count }}/10
+                </div>
+            </div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+                {% for movie in movies %}
+                    <div class="col-md-6">
+                        <div class="onboarding-movie">
+                            <div>
+                                <strong>{{ movie.title }}</strong>
+                                <div class="small text-secondary">{{ movie.year }} · {{ movie.genres }}</div>
+                            </div>
+                            <select class="form-select onboarding-rating" name="rating_{{ movie.id }}">
+                                <option value="">Not rated</option>
+                                {% for value in "12345" %}
+                                    <option value="{{ value }}" {% if movie.user_rating|stringformat:"s" == value %}selected{% endif %}>{{ value }} / 5</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="btn btn-primary btn-lg mt-4" type="submit">Save Preferences</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
