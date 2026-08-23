@@ -72,10 +72,34 @@ def explorer(request):
 @login_required
 def detail(request, movie_id):
     movie = get_movie_by_id(movie_id)
+
     if movie is None:
         raise Http404("Movie not found.")
+
+    # Attach existing user-specific state to the movie.
     movie = attach_user_state([movie], request.user)[0]
-    return render(request, "movies/detail.html", {"movie": movie})
+
+    # Get the user's current saved rating for this movie.
+    saved_rating = WebsiteRating.objects.filter(
+        user=request.user,
+        movie_id=movie_id,
+    ).first()
+
+    # Check whether this movie is currently in the user's list.
+    in_list = WatchlistItem.objects.filter(
+        user=request.user,
+        movie_id=movie_id,
+    ).exists()
+
+    return render(
+        request,
+        "movies/detail.html",
+        {
+            "movie": movie,
+            "saved_rating": saved_rating,
+            "in_list": in_list,
+        },
+    )
 
 
 @login_required

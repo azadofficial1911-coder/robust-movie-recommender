@@ -1,16 +1,149 @@
-/* Week 6 user-platform additions. Keep existing style.css and load this after it. */
-.auth-page { min-height: calc(100vh - 145px); display: grid; place-items: center; padding: 3rem 1rem; }
-.auth-card { width: min(100%, 480px); background: #fff; border: 1px solid var(--rmrs-border); border-radius: var(--rmrs-radius-lg); padding: 2rem; }
-.profile-card { max-width: 760px; background: #fff; border: 1px solid var(--rmrs-border); border-radius: var(--rmrs-radius-lg); padding: 1.5rem; }
-.stream-hero { color: #fff; background: linear-gradient(100deg, rgba(11,23,54,.98), rgba(18,38,83,.78)), radial-gradient(circle at 85% 20%, #266bfd, #0b1736); }
-.stream-hero-content { max-width: 720px; }
-.movie-row-section { margin-bottom: 3rem; }
-.horizontal-movie-row { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: .75rem; scroll-snap-type: x proximity; }
-.stream-card { flex: 0 0 250px; scroll-snap-align: start; }
-.movie-poster-fallback { display: grid; place-items: center; background: linear-gradient(135deg, var(--rmrs-navy-2), var(--rmrs-teal)); color: rgba(255,255,255,.8); font-size: 1.5rem; font-weight: 800; }
-.onboarding-movie { display: flex; justify-content: space-between; align-items: center; gap: 1rem; background: #fff; border: 1px solid var(--rmrs-border); border-radius: 1rem; padding: 1rem; }
-.onboarding-rating { width: 130px; }
-.research-link-card { display: flex; flex-direction: column; gap: .35rem; height: 100%; padding: 1.25rem; border: 1px solid var(--rmrs-border); border-radius: 1rem; background: #fff; color: var(--rmrs-text); text-decoration: none; transition: .2s ease; }
-.research-link-card:hover { border-color: var(--rmrs-blue); transform: translateY(-2px); }
-.recommendation-mini-card { flex: 0 0 220px; display: flex; justify-content: space-between; gap: 1rem; padding: 1rem; border: 1px solid var(--rmrs-border); border-radius: 1rem; background: #fff; }
-@media (max-width: 767.98px) { .stream-card { flex-basis: 190px; } .onboarding-movie { align-items: stretch; flex-direction: column; } .onboarding-rating { width: 100%; } }
+/* Week 6 user-platform additions.
+   Keep existing style.css and load this after it.
+*/
+
+.auth-page {
+    min-height: calc(100vh - 145px);
+    display: grid;
+    place-items: center;
+    padding: 3rem 1rem;
+}
+
+.auth-card {
+    width: min(100%, 480px);
+    background: #fff;
+    border: 1px solid var(--rmrs-border);
+    border-radius: var(--rmrs-radius-lg);
+    padding: 2rem;
+}
+
+.profile-card {
+    max-width: 760px;
+    background: #fff;
+    border: 1px solid var(--rmrs-border);
+    border-radius: var(--rmrs-radius-lg);
+    padding: 1.5rem;
+}
+
+.stream-hero {
+    color: #fff;
+    background:
+        linear-gradient(
+            100deg,
+            rgba(11, 23, 54, .98),
+            rgba(18, 38, 83, .78)
+        ),
+        radial-gradient(
+            circle at 85% 20%,
+            #266bfd,
+            #0b1736
+        );
+}
+
+.stream-hero-content {
+    max-width: 720px;
+}
+
+.movie-row-section {
+    margin-bottom: 3rem;
+}
+
+/* Horizontal movie rows remain scrollable,
+   but the visible scrollbar is hidden. */
+.horizontal-movie-row {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: .75rem;
+    scroll-snap-type: x proximity;
+
+    /* Firefox */
+    scrollbar-width: none;
+
+    /* Older Microsoft browsers */
+    -ms-overflow-style: none;
+}
+
+/* Chrome, Safari and Edge */
+.horizontal-movie-row::-webkit-scrollbar {
+    display: none;
+}
+
+.stream-card {
+    flex: 0 0 250px;
+    scroll-snap-align: start;
+}
+
+.movie-poster-fallback {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(
+        135deg,
+        var(--rmrs-navy-2),
+        var(--rmrs-teal)
+    );
+    color: rgba(255, 255, 255, .8);
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.onboarding-movie {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    background: #fff;
+    border: 1px solid var(--rmrs-border);
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.onboarding-rating {
+    width: 130px;
+}
+
+.research-link-card {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    height: 100%;
+    padding: 1.25rem;
+    border: 1px solid var(--rmrs-border);
+    border-radius: 1rem;
+    background: #fff;
+    color: var(--rmrs-text);
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.research-link-card:hover {
+    border-color: var(--rmrs-blue);
+    transform: translateY(-2px);
+}
+
+.recommendation-mini-card {
+    flex: 0 0 220px;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--rmrs-border);
+    border-radius: 1rem;
+    background: #fff;
+}
+
+@media (max-width: 767.98px) {
+
+    .stream-card {
+        flex-basis: 190px;
+    }
+
+    .onboarding-movie {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .onboarding-rating {
+        width: 100%;
+    }
+}

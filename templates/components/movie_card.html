@@ -1,7 +1,7 @@
 {% load static %}
 <article class="card movie-card h-100 border-0 shadow-sm">
     {% if movie.poster %}
-        <img src="{% static movie.poster %}" class="card-img-top movie-poster" alt="Poster for {{ movie.title }}">
+        <img src="{% static movie.poster %}?v=3" class="card-img-top movie-poster" alt="Poster for {{ movie.title }}">
     {% else %}
         <div class="movie-poster movie-poster-fallback" role="img" aria-label="Poster placeholder for {{ movie.title }}">
             <span>RMRS</span>
