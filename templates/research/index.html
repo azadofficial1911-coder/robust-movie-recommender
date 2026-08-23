@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Research Lab · RMRS{% endblock %}
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="eyebrow mb-2">STAFF RESEARCH AREA</div>
+        <h1 class="display-6 fw-bold">Research Lab</h1>
+        <p class="text-secondary mb-4">Research tools are separated from the normal movie experience and are available only to authorised staff users.</p>
+
+        <div class="row g-3">
+            <div class="col-md-6"><a class="research-link-card" href="{% url 'research:attack_lab' %}"><strong>Attack Lab</strong><span>Attack experiment interface.</span></a></div>
+            <div class="col-md-6"><a class="research-link-card" href="{% url 'research:detection' %}"><strong>Detection</strong><span>Suspicious-user analysis interface.</span></a></div>
+            <div class="col-md-6"><a class="research-link-card" href="{% url 'research:defence' %}"><strong>Defence</strong><span>Defence controls and results.</span></a></div>
+            <div class="col-md-6"><a class="research-link-card" href="{% url 'research:evaluation' %}"><strong>Evaluation</strong><span>Clean, attacked and defended comparison.</span></a></div>
+        </div>
+    </div>
+</section>
+{% endblock %}

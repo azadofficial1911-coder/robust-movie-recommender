@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Project apps are separated by responsibility to keep future work modular.
+    "apps.accounts.apps.AccountsConfig",
     "apps.core.apps.CoreConfig",
     "apps.movies.apps.MoviesConfig",
     "apps.recommendations.apps.RecommendationsConfig",
@@ -78,6 +79,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
+
+LOGIN_URL = "accounts:login"
+LOGIN_REDIRECT_URL = "core:home"
+LOGOUT_REDIRECT_URL = "accounts:login"
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"

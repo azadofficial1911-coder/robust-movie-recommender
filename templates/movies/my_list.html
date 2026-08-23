@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}My List · RMRS{% endblock %}
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="eyebrow mb-2">SAVED MOVIES</div>
+        <h1 class="display-6 fw-bold mb-4">My List</h1>
+        <div class="row g-3">
+            {% for row in rows %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="profile-card shadow-sm h-100">
+                        <h2 class="h5 fw-bold">{{ row.movie.title }}</h2>
+                        <p class="text-secondary mb-2">{{ row.movie.year }} · {{ row.movie.genres }}</p>
+                        <a href="{% url 'movies:detail' row.movie.id %}">View movie</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-secondary">Your list is empty. Add movies from Browse.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

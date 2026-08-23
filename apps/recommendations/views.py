@@ -1,19 +1,49 @@
-"""Views for recommendation presentation."""
+"""Views for the recommendation presentation layer."""
+
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from .services.demo import get_demo_recommendations
+
+from apps.movies.models import WebsiteRating
+
+from .services.recommender import get_recommendations
 
 
+@login_required
 def index(request):
-    """Render a frontend-only recommendation workflow for Week 1."""
-    selected_user = request.GET.get("user", "196")
+    """
+    Display personalised recommendation results for the logged-in user.
+
+    The Django layer does not calculate recommendations itself.
+    Real recommendation results will come from the recommender service.
+    """
+
     try:
-        limit = max(1, min(int(request.GET.get("limit", "10")), 20))
+        top_n = int(request.GET.get("top_n", 10))
     except ValueError:
-        limit = 10
+        top_n = 10
+
+    # Keep the requested number within a sensible range.
+    top_n = min(max(top_n, 1), 50)
+
+    # Ask the recommendation integration service for results.
+    results = get_recommendations(
+        request.user.id,
+        top_n=top_n,
+    )
+
+    # Count genuine ratings saved by this Django user.
+    rating_count = WebsiteRating.objects.filter(
+        user=request.user
+    ).count()
 
     context = {
-        "selected_user": selected_user,
-        "selected_limit": limit,
-        "demo_results": get_demo_recommendations(limit=limit),
+        "results": results,
+        "rating_count": rating_count,
+        "top_n": top_n,
     }
-    return render(request, "recommendations/index.html", context)
+
+    return render(
+        request,
+        "recommendations/index.html",
+        context,
+    )

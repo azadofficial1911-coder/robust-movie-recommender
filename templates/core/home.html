@@ -1,73 +1,60 @@
 {% extends "base.html" %}
 {% block title %}Home · RMRS{% endblock %}
 {% block content %}
-<section class="hero-section">
-    <div class="container py-5 py-lg-6">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-7">
-                <div class="eyebrow mb-3">Robust Movie Recommender System</div>
-                <h1 class="display-4 fw-bold hero-title">Find trusted movie recommendations</h1>
-                <p class="lead text-secondary hero-copy">Discover movies personalized to your interests while our research prototype prepares to study recommender robustness, attacks, detection and defence.</p>
-
-                <form class="search-panel mt-4" action="{% url 'movies:explorer' %}" method="get">
-                    <div class="input-group input-group-lg">
-                        <input class="form-control" type="search" name="q" placeholder="Search movies..." aria-label="Search movies">
-                        <button class="btn btn-primary px-4" type="submit">Search</button>
-                    </div>
-                    <div class="row g-2 mt-2">
-                        <div class="col-md-4">
-                            <select class="form-select" name="genre" aria-label="Genre">
-                                <option value="">Genre</option>
-                                {% for genre in genres %}<option value="{{ genre }}">{{ genre }}</option>{% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <select class="form-select" name="rating" aria-label="Rating">
-                                <option value="">Rating</option>
-                                <option value="4">4+ Stars</option>
-                                <option value="3">3+ Stars</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <input class="form-control" type="number" name="year_from" min="1900" max="2100" placeholder="Year">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-lg-5">
-                <div class="hero-research-card shadow-sm">
-                    <div class="d-flex align-items-center gap-3 mb-4">
-                        <div class="research-icon">R</div>
-                        <div>
-                            <div class="small text-uppercase text-secondary fw-semibold">Research-ready shell</div>
-                            <div class="h4 mb-0">Built for later integration</div>
-                        </div>
-                    </div>
-                    <div class="row g-3 text-center">
-                        <div class="col-6"><div class="metric-card"><strong>7</strong><span>Working routes</span></div></div>
-                        <div class="col-6"><div class="metric-card"><strong>4</strong><span>Research pages</span></div></div>
-                        <div class="col-6"><div class="metric-card"><strong>1</strong><span>Reusable shell</span></div></div>
-                        <div class="col-6"><div class="metric-card"><strong>0</strong><span>ML duplication</span></div></div>
-                    </div>
-                </div>
+{% if featured %}
+<section class="stream-hero">
+    <div class="container py-5">
+        <div class="stream-hero-content">
+            <div class="eyebrow mb-2 text-info">FEATURED MOVIE</div>
+            <h1 class="display-4 fw-bold">{{ featured.title }}</h1>
+            <p class="lead mb-2">{{ featured.year }} · {{ featured.genres }}</p>
+            <p class="opacity-75">Average rating: {{ featured.rating }}/5</p>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <a class="btn btn-light" href="{% url 'movies:detail' featured.id %}">Details & Rate</a>
+                <a class="btn btn-outline-light" href="{% url 'movies:explorer' %}">Browse Movies</a>
             </div>
         </div>
     </div>
 </section>
+{% endif %}
 
-<section class="page-section pt-3">
+<section class="page-section">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-end gap-3 mb-4">
-            <div>
-                <div class="eyebrow">Week 1 demo content</div>
-                <h2 class="h2 fw-bold mb-0">Featured Movies</h2>
+        <div class="movie-row-section">
+            <div class="d-flex justify-content-between align-items-end gap-3 mb-3">
+                <h2 class="h3 fw-bold mb-0">Recommended For You</h2>
+                <a href="{% url 'recommendations:index' %}">View recommendations</a>
             </div>
-            <a class="btn btn-outline-primary" href="{% url 'movies:explorer' %}">Explore all</a>
+            {% if recommended %}
+                <div class="horizontal-movie-row">
+                    {% for item in recommended %}
+                        <div class="recommendation-mini-card"><strong>{{ item.title }}</strong><span>{{ item.predicted_rating|floatformat:2 }}</span></div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="integration-box">Your personalised recommendation row is ready to display real recommender output.</div>
+            {% endif %}
         </div>
-        <div class="row g-4">
-            {% for movie in featured_movies %}
-                <div class="col-12 col-sm-6 col-lg-3">{% include "components/movie_card.html" with movie=movie %}</div>
-            {% endfor %}
+
+        <div class="movie-row-section">
+            <h2 class="h3 fw-bold mb-3">Popular Movies</h2>
+            <div class="horizontal-movie-row">
+                {% for movie in popular_movies %}<div class="stream-card">{% include "components/movie_card.html" with movie=movie %}</div>{% endfor %}
+            </div>
+        </div>
+
+        <div class="movie-row-section">
+            <h2 class="h3 fw-bold mb-3">Action Movies</h2>
+            <div class="horizontal-movie-row">
+                {% for movie in action_movies %}<div class="stream-card">{% include "components/movie_card.html" with movie=movie %}</div>{% endfor %}
+            </div>
+        </div>
+
+        <div class="movie-row-section">
+            <h2 class="h3 fw-bold mb-3">Comedy</h2>
+            <div class="horizontal-movie-row">
+                {% for movie in comedy_movies %}<div class="stream-card">{% include "components/movie_card.html" with movie=movie %}</div>{% endfor %}
+            </div>
         </div>
     </div>
 </section>
