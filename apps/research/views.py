@@ -1,7 +1,28 @@
-"""Placeholder research views prepared for later team integration."""
+from functools import wraps
+
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 
 
+def staff_required(view_func):
+    """Require a genuine authenticated staff/research account."""
+    @wraps(view_func)
+    @login_required
+    def wrapped(request, *args, **kwargs):
+        if not request.user.is_staff:
+            raise PermissionDenied("Research Lab access is restricted to staff.")
+        return view_func(request, *args, **kwargs)
+
+    return wrapped
+
+
+@staff_required
+def lab(request):
+    return render(request, "research/index.html")
+
+
+@staff_required
 def attack_lab(request):
     return render(
         request,
@@ -10,6 +31,7 @@ def attack_lab(request):
     )
 
 
+@staff_required
 def detection(request):
     return render(
         request,
@@ -18,6 +40,7 @@ def detection(request):
     )
 
 
+@staff_required
 def defence(request):
     return render(
         request,
@@ -26,6 +49,7 @@ def defence(request):
     )
 
 
+@staff_required
 def evaluation(request):
     return render(
         request,
