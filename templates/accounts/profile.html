@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}My Profile · RMRS{% endblock %}
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="profile-card shadow-sm mx-auto">
+            <div class="eyebrow mb-2">MY ACCOUNT</div>
+            <h1 class="h2 fw-bold">Profile</h1>
+
+            <dl class="row mt-4 mb-0">
+                <dt class="col-sm-4">Username</dt><dd class="col-sm-8">{{ request.user.username }}</dd>
+                <dt class="col-sm-4">Email</dt><dd class="col-sm-8">{{ request.user.email|default:"Not provided" }}</dd>
+                <dt class="col-sm-4">Movies Rated</dt><dd class="col-sm-8">{{ rating_count }}</dd>
+            </dl>
+
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <a class="btn btn-primary" href="{% url 'movies:my_ratings' %}">My Ratings</a>
+                <a class="btn btn-outline-primary" href="{% url 'recommendations:index' %}">My Recommendations</a>
+                <a class="btn btn-outline-primary" href="{% url 'movies:my_list' %}">My List</a>
+                {% if request.user.is_staff %}<a class="btn btn-outline-dark" href="{% url 'research:lab' %}">Research Lab</a>{% endif %}
+            </div>
+
+            <form class="mt-4" method="post" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-danger" type="submit">Logout</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
