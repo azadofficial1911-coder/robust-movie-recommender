@@ -7,6 +7,10 @@ from django.shortcuts import render
 from apps.movies.services.catalog import get_all_movies
 
 from .services.attacks import AttackConfig, validate_attack_config
+from .services.detection import (
+    CANDIDATE_FEATURES,
+    validate_threshold,
+)
 
 
 def staff_required(view_func):
@@ -118,10 +122,44 @@ def attack_lab(request):
 
 @staff_required
 def detection(request):
+    """
+    Staff-only interface for configuring suspicious-user detection.
+
+    Django validates the detection configuration and prepares the
+    presentation layer. The actual detector remains in the research backend.
+    """
+
+    errors = []
+    detection_requested = False
+    config_valid = False
+
+    threshold = "0.5"
+
+    if request.method == "POST":
+        detection_requested = True
+        threshold = request.POST.get("threshold", "0.5")
+
+        try:
+            threshold_value = float(threshold)
+
+            validate_threshold(threshold_value)
+
+            config_valid = True
+
+        except (TypeError, ValueError) as exc:
+            errors.append(str(exc))
+
     return render(
         request,
         "research/detection.html",
-        {"page_title": "Suspicious-User Detection", "status_label": "Integration Ready"},
+        {
+            "page_title": "Suspicious-User Detection",
+            "errors": errors,
+            "detection_requested": detection_requested,
+            "config_valid": config_valid,
+            "threshold": threshold,
+            "candidate_features": CANDIDATE_FEATURES,
+        },
     )
 
 

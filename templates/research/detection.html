@@ -1,10 +1,213 @@
 {% extends "base.html" %}
-{% block title %}Detection · RMRS{% endblock %}
+
+{% block title %}Detection | RMRS{% endblock %}
+
 {% block content %}
-<section class="page-section"><div class="container"><div class="research-placeholder mx-auto">
-    <div class="eyebrow mb-2">Robustness Analysis</div>
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3"><h1 class="display-6 fw-bold mb-0">{{ page_title }}</h1><span class="status-chip">{{ status_label }}</span></div>
-    <p class="lead text-secondary mb-4">Suspicious-user detection results will be displayed here.</p>
-    <div class="integration-box"><strong>Prepared for integration</strong><p class="mb-0 mt-1 text-secondary">Add detection logic to <code>apps/research/services/detection.py</code> and keep model logic outside the Django template.</p></div>
-</div></div></section>
+
+<div class="container py-5">
+
+    <div class="eyebrow mb-2">
+        ROBUSTNESS ANALYSIS
+    </div>
+
+    <h1 class="display-6 fw-bold">
+        Suspicious-User Detection
+    </h1>
+
+    <p class="text-secondary mb-4">
+        Configure the suspicious-user detection stage for the RMRS research environment.
+    </p>
+
+
+    {% if errors %}
+
+        <div class="alert alert-danger">
+
+            <strong>
+                Please check the detection configuration:
+            </strong>
+
+            <ul class="mb-0 mt-2">
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+
+        </div>
+
+    {% endif %}
+
+
+    <div class="row g-4">
+
+        <!-- Detection Configuration -->
+        <div class="col-lg-5">
+
+            <div class="profile-card">
+
+                <h2 class="h4 fw-bold mb-4">
+                    Detection Configuration
+                </h2>
+
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+                            Suspicion Threshold
+                        </label>
+
+                        <input
+                            class="form-control"
+                            type="number"
+                            name="threshold"
+                            min="0"
+                            max="1"
+                            step="0.01"
+                            value="{{ threshold }}"
+                            required>
+
+                        <div class="form-text">
+                            Scores at or above this threshold will be classified
+                            as suspicious.
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="btn btn-primary w-100"
+                        type="submit">
+                        Validate Detection Setup
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <div class="profile-card mt-4">
+
+                <h2 class="h5 fw-bold mb-3">
+                    Candidate Behavioural Features
+                </h2>
+
+                <ul class="mb-0">
+
+                    {% for feature in candidate_features %}
+
+                        <li class="mb-2">
+                            {{ feature|title }}
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+        </div>
+
+
+        <!-- Detection Status -->
+        <div class="col-lg-7">
+
+            {% if config_valid %}
+
+                <div class="profile-card">
+
+                    <div class="eyebrow mb-2">
+                        CONFIGURATION VALID
+                    </div>
+
+                    <h2 class="h4 fw-bold">
+                        Detection Configuration Validated
+                    </h2>
+
+                    <p class="text-secondary">
+                        The detection threshold is valid and the interface
+                        is ready to receive results from the detection backend.
+                    </p>
+
+
+                    <dl class="row mb-0">
+
+                        <dt class="col-sm-5">
+                            Suspicion Threshold
+                        </dt>
+
+                        <dd class="col-sm-7">
+                            {{ threshold }}
+                        </dd>
+
+                        <dt class="col-sm-5">
+                            Result Structure
+                        </dt>
+
+                        <dd class="col-sm-7">
+                            User ID, Suspicion Score, Status
+                        </dd>
+
+                    </dl>
+
+                </div>
+
+
+                <div class="integration-notice mt-4">
+
+                    <strong>
+                        Detection Backend Integration Pending
+                    </strong>
+
+                    <p class="mb-0 mt-2 text-secondary">
+                        Users analysed, suspicious-user counts, suspicion
+                        scores and classification results will appear here
+                        when the final detector is connected.
+                    </p>
+
+                </div>
+
+
+            {% elif detection_requested %}
+
+                <div class="integration-notice">
+
+                    <strong>
+                        Detection Configuration Pending
+                    </strong>
+
+                    <p class="mb-0 mt-2 text-secondary">
+                        Correct the configuration values and try again.
+                    </p>
+
+                </div>
+
+
+            {% else %}
+
+                <div class="integration-notice">
+
+                    <strong>
+                        Detection Integration Ready
+                    </strong>
+
+                    <p class="mb-0 mt-2 text-secondary">
+                        Configure and validate the detection threshold.
+                        Real suspicious-user results will be supplied by
+                        the detection backend when it is connected.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}
