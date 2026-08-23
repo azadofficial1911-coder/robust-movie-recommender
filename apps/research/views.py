@@ -165,10 +165,20 @@ def detection(request):
 
 @staff_required
 def defence(request):
+    """
+    Staff-only Defence Centre.
+
+    The presentation layer is prepared for the future defence backend.
+    No defence calculations are performed inside Django.
+    """
+
     return render(
         request,
         "research/defence.html",
-        {"page_title": "Defence Centre", "status_label": "Integration Ready"},
+        {
+            "page_title": "Defence Centre",
+            "integration_ready": True,
+        },
     )
 
 
