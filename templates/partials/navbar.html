@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-xl navbar-dark rmrs-navbar sticky-top" aria-label="Main navigation">
     <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{% url 'core:home' %}">
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{% if request.user.is_authenticated %}{% url 'core:home' %}{% else %}{% url 'accounts:login' %}{% endif %}">
             <span class="brand-mark" aria-hidden="true">R</span>
             <span>RMRS</span>
         </a>
@@ -8,16 +8,44 @@
                 aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="mainNavbar">
-            <ul class="navbar-nav ms-auto gap-xl-1">
-                <li class="nav-item"><a class="nav-link" href="{% url 'core:home' %}">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'movies:explorer' %}">Movie Explorer</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'recommendations:index' %}">Recommendations</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'research:attack_lab' %}">Attack Lab</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'research:detection' %}">Detection</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'research:defence' %}">Defence</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'research:evaluation' %}">Evaluation</a></li>
-            </ul>
+            {% if request.user.is_authenticated %}
+                <ul class="navbar-nav ms-auto gap-xl-1 align-items-xl-center">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'core:home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'movies:explorer' %}">Browse</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'recommendations:index' %}">Recommendations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'movies:my_ratings' %}">My Ratings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'movies:my_list' %}">My List</a></li>
+
+                    <li class="nav-item dropdown">
+                        <button class="btn nav-link dropdown-toggle border-0 bg-transparent" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ request.user.username }}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">My Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'movies:my_ratings' %}">My Ratings</a></li>
+                            <li><a class="dropdown-item" href="{% url 'movies:my_list' %}">My List</a></li>
+                            {% if request.user.is_staff %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'research:lab' %}">Research Lab</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{% url 'accounts:logout' %}">
+                                    {% csrf_token %}
+                                    <button class="dropdown-item" type="submit">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            {% else %}
+                <ul class="navbar-nav ms-auto gap-xl-1">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:signup' %}">Sign Up</a></li>
+                </ul>
+            {% endif %}
         </div>
     </div>
 </nav>

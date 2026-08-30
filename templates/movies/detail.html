@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ movie.title }} | RMRS{% endblock %}
+
+{% block content %}
+
+<section class="page-section">
+    <div class="container py-5">
+
+        <!-- Back Button -->
+        <a href="{% url 'movies:explorer' %}"
+           class="btn btn-outline-secondary mb-4">
+            ← Back to Browse
+        </a>
+
+        <div class="row g-5 align-items-start">
+
+            <!-- Movie Poster -->
+            <div class="col-lg-4">
+
+                {% if movie.poster %}
+                    <img
+                        src="{% static movie.poster %}?v=3"
+                        alt="{{ movie.title }}"
+                        class="img-fluid rounded shadow-sm w-100"
+                    >
+                {% else %}
+                    <div class="profile-card text-center py-5">
+                        <div class="py-5">
+                            <h2 class="fw-bold">RMRS</h2>
+                        </div>
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <!-- Movie Information -->
+            <div class="col-lg-8">
+
+                <div class="eyebrow mb-2">
+                    MOVIE DETAILS
+                </div>
+
+                <h1 class="display-5 fw-bold mb-3">
+                    {{ movie.title }}
+                </h1>
+
+                <p class="fs-5 text-secondary mb-4">
+                    {{ movie.year }} · {{ movie.genres }}
+                </p>
+
+                <!-- Movie Information Card -->
+                <div class="profile-card mb-4">
+
+                    <h2 class="h4 fw-bold mb-4">
+                        Movie Information
+                    </h2>
+
+                    <div class="row g-4">
+
+                        <div class="col-sm-6">
+                            <div class="text-secondary small">
+                                Release Year
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ movie.year }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="text-secondary small">
+                                Average Rating
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ movie.rating }}/5
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="text-secondary small">
+                                Genres
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ movie.genres }}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Your Rating Card -->
+                <div class="profile-card mb-4">
+
+                    <h2 class="h4 fw-bold mb-2">
+                        Your Rating
+                    </h2>
+
+                    <p class="text-secondary mb-4">
+                        Rate this movie from 1 to 5.
+                        You can change your rating at any time.
+                    </p>
+
+                    <form
+                        method="post"
+                        action="{% url 'movies:rate' movie.id %}"
+                    >
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+
+                            <label
+                                for="rating"
+                                class="form-label fw-semibold"
+                            >
+                                Select Rating
+                            </label>
+
+                            <select
+                                id="rating"
+                                name="rating"
+                                class="form-select"
+                                required
+                            >
+                                <option value="">
+                                    Choose a rating
+                                </option>
+
+                                <option value="1"
+                                    {% if saved_rating and saved_rating.rating == 1 %}selected{% endif %}>
+                                    ★☆☆☆☆ — 1 / 5
+                                </option>
+
+                                <option value="2"
+                                    {% if saved_rating and saved_rating.rating == 2 %}selected{% endif %}>
+                                    ★★☆☆☆ — 2 / 5
+                                </option>
+
+                                <option value="3"
+                                    {% if saved_rating and saved_rating.rating == 3 %}selected{% endif %}>
+                                    ★★★☆☆ — 3 / 5
+                                </option>
+
+                                <option value="4"
+                                    {% if saved_rating and saved_rating.rating == 4 %}selected{% endif %}>
+                                    ★★★★☆ — 4 / 5
+                                </option>
+
+                                <option value="5"
+                                    {% if saved_rating and saved_rating.rating == 5 %}selected{% endif %}>
+                                    ★★★★★ — 5 / 5
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            {% if saved_rating %}
+                                Update Rating
+                            {% else %}
+                                Save Rating
+                            {% endif %}
+                        </button>
+
+                        {% if saved_rating %}
+                            <span class="ms-3 text-secondary">
+                                Current rating:
+                                <strong>{{ saved_rating.rating }}/5</strong>
+                            </span>
+                        {% endif %}
+
+                    </form>
+
+                </div>
+
+                <!-- My List Card -->
+                <div class="profile-card">
+
+                    <h2 class="h4 fw-bold mb-2">
+                        My List
+                    </h2>
+
+                    <p class="text-secondary mb-3">
+                        Save movies you want to revisit later.
+                    </p>
+
+                    <form
+                        method="post"
+                        action="{% url 'movies:toggle_list' movie.id %}"
+                    >
+                        {% csrf_token %}
+
+                        {% if in_list %}
+                            <button
+                                type="submit"
+                                class="btn btn-outline-danger"
+                            >
+                                Remove from My List
+                            </button>
+                        {% else %}
+                            <button
+                                type="submit"
+                                class="btn btn-outline-primary"
+                            >
+                                + Add to My List
+                            </button>
+                        {% endif %}
+
+                    </form>
+
+                </div>
+
+                <!-- Navigation -->
+                <div class="mt-4">
+
+                    <a
+                        href="{% url 'movies:my_ratings' %}"
+                        class="btn btn-outline-secondary"
+                    >
+                        View My Ratings
+                    </a>
+
+                    <a
+                        href="{% url 'movies:my_list' %}"
+                        class="btn btn-outline-secondary ms-2"
+                    >
+                        View My List
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
