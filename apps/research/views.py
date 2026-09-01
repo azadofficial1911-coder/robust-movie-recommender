@@ -12,6 +12,11 @@ from .services.detection import (
     validate_threshold,
 )
 from .services.evaluation import EXPECTED_METRICS
+from .services.results_loader import (
+    load_defence_summary,
+    load_experiment_results,
+    load_result_figures,
+)
 
 def staff_required(view_func):
     """Require a genuine authenticated staff/research account."""
@@ -168,9 +173,14 @@ def defence(request):
     """
     Staff-only Defence Centre.
 
-    The presentation layer is prepared for the future defence backend.
-    No defence calculations are performed inside Django.
+    Django only reads and displays results already produced by the
+    research scripts (experiments/apply_defence.py) -- no defence
+    calculation happens inside this view. When those results don't
+    exist yet, the template falls back to its original "integration
+    ready, pending real data" presentation.
     """
+
+    defence_summary = load_defence_summary()
 
     return render(
         request,
@@ -178,6 +188,8 @@ def defence(request):
         {
             "page_title": "Defence Centre",
             "integration_ready": True,
+            "defence_summary": defence_summary,
+            "results_available": defence_summary is not None,
         },
     )
 
@@ -187,10 +199,14 @@ def evaluation(request):
     """
     Staff-only evaluation dashboard.
 
-    Django prepares the presentation layer for clean, attacked and
-    defended experiment metrics. Metric calculations remain in the
-    evaluation backend.
+    Django only reads and displays results already produced by the
+    research scripts (experiments/build_experiment_results.py,
+    results/generate_reports.py) -- all metric calculation happens in
+    those scripts, not here. When those results don't exist yet, the
+    template falls back to its original "pending" presentation.
     """
+
+    experiment_results = load_experiment_results()
 
     return render(
         request,
@@ -199,5 +215,8 @@ def evaluation(request):
             "page_title": "Evaluation Dashboard",
             "integration_ready": True,
             "expected_metrics": EXPECTED_METRICS,
+            "experiment_results": experiment_results,
+            "result_figures": load_result_figures(),
+            "results_available": experiment_results is not None,
         },
     )

@@ -1,0 +1,3 @@
+condition,detection_precision,detection_recall,detection_f1,false_positive_rate
+random,1.0,1.0,1.0,0.0
+average,1.0,1.0,1.0,0.0

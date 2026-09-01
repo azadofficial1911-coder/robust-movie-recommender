@@ -1,0 +1,3 @@
+scenario,defence_method,suspicious_profiles_detected,users_before,users_removed,users_after,ratings_before,ratings_removed,ratings_after
+random,remove_suspicious_profiles,47,990,47,943,84024,3995,80029
+average,remove_suspicious_profiles,47,990,47,943,84024,3995,80029

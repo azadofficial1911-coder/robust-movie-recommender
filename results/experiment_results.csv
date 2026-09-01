@@ -1,0 +1,6 @@
+experiment_id,condition,attack_type,attack_size,filler_size,target_movie,random_seed,defence_method,rmse,mae,precision_at_k,recall_at_k,target_rank,target_score,hit_rate,detection_precision,detection_recall,detection_f1,false_positive_rate
+EXP001_PILOT,clean,,,,758,42,,0.929807650775908,0.7253003839878471,,,1127.428571428571,1.9721571428571427,0.0,,,,
+EXP001_PILOT,random,random,5,5,758,42,,0.9304315919744656,0.7260643840839762,,,778.8571428571429,3.1082571428571426,0.0,1.0,1.0,1.0,0.0
+EXP001_PILOT,random_defended,random,5,5,758,42,remove_suspicious_profiles,0.929807650775908,0.7253003839878471,,,1127.428571428571,1.9721571428571427,0.0,1.0,1.0,1.0,0.0
+EXP001_PILOT,average,average,5,5,758,42,,0.9309038701982444,0.7262220818969339,,,407.57142857142856,3.6731142857142856,0.0,1.0,1.0,1.0,0.0
+EXP001_PILOT,average_defended,average,5,5,758,42,remove_suspicious_profiles,0.929807650775908,0.7253003839878471,,,1127.428571428571,1.9721571428571427,0.0,1.0,1.0,1.0,0.0
