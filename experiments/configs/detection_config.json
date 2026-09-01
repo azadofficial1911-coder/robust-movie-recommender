@@ -1,0 +1,7 @@
+{
+  "target_movie_id": 758,
+  "threshold": 0.5,
+  "rating_min": 1,
+  "rating_max": 5,
+  "status": "week6_pilot"
+}
