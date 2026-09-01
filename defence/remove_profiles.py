@@ -1,26 +1,26 @@
-"""Primary defence: remove profiles identified as suspicious."""
-from __future__ import annotations
-from typing import Iterable
+"""Primary defence: remove profiles predicted as suspicious."""
+from pathlib import Path
 import pandas as pd
 
-def get_suspicious_user_ids(detection_results: pd.DataFrame, label_column="predicted_label",
-                            suspicious_label="suspicious", user_id_column="user_id") -> set:
-    required = {user_id_column, label_column}
-    missing = required.difference(detection_results.columns)
+def get_suspicious_user_ids(detection_results, user_id_column="user_id",
+                            label_column="predicted_label", suspicious_label="suspicious"):
+    missing={user_id_column,label_column}-set(detection_results.columns)
     if missing: raise ValueError(f"Missing required columns: {sorted(missing)}")
-    return set(detection_results.loc[detection_results[label_column] == suspicious_label, user_id_column])
+    return set(detection_results.loc[detection_results[label_column]==suspicious_label,user_id_column])
 
-def remove_suspicious_profiles(ratings: pd.DataFrame, suspicious_user_ids: Iterable,
-                               user_id_column="user_id") -> pd.DataFrame:
-    if user_id_column not in ratings.columns: raise ValueError(f"Missing required column: {user_id_column}")
-    return ratings.loc[~ratings[user_id_column].isin(set(suspicious_user_ids))].copy()
+def remove_suspicious_profiles(attacked_dataset, suspicious_user_ids, user_id_column="user_id"):
+    if user_id_column not in attacked_dataset.columns: raise ValueError(f"Missing required column: {user_id_column}")
+    return attacked_dataset.loc[~attacked_dataset[user_id_column].isin(set(suspicious_user_ids))].copy()
 
-def defence_summary(ratings_before: pd.DataFrame, ratings_after: pd.DataFrame,
-                    user_id_column="user_id") -> dict:
-    before_users = ratings_before[user_id_column].nunique()
-    after_users = ratings_after[user_id_column].nunique()
-    return {"users_before": int(before_users), "users_after": int(after_users),
-            "users_removed": int(before_users-after_users),
-            "ratings_before": int(len(ratings_before)),
-            "ratings_after": int(len(ratings_after)),
-            "ratings_removed": int(len(ratings_before)-len(ratings_after))}
+def apply_from_detection_results(attacked_dataset, detection_results, output_path=None):
+    suspicious=get_suspicious_user_ids(detection_results)
+    defended=remove_suspicious_profiles(attacked_dataset,suspicious)
+    if output_path:
+        p=Path(output_path); p.parent.mkdir(parents=True,exist_ok=True); defended.to_csv(p,index=False)
+    return defended
+
+def defence_summary(attacked_dataset, defended_dataset, user_id_column="user_id"):
+    bu=attacked_dataset[user_id_column].nunique(); au=defended_dataset[user_id_column].nunique()
+    return {"users_before":int(bu),"users_after":int(au),"users_removed":int(bu-au),
+            "ratings_before":int(len(attacked_dataset)),"ratings_after":int(len(defended_dataset)),
+            "ratings_removed":int(len(attacked_dataset)-len(defended_dataset))}

@@ -1,6 +1,3 @@
 # Tables
-Planned tables:
-- Recommendation performance: RMSE, MAE, Precision@K, Recall@K.
-- Attack impact: target score/rank and hit rate.
-- Detection performance: precision, recall, F1, false-positive rate.
-Populate only from actual experiment outputs.
+Planned: recommender_metrics.csv, attack_metrics.csv, detection_metrics.csv.
+Populate from real experiment outputs only.
