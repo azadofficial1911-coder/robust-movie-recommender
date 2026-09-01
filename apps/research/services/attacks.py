@@ -268,20 +268,227 @@ def generate_average_push(
     attack_size_percent: float,
     filler_size_percent: float,
     random_seed: int = 42,
+    target_rating: int = 5,
+    rating_min: int = 1,
+    rating_max: int = 5,
 ):
-    """Generate synthetic Average Push profiles.
+    """Generate reproducible synthetic Average Push fake-user profiles.
 
-    Planned implementation:
-    1. Calculate the required number of fake users.
-    2. Assign new user IDs after the maximum genuine user ID.
-    3. Give the target movie the maximum push rating.
-    4. Select filler movies.
-    5. Generate each filler rating around that movie's genuine mean rating.
-    6. Return the generated fake ratings.
+    Each synthetic user:
+    - receives a new numeric user ID after the maximum genuine user ID;
+    - rates the selected target movie with the configured push rating;
+    - rates a percentage of the remaining movie catalogue as filler items;
+    - receives filler ratings sampled around each filler movie's mean rating.
 
-    Full implementation requires processed ratings and movie statistics.
+    The input DataFrames are never modified in place.
+
+    Returns:
+        pandas.DataFrame with columns:
+        user_id, movie_id, rating, attack_type, target_movie_id
     """
 
-    raise NotImplementedError(
-        "Average Push generation requires ratings and movie statistics."
+    if not isinstance(ratings, pd.DataFrame):
+        raise TypeError("ratings must be a pandas DataFrame.")
+
+    if not isinstance(movie_statistics, pd.DataFrame):
+        raise TypeError("movie_statistics must be a pandas DataFrame.")
+
+    required_rating_columns = {"user_id", "movie_id", "rating"}
+    missing_rating_columns = required_rating_columns.difference(
+        ratings.columns
+    )
+
+    if missing_rating_columns:
+        raise ValueError(
+            "ratings is missing required columns: "
+            + ", ".join(sorted(missing_rating_columns))
+        )
+
+    required_statistics_columns = {"movie_id", "mean_rating"}
+    missing_statistics_columns = required_statistics_columns.difference(
+        movie_statistics.columns
+    )
+
+    if missing_statistics_columns:
+        raise ValueError(
+            "movie_statistics is missing required columns: "
+            + ", ".join(sorted(missing_statistics_columns))
+        )
+
+    if ratings.empty:
+        raise ValueError("ratings cannot be empty.")
+
+    if movie_statistics.empty:
+        raise ValueError("movie_statistics cannot be empty.")
+
+    if target_movie_id <= 0:
+        raise ValueError("target_movie_id must be a positive integer.")
+
+    if target_movie_id not in set(ratings["movie_id"]):
+        raise ValueError(
+            f"target_movie_id {target_movie_id} does not exist in ratings."
+        )
+
+    if not 0 < attack_size_percent <= 100:
+        raise ValueError(
+            "attack_size_percent must be greater than 0 and at most 100."
+        )
+
+    if not 0 < filler_size_percent <= 100:
+        raise ValueError(
+            "filler_size_percent must be greater than 0 and at most 100."
+        )
+
+    if rating_min >= rating_max:
+        raise ValueError("rating_min must be smaller than rating_max.")
+
+    if not rating_min <= target_rating <= rating_max:
+        raise ValueError(
+            "target_rating must be inside the configured rating range."
+        )
+
+    if random_seed < 0:
+        raise ValueError("random_seed cannot be negative.")
+
+    genuine_user_count = ratings["user_id"].nunique()
+
+    fake_user_count = calculate_fake_user_count(
+        genuine_user_count,
+        attack_size_percent,
+    )
+
+    if fake_user_count <= 0:
+        raise ValueError(
+            "attack_size_percent produced zero synthetic users."
+        )
+
+    statistics = (
+        movie_statistics[["movie_id", "mean_rating"]]
+        .drop_duplicates(subset=["movie_id"])
+        .copy()
+    )
+
+    statistics["movie_id"] = statistics["movie_id"].astype(int)
+    statistics["mean_rating"] = statistics["mean_rating"].astype(float)
+
+    mean_rating_by_movie = dict(
+        zip(
+            statistics["movie_id"],
+            statistics["mean_rating"],
+        )
+    )
+
+    eligible_movie_ids = sorted(
+        int(movie_id)
+        for movie_id in ratings["movie_id"].unique()
+        if (
+            int(movie_id) != target_movie_id
+            and int(movie_id) in mean_rating_by_movie
+        )
+    )
+
+    if not eligible_movie_ids:
+        raise ValueError(
+            "No eligible filler movies have available mean ratings."
+        )
+
+    filler_count = round(
+        len(eligible_movie_ids) * filler_size_percent / 100
+    )
+
+    if filler_count <= 0:
+        raise ValueError(
+            "filler_size_percent produced zero filler movies."
+        )
+
+    if filler_count > len(eligible_movie_ids):
+        raise ValueError(
+            "Requested filler count exceeds the available movie catalogue."
+        )
+
+    max_genuine_user_id = int(ratings["user_id"].max())
+
+    global_rating_std = float(
+        ratings["rating"].astype(float).std(ddof=0)
+    )
+
+    if pd.isna(global_rating_std):
+        global_rating_std = 0.0
+
+    item_rating_std = (
+        ratings.groupby("movie_id")["rating"]
+        .std(ddof=0)
+        .to_dict()
+    )
+
+    rng = random.Random(random_seed)
+
+    fake_rows = []
+
+    for fake_offset in range(1, fake_user_count + 1):
+        fake_user_id = max_genuine_user_id + fake_offset
+
+        fake_rows.append(
+            {
+                "user_id": fake_user_id,
+                "movie_id": target_movie_id,
+                "rating": target_rating,
+                "attack_type": "average",
+                "target_movie_id": target_movie_id,
+            }
+        )
+
+        filler_movie_ids = rng.sample(
+            eligible_movie_ids,
+            k=filler_count,
+        )
+
+        for filler_movie_id in filler_movie_ids:
+            item_mean = mean_rating_by_movie[filler_movie_id]
+
+            if not rating_min <= item_mean <= rating_max:
+                raise ValueError(
+                    f"mean_rating for movie {filler_movie_id} "
+                    "is outside the configured rating range."
+                )
+
+            item_std = item_rating_std.get(
+                filler_movie_id,
+                global_rating_std,
+            )
+
+            if pd.isna(item_std):
+                item_std = global_rating_std
+
+            sampled_rating = rng.gauss(
+                item_mean,
+                float(item_std),
+            )
+
+            filler_rating = int(round(sampled_rating))
+
+            filler_rating = max(
+                rating_min,
+                min(rating_max, filler_rating),
+            )
+
+            fake_rows.append(
+                {
+                    "user_id": fake_user_id,
+                    "movie_id": filler_movie_id,
+                    "rating": filler_rating,
+                    "attack_type": "average",
+                    "target_movie_id": target_movie_id,
+                }
+            )
+
+    return pd.DataFrame(
+        fake_rows,
+        columns=[
+            "user_id",
+            "movie_id",
+            "rating",
+            "attack_type",
+            "target_movie_id",
+        ],
     )
