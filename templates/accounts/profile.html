@@ -1,30 +1,417 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}My Profile · RMRS{% endblock %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+
 {% block content %}
-<section class="page-section">
-    <div class="container">
-        <div class="profile-card shadow-sm mx-auto">
-            <div class="eyebrow mb-2">MY ACCOUNT</div>
-            <h1 class="h2 fw-bold">Profile</h1>
 
-            <dl class="row mt-4 mb-0">
-                <dt class="col-sm-4">Username</dt><dd class="col-sm-8">{{ request.user.username }}</dd>
-                <dt class="col-sm-4">Email</dt><dd class="col-sm-8">{{ request.user.email|default:"Not provided" }}</dd>
-                <dt class="col-sm-4">Movies Rated</dt><dd class="col-sm-8">{{ rating_count }}</dd>
-            </dl>
+<section class="profile-page">
 
-            <div class="d-flex flex-wrap gap-2 mt-4">
-                <a class="btn btn-primary" href="{% url 'movies:my_ratings' %}">My Ratings</a>
-                <a class="btn btn-outline-primary" href="{% url 'recommendations:index' %}">My Recommendations</a>
-                <a class="btn btn-outline-primary" href="{% url 'movies:my_list' %}">My List</a>
-                {% if request.user.is_staff %}<a class="btn btn-outline-dark" href="{% url 'research:lab' %}">Research Lab</a>{% endif %}
+    <div class="profile-shell">
+
+
+        <!-- ==========================================
+             LEFT PROFILE SUMMARY
+             ========================================== -->
+
+        <aside class="profile-sidebar">
+
+            <div>
+
+                <div class="profile-avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+
+
+                <p class="profile-sidebar-label">
+                    RMRS ACCOUNT
+                </p>
+
+
+                <h1>
+                    {{ request.user.username }}
+                </h1>
+
+
+                <p class="profile-sidebar-email">
+                    {{ request.user.email|default:"Email not provided" }}
+                </p>
+
+
+                <div class="profile-rating-stat">
+
+                    <span class="profile-rating-stat-label">
+                        Movies Rated
+                    </span>
+
+                    <span class="profile-rating-stat-value">
+                        {{ rating_count }}
+                    </span>
+
+                </div>
+
             </div>
 
-            <form class="mt-4" method="post" action="{% url 'accounts:logout' %}">
-                {% csrf_token %}
-                <button class="btn btn-outline-danger" type="submit">Logout</button>
-            </form>
+
+            <div class="profile-sidebar-footer">
+                HIT401 Capstone Project · Group 15 · 2026
+            </div>
+
+        </aside>
+
+
+
+        <!-- ==========================================
+             RIGHT PROFILE CONTENT
+             ========================================== -->
+
+        <div class="profile-content">
+
+
+            <p class="profile-eyebrow">
+                MY ACCOUNT
+            </p>
+
+
+            <h2 class="profile-title">
+                Profile
+            </h2>
+
+
+            <p class="profile-subtitle">
+                Review your RMRS account information and access
+                your personalised movie features.
+            </p>
+
+
+
+            <!-- ACCOUNT INFORMATION -->
+
+            <div class="profile-info-card">
+
+
+                <!-- Username -->
+
+                <div class="profile-info-row">
+
+                    <div class="profile-info-label">
+
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                            <circle
+                                cx="12"
+                                cy="8"
+                                r="4"
+                            ></circle>
+
+                            <path
+                                d="M4 21c0-4 3.6-7 8-7s8 3 8 7"
+                            ></path>
+
+                        </svg>
+
+                        <span>
+                            Username
+                        </span>
+
+                    </div>
+
+                    <div class="profile-info-value">
+                        {{ request.user.username }}
+                    </div>
+
+                </div>
+
+
+
+                <!-- Email -->
+
+                <div class="profile-info-row">
+
+                    <div class="profile-info-label">
+
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                            <rect
+                                x="3"
+                                y="5"
+                                width="18"
+                                height="14"
+                                rx="2"
+                            ></rect>
+
+                            <path
+                                d="m4 7 8 6 8-6"
+                            ></path>
+
+                        </svg>
+
+                        <span>
+                            Email
+                        </span>
+
+                    </div>
+
+                    <div class="profile-info-value">
+                        {{ request.user.email|default:"Not provided" }}
+                    </div>
+
+                </div>
+
+
+
+                <!-- Movies rated -->
+
+                <div class="profile-info-row">
+
+                    <div class="profile-info-label">
+
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                            <path
+                                d="m12 3 2.8 5.7 6.2.9-4.5
+                                4.4 1.1 6.2L12 17.3 6.4
+                                20.2 7.5 14 3 9.6l6.2-.9L12 3Z"
+                            ></path>
+
+                        </svg>
+
+                        <span>
+                            Movies Rated
+                        </span>
+
+                    </div>
+
+                    <div class="profile-info-value">
+                        {{ rating_count }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- QUICK LINKS -->
+
+            <h3 class="profile-section-title">
+                Quick Access
+            </h3>
+
+
+            <div class="profile-actions">
+
+
+                <!-- My Ratings -->
+
+                <a
+                    class="profile-action"
+                    href="{% url 'movies:my_ratings' %}"
+                >
+
+                    <span class="profile-action-icon">
+
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                            <path
+                                d="m12 3 2.8 5.7 6.2.9-4.5
+                                4.4 1.1 6.2L12 17.3 6.4
+                                20.2 7.5 14 3 9.6l6.2-.9L12 3Z"
+                            ></path>
+
+                        </svg>
+
+                    </span>
+
+
+                    <span class="profile-action-text">
+
+                        <strong>
+                            My Ratings
+                        </strong>
+
+                        <span>
+                            View your movie ratings
+                        </span>
+
+                    </span>
+
+                </a>
+
+
+
+                <!-- Recommendations -->
+
+                <a
+                    class="profile-action"
+                    href="{% url 'recommendations:index' %}"
+                >
+
+                    <span class="profile-action-icon">
+
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                            <path
+                                d="M4 19h16"
+                            ></path>
+
+                            <path
+                                d="M6 16V9"
+                            ></path>
+
+                            <path
+                                d="M12 16V5"
+                            ></path>
+
+                            <path
+                                d="M18 16v-4"
+                            ></path>
+
+                        </svg>
+
+                    </span>
+
+
+                    <span class="profile-action-text">
+
+                        <strong>
+                            Recommendations
+                        </strong>
+
+                        <span>
+                            Discover personalised movies
+                        </span>
+
+                    </span>
+
+                </a>
+
+
+
+                <!-- My List -->
+
+                <a
+                    class="profile-action"
+                    href="{% url 'movies:my_list' %}"
+                >
+
+                    <span class="profile-action-icon">
+
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                            <path d="M8 6h13"></path>
+                            <path d="M8 12h13"></path>
+                            <path d="M8 18h13"></path>
+
+                            <path d="M3 6h.01"></path>
+                            <path d="M3 12h.01"></path>
+                            <path d="M3 18h.01"></path>
+
+                        </svg>
+
+                    </span>
+
+
+                    <span class="profile-action-text">
+
+                        <strong>
+                            My List
+                        </strong>
+
+                        <span>
+                            Manage your saved movies
+                        </span>
+
+                    </span>
+
+                </a>
+
+
+
+                <!-- Staff-only robustness area -->
+
+                {% if request.user.is_staff %}
+
+                    <a
+                        class="profile-action profile-action-research"
+                        href="{% url 'research:lab' %}"
+                    >
+
+                        <span class="profile-action-icon">
+
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                                <path
+                                    d="M9 3h6"
+                                ></path>
+
+                                <path
+                                    d="M10 3v5l-5 9a2 2 0 0 0
+                                    1.7 3h10.6a2 2 0 0 0
+                                    1.7-3l-5-9V3"
+                                ></path>
+
+                                <path
+                                    d="M8 14h8"
+                                ></path>
+
+                            </svg>
+
+                        </span>
+
+
+                        <span class="profile-action-text">
+
+                            <strong>
+                                Robustness Lab
+                            </strong>
+
+                            <span>
+                                Access robustness analysis tools
+                            </span>
+
+                        </span>
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- LOGOUT -->
+
+            <div class="profile-logout-area">
+
+                <form
+                    method="post"
+                    action="{% url 'accounts:logout' %}"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        class="profile-logout-button"
+                        type="submit"
+                    >
+                        Logout
+                    </button>
+
+                </form>
+
+            </div>
+
         </div>
+
     </div>
+
 </section>
+
 {% endblock %}
