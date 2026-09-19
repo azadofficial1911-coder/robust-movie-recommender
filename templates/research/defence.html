@@ -6,6 +6,10 @@
 
 <div class="container py-5">
 
+    <a href="{% url 'research:lab' %}" class="btn btn-outline-secondary mb-4">
+        ← Back to Robustness Lab
+    </a>
+
     <div class="eyebrow mb-2">
         ROBUSTNESS ANALYSIS
     </div>
@@ -15,10 +19,8 @@
     </h1>
 
     <p class="text-secondary mb-4">
-        Defence methods will use attack and detection outputs to improve
-        the robustness of the recommendation pipeline.
+        Defence methods use attack and detection outputs to improve the robustness of the recommendation pipeline.
     </p>
-
 
     <div class="row g-4">
 
@@ -26,99 +28,56 @@
 
             <div class="profile-card">
 
-                <h2 class="h4 fw-bold mb-4">
-                    Defence Pipeline
-                </h2>
-
-                <div class="mb-4">
-
-                    <div class="fw-semibold">
-                        1. Attack Analysis
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="research-icon" aria-hidden="true">F</div>
+                    <div>
+                        <div class="eyebrow mb-1">DEFENCE WORKFLOW</div>
+                        <h2 class="h4 fw-bold mb-0">Defence Pipeline</h2>
                     </div>
-
-                    <div class="text-secondary">
-                        Receive attacked rating data from the Attack Lab.
-                    </div>
-
                 </div>
 
-
                 <div class="mb-4">
-
-                    <div class="fw-semibold">
-                        2. Suspicious-User Detection
-                    </div>
-
-                    <div class="text-secondary">
-                        Receive suspicious-user classifications and scores.
-                    </div>
-
+                    <div class="fw-semibold">1. Attack Analysis</div>
+                    <div class="text-secondary">Receive attacked rating data from the Attack Lab.</div>
                 </div>
 
-
                 <div class="mb-4">
-
-                    <div class="fw-semibold">
-                        3. Defence Processing
-                    </div>
-
-                    <div class="text-secondary">
-                        Pass the research data to the approved defence
-                        method when the backend implementation is available.
-                    </div>
-
+                    <div class="fw-semibold">2. Suspicious-User Detection</div>
+                    <div class="text-secondary">Receive suspicious-user classifications and scores.</div>
                 </div>
 
+                <div class="mb-4">
+                    <div class="fw-semibold">3. Defence Processing</div>
+                    <div class="text-secondary">
+                        Pass the research data to the approved defence method when the backend implementation is available.
+                    </div>
+                </div>
 
                 <div>
-
-                    <div class="fw-semibold">
-                        4. Evaluation
-                    </div>
-
-                    <div class="text-secondary">
-                        Send defended results to the evaluation stage for
-                        robustness comparison.
-                    </div>
-
+                    <div class="fw-semibold">4. Evaluation</div>
+                    <div class="text-secondary">Send defended results to the evaluation stage for robustness comparison.</div>
                 </div>
 
             </div>
 
         </div>
 
-
         <div class="col-lg-7">
 
             {% if results_available %}
 
                 <div class="integration-notice">
-
-                    <strong>
-                        Defence Applied -- Real Pilot Results
-                    </strong>
-
+                    <strong>Defence Applied -- Real Pilot Results</strong>
                     <p class="mb-0 mt-2 text-secondary">
-                        The figures below come directly from
-                        <code>results/tables/defence_summary_pilot.csv</code>,
-                        produced by running the primary defence
-                        (remove suspicious profiles) against the real
-                        attacked datasets and detection output.
+                        The figures below come directly from <code>results/tables/defence_summary_pilot.csv</code>, produced by running the primary defence (remove suspicious profiles) against the real attacked datasets and detection output.
                     </p>
-
                 </div>
 
-
                 <div class="profile-card mt-4">
-
-                    <h2 class="h5 fw-bold mb-3">
-                        Defence Summary
-                    </h2>
+                    <h2 class="h5 fw-bold mb-3">Defence Summary</h2>
 
                     <div class="table-responsive">
-
                         <table class="table align-middle mb-0">
-
                             <thead>
                                 <tr>
                                     <th>Scenario</th>
@@ -132,12 +91,9 @@
                             </thead>
 
                             <tbody>
-
                                 {% for row in defence_summary %}
                                     <tr>
-                                        <td class="fw-semibold text-capitalize">
-                                            {{ row.scenario }}
-                                        </td>
+                                        <td class="fw-semibold text-capitalize">{{ row.scenario }}</td>
                                         <td>{{ row.defence_method }}</td>
                                         <td>{{ row.suspicious_profiles_detected }}</td>
                                         <td>{{ row.users_before }}</td>
@@ -146,45 +102,25 @@
                                         <td>{{ row.ratings_removed }}</td>
                                     </tr>
                                 {% endfor %}
-
                             </tbody>
-
                         </table>
-
                     </div>
-
                 </div>
 
             {% else %}
 
                 <div class="integration-notice">
-
-                    <strong>
-                        Defence Integration Ready
-                    </strong>
-
+                    <strong>Defence Integration Ready</strong>
                     <p class="mb-0 mt-2 text-secondary">
-                        The RMRS presentation layer is prepared to receive the
-                        final defence implementation. No placeholder defence
-                        calculations or artificial robustness results are
-                        generated by the Django application. Run
-                        <code>experiments/apply_defence.py</code> to populate
-                        this page with real results.
+                        The RMRS presentation layer is prepared to receive the final defence implementation. No placeholder defence calculations or artificial robustness results are generated by the Django application. Run <code>experiments/apply_defence.py</code> to populate this page with real results.
                     </p>
-
                 </div>
 
-
                 <div class="profile-card mt-4">
-
-                    <h2 class="h5 fw-bold mb-3">
-                        Expected Integration Flow
-                    </h2>
+                    <h2 class="h5 fw-bold mb-3">Expected Integration Flow</h2>
 
                     <div class="table-responsive">
-
                         <table class="table align-middle mb-0">
-
                             <thead>
                                 <tr>
                                     <th>Stage</th>
@@ -193,53 +129,13 @@
                             </thead>
 
                             <tbody>
-
-                                <tr>
-                                    <td class="fw-semibold">
-                                        Attack
-                                    </td>
-
-                                    <td>
-                                        Generate attacked rating data.
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="fw-semibold">
-                                        Detection
-                                    </td>
-
-                                    <td>
-                                        Identify suspicious user profiles.
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="fw-semibold">
-                                        Defence
-                                    </td>
-
-                                    <td>
-                                        Apply the approved robustness method.
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="fw-semibold">
-                                        Evaluation
-                                    </td>
-
-                                    <td>
-                                        Compare clean, attacked and defended results.
-                                    </td>
-                                </tr>
-
+                                <tr><td class="fw-semibold">Attack</td><td>Generate attacked rating data.</td></tr>
+                                <tr><td class="fw-semibold">Detection</td><td>Identify suspicious user profiles.</td></tr>
+                                <tr><td class="fw-semibold">Defence</td><td>Apply the approved robustness method.</td></tr>
+                                <tr><td class="fw-semibold">Evaluation</td><td>Compare clean, attacked and defended results.</td></tr>
                             </tbody>
-
                         </table>
-
                     </div>
-
                 </div>
 
             {% endif %}

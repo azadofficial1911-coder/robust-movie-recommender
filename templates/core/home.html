@@ -1,61 +1,337 @@
 {% extends "base.html" %}
+
 {% block title %}Home · RMRS{% endblock %}
+
+
 {% block content %}
+
+
+<!-- =========================================================
+     FEATURED MOVIE
+     ========================================================= -->
+
 {% if featured %}
+
 <section class="stream-hero">
+
     <div class="container py-5">
+
         <div class="stream-hero-content">
-            <div class="eyebrow mb-2 text-info">FEATURED MOVIE</div>
-            <h1 class="display-4 fw-bold">{{ featured.title }}</h1>
-            <p class="lead mb-2">{{ featured.year }} · {{ featured.genres }}</p>
-            <p class="opacity-75">Average rating: {{ featured.rating }}/5</p>
-            <div class="d-flex flex-wrap gap-2 mt-4">
-                <a class="btn btn-light" href="{% url 'movies:detail' featured.id %}">Details & Rate</a>
-                <a class="btn btn-outline-light" href="{% url 'movies:explorer' %}">Browse Movies</a>
+
+            <div class="eyebrow mb-2 text-info">
+                FEATURED MOVIE
             </div>
+
+
+            <h1 class="display-4 fw-bold">
+                {{ featured.title }}
+            </h1>
+
+
+            <p class="lead mb-2">
+                {{ featured.year }}
+                ·
+                {{ featured.genres }}
+            </p>
+
+
+            <p class="opacity-75">
+                Average rating:
+                {{ featured.rating }}/5
+            </p>
+
+
+            <div class="d-flex flex-wrap gap-2 mt-4">
+
+                <a
+                    class="btn btn-light"
+                    href="{% url 'movies:detail' featured.id %}"
+                >
+                    Details &amp; Rate
+                </a>
+
+
+                <a
+                    class="btn btn-outline-light"
+                    href="{% url 'movies:explorer' %}"
+                >
+                    Browse Movies
+                </a>
+
+            </div>
+
         </div>
+
     </div>
+
 </section>
+
 {% endif %}
 
+
+
+<!-- =========================================================
+     HOME CONTENT
+     ========================================================= -->
+
 <section class="page-section">
+
     <div class="container">
-        <div class="movie-row-section">
-            <div class="d-flex justify-content-between align-items-end gap-3 mb-3">
-                <h2 class="h3 fw-bold mb-0">Recommended For You</h2>
-                <a href="{% url 'recommendations:index' %}">View recommendations</a>
-            </div>
-            {% if recommended %}
-                <div class="horizontal-movie-row">
-                    {% for item in recommended %}
-                        <div class="recommendation-mini-card"><strong>{{ item.title }}</strong><span>{{ item.predicted_rating|floatformat:2 }}</span></div>
-                    {% endfor %}
+
+
+        <!-- =================================================
+             RECOMMENDED FOR YOU
+             ================================================= -->
+
+        <section class="rmrs-recommendation-section">
+
+
+            <!-- HEADER -->
+
+            <div class="rmrs-section-header">
+
+                <div>
+
+                    <p class="rmrs-section-eyebrow">
+                        PERSONALISED DISCOVERY
+                    </p>
+
+
+                    <h2>
+                        Recommended For You
+                    </h2>
+
+
+                    <p class="rmrs-section-description">
+                        Movie suggestions based on your saved ratings
+                        and preference profile.
+                    </p>
+
                 </div>
+
+
+                <a
+                    class="rmrs-section-link"
+                    href="{% url 'recommendations:index' %}"
+                >
+                    View recommendations
+
+                    <span aria-hidden="true">
+                        →
+                    </span>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 REAL RECOMMENDATIONS
+                 ============================================= -->
+
+            {% if recommended %}
+
+                <div class="horizontal-movie-row rmrs-recommendation-row">
+
+
+                    {% for item in recommended %}
+
+                        <a
+                            class="rmrs-recommendation-card"
+                            href="{% url 'recommendations:index' %}"
+                        >
+
+
+                            <div
+                                class="rmrs-recommendation-icon"
+                                aria-hidden="true"
+                            >
+                                R
+                            </div>
+
+
+                            <div class="rmrs-recommendation-content">
+
+                                <span class="rmrs-recommendation-label">
+                                    RECOMMENDED
+                                </span>
+
+
+                                <strong>
+                                    {{ item.title }}
+                                </strong>
+
+
+                                <span class="rmrs-predicted-score">
+                                    Predicted rating:
+                                    {{ item.predicted_rating|floatformat:2 }}/5
+                                </span>
+
+                            </div>
+
+
+                            <span
+                                class="rmrs-recommendation-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </a>
+
+                    {% endfor %}
+
+
+                </div>
+
+
+
+            <!-- =============================================
+                 EMPTY / ONBOARDING STATE
+                 ============================================= -->
+
             {% else %}
-                <div class="integration-box">Your personalised recommendation row is ready to display real recommender output.</div>
+
+
+                <div class="rmrs-recommendation-empty">
+
+
+                    <div
+                        class="rmrs-recommendation-empty-icon"
+                        aria-hidden="true"
+                    >
+                        R
+                    </div>
+
+
+                    <div class="rmrs-recommendation-empty-content">
+
+                        <strong>
+                            Build your personalised recommendations
+                        </strong>
+
+
+                        <p>
+                            Rate movies to strengthen your preference profile.
+                            Your personalised recommendations will appear here.
+                        </p>
+
+                    </div>
+
+
+                    <a
+                        class="rmrs-recommendation-action"
+                        href="{% url 'movies:explorer' %}"
+                    >
+                        Browse &amp; Rate Movies
+
+                        <span aria-hidden="true">
+                            →
+                        </span>
+
+                    </a>
+
+
+                </div>
+
+
             {% endif %}
-        </div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             POPULAR MOVIES
+             ================================================= -->
 
         <div class="movie-row-section">
-            <h2 class="h3 fw-bold mb-3">Popular Movies</h2>
+
+            <h2 class="h3 fw-bold mb-3">
+                Popular Movies
+            </h2>
+
+
             <div class="horizontal-movie-row">
-                {% for movie in popular_movies %}<div class="stream-card">{% include "components/movie_card.html" with movie=movie %}</div>{% endfor %}
+
+                {% for movie in popular_movies %}
+
+                    <div class="stream-card">
+
+                        {% include "components/movie_card.html" with movie=movie %}
+
+                    </div>
+
+                {% endfor %}
+
             </div>
+
         </div>
 
-        <div class="movie-row-section">
-            <h2 class="h3 fw-bold mb-3">Action Movies</h2>
-            <div class="horizontal-movie-row">
-                {% for movie in action_movies %}<div class="stream-card">{% include "components/movie_card.html" with movie=movie %}</div>{% endfor %}
-            </div>
-        </div>
+
+
+        <!-- =================================================
+             ACTION MOVIES
+             ================================================= -->
 
         <div class="movie-row-section">
-            <h2 class="h3 fw-bold mb-3">Comedy</h2>
+
+            <h2 class="h3 fw-bold mb-3">
+                Action Movies
+            </h2>
+
+
             <div class="horizontal-movie-row">
-                {% for movie in comedy_movies %}<div class="stream-card">{% include "components/movie_card.html" with movie=movie %}</div>{% endfor %}
+
+                {% for movie in action_movies %}
+
+                    <div class="stream-card">
+
+                        {% include "components/movie_card.html" with movie=movie %}
+
+                    </div>
+
+                {% endfor %}
+
             </div>
+
         </div>
+
+
+
+        <!-- =================================================
+             COMEDY MOVIES
+             ================================================= -->
+
+        <div class="movie-row-section">
+
+            <h2 class="h3 fw-bold mb-3">
+                Comedy
+            </h2>
+
+
+            <div class="horizontal-movie-row">
+
+                {% for movie in comedy_movies %}
+
+                    <div class="stream-card">
+
+                        {% include "components/movie_card.html" with movie=movie %}
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
     </div>
+
 </section>
+
+
 {% endblock %}

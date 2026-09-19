@@ -6,6 +6,10 @@
 
 <div class="container py-5">
 
+    <a href="{% url 'research:lab' %}" class="btn btn-outline-secondary mb-4">
+        ← Back to Robustness Lab
+    </a>
+
     <div class="eyebrow mb-2">
         ROBUSTNESS ANALYSIS
     </div>
@@ -32,143 +36,65 @@
 
     <div class="row g-4">
 
-        <!-- Attack Configuration -->
         <div class="col-lg-5">
 
-            <div class="profile-card">
+            <div class="profile-card h-100">
 
-                <h2 class="h4 fw-bold mb-4">
-                    Experiment Configuration
-                </h2>
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="research-icon" aria-hidden="true">A</div>
+                    <div>
+                        <div class="eyebrow mb-1">ATTACK SETUP</div>
+                        <h2 class="h4 fw-bold mb-0">Experiment Configuration</h2>
+                    </div>
+                </div>
 
                 <form method="post">
 
                     {% csrf_token %}
 
-                    <!-- Attack Type -->
                     <div class="mb-3">
+                        <label class="form-label">Attack Type</label>
 
-                        <label class="form-label">
-                            Attack Type
-                        </label>
-
-                        <select
-                            class="form-select"
-                            name="attack_type">
-
-                            <option
-                                value="random"
-                                {% if form_data.attack_type == "random" %}
-                                    selected
-                                {% endif %}
-                            >
+                        <select class="form-select" name="attack_type">
+                            <option value="random" {% if form_data.attack_type == "random" %}selected{% endif %}>
                                 Random Push
                             </option>
-
-                            <option
-                                value="average"
-                                {% if form_data.attack_type == "average" %}
-                                    selected
-                                {% endif %}
-                            >
+                            <option value="average" {% if form_data.attack_type == "average" %}selected{% endif %}>
                                 Average Push
                             </option>
-
                         </select>
-
                     </div>
 
-                    <!-- Target Movie -->
                     <div class="mb-3">
+                        <label class="form-label">Target Movie</label>
 
-                        <label class="form-label">
-                            Target Movie
-                        </label>
-
-                        <select
-                            class="form-select"
-                            name="target_movie_id"
-                            required>
-
-                            <option value="">
-                                Select Movie
-                            </option>
+                        <select class="form-select" name="target_movie_id" required>
+                            <option value="">Select Movie</option>
 
                             {% for movie in movies %}
-
-                                <option
-                                    value="{{ movie.id }}"
-                                    {% if form_data.target_movie_id|stringformat:"s" == movie.id|stringformat:"s" %}
-                                        selected
-                                    {% endif %}
-                                >
+                                <option value="{{ movie.id }}" {% if form_data.target_movie_id|stringformat:"s" == movie.id|stringformat:"s" %}selected{% endif %}>
                                     {{ movie.title }}
                                 </option>
-
                             {% endfor %}
-
                         </select>
-
                     </div>
 
-                    <!-- Attack Size -->
                     <div class="mb-3">
-
-                        <label class="form-label">
-                            Attack Size (%)
-                        </label>
-
-                        <input
-                            class="form-control"
-                            type="number"
-                            name="attack_size_percent"
-                            min="1"
-                            max="100"
-                            step="0.1"
-                            value="{{ form_data.attack_size_percent }}"
-                            required>
-
+                        <label class="form-label">Attack Size (%)</label>
+                        <input class="form-control" type="number" name="attack_size_percent" min="1" max="100" step="0.1" value="{{ form_data.attack_size_percent }}" required>
                     </div>
 
-                    <!-- Filler Size -->
                     <div class="mb-3">
-
-                        <label class="form-label">
-                            Filler Size (%)
-                        </label>
-
-                        <input
-                            class="form-control"
-                            type="number"
-                            name="filler_size_percent"
-                            min="1"
-                            max="100"
-                            step="0.1"
-                            value="{{ form_data.filler_size_percent }}"
-                            required>
-
+                        <label class="form-label">Filler Size (%)</label>
+                        <input class="form-control" type="number" name="filler_size_percent" min="1" max="100" step="0.1" value="{{ form_data.filler_size_percent }}" required>
                     </div>
 
-                    <!-- Random Seed -->
                     <div class="mb-4">
-
-                        <label class="form-label">
-                            Random Seed
-                        </label>
-
-                        <input
-                            class="form-control"
-                            type="number"
-                            name="random_seed"
-                            min="0"
-                            value="{{ form_data.random_seed }}"
-                            required>
-
+                        <label class="form-label">Random Seed</label>
+                        <input class="form-control" type="number" name="random_seed" min="0" value="{{ form_data.random_seed }}" required>
                     </div>
 
-                    <button
-                        class="btn btn-primary w-100"
-                        type="submit">
+                    <button class="btn btn-primary w-100" type="submit">
                         Validate Configuration
                     </button>
 
@@ -178,108 +104,54 @@
 
         </div>
 
-
-        <!-- Result / Integration Status -->
         <div class="col-lg-7">
 
             {% if config_valid %}
 
                 <div class="profile-card">
-
-                    <div class="eyebrow mb-2">
-                        CONFIGURATION VALID
-                    </div>
-
-                    <h2 class="h4 fw-bold mb-3">
-                        Attack Configuration Validated
-                    </h2>
+                    <div class="eyebrow mb-2">CONFIGURATION VALID</div>
+                    <h2 class="h4 fw-bold mb-3">Attack Configuration Validated</h2>
 
                     <p class="text-secondary">
-                        The experiment configuration is valid and ready
-                        to be passed to the attack-generation backend.
+                        The experiment configuration is valid and ready to be passed to the attack-generation backend.
                     </p>
 
                     <dl class="row mb-0">
-
-                        <dt class="col-sm-5">
-                            Attack Type
-                        </dt>
-
+                        <dt class="col-sm-5">Attack Type</dt>
                         <dd class="col-sm-7">
-                            {% if form_data.attack_type == "random" %}
-                                Random Push
-                            {% else %}
-                                Average Push
-                            {% endif %}
+                            {% if form_data.attack_type == "random" %}Random Push{% else %}Average Push{% endif %}
                         </dd>
 
-                        <dt class="col-sm-5">
-                            Target Movie ID
-                        </dt>
+                        <dt class="col-sm-5">Target Movie ID</dt>
+                        <dd class="col-sm-7">{{ form_data.target_movie_id }}</dd>
 
-                        <dd class="col-sm-7">
-                            {{ form_data.target_movie_id }}
-                        </dd>
+                        <dt class="col-sm-5">Attack Size</dt>
+                        <dd class="col-sm-7">{{ form_data.attack_size_percent }}%</dd>
 
-                        <dt class="col-sm-5">
-                            Attack Size
-                        </dt>
+                        <dt class="col-sm-5">Filler Size</dt>
+                        <dd class="col-sm-7">{{ form_data.filler_size_percent }}%</dd>
 
-                        <dd class="col-sm-7">
-                            {{ form_data.attack_size_percent }}%
-                        </dd>
-
-                        <dt class="col-sm-5">
-                            Filler Size
-                        </dt>
-
-                        <dd class="col-sm-7">
-                            {{ form_data.filler_size_percent }}%
-                        </dd>
-
-                        <dt class="col-sm-5">
-                            Random Seed
-                        </dt>
-
-                        <dd class="col-sm-7">
-                            {{ form_data.random_seed }}
-                        </dd>
-
+                        <dt class="col-sm-5">Random Seed</dt>
+                        <dd class="col-sm-7">{{ form_data.random_seed }}</dd>
                     </dl>
-
                 </div>
 
             {% elif attack_requested and not errors %}
 
                 <div class="integration-notice">
-
-                    <strong>
-                        Attack Backend Integration Pending
-                    </strong>
-
+                    <strong>Attack Backend Integration Pending</strong>
                     <p class="mb-0 mt-2 text-secondary">
-                        The configuration was received successfully.
-                        Real Random Push or Average Push results will appear
-                        here when the processed dataset and attack backend
-                        are connected.
+                        The configuration was received successfully. Real Random Push or Average Push results will appear here when the processed dataset and attack backend are connected.
                     </p>
-
                 </div>
 
             {% else %}
 
                 <div class="integration-notice">
-
-                    <strong>
-                        Attack Integration Ready
-                    </strong>
-
+                    <strong>Attack Configuration</strong>
                     <p class="mb-0 mt-2 text-secondary">
-                        Configure the experiment on the left.
-                        RMRS will validate the parameters before they are
-                        passed to the attack-generation backend.
+                        Configure the experiment on the left. RMRS will validate the parameters before they are passed to the attack-generation backend.
                     </p>
-
                 </div>
 
             {% endif %}

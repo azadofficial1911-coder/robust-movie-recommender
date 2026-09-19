@@ -1,51 +1,397 @@
-<nav class="navbar navbar-expand-xl navbar-dark rmrs-navbar sticky-top" aria-label="Main navigation">
+<nav class="navbar navbar-expand-xl navbar-dark rmrs-navbar sticky-top"
+     aria-label="Main navigation">
+
     <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{% if request.user.is_authenticated %}{% url 'core:home' %}{% else %}{% url 'accounts:login' %}{% endif %}">
-            <span class="brand-mark" aria-hidden="true">R</span>
-            <span>RMRS</span>
+
+        <!-- ==================================================
+             RMRS BRAND
+             ================================================== -->
+
+        <a class="navbar-brand rmrs-brand"
+           href="{% if request.user.is_authenticated %}{% url 'core:home' %}{% else %}{% url 'accounts:login' %}{% endif %}">
+
+            <span class="brand-mark" aria-hidden="true">
+                R
+            </span>
+
+            <span class="rmrs-brand-text">
+                <strong>RMRS</strong>
+                <small>Movie Recommender</small>
+            </span>
+
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-                aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+
+
+        <!-- ==================================================
+             MOBILE MENU BUTTON
+             ================================================== -->
+
+        <button class="navbar-toggler rmrs-navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+
             <span class="navbar-toggler-icon"></span>
+
         </button>
 
-        <div class="collapse navbar-collapse" id="mainNavbar">
-            {% if request.user.is_authenticated %}
-                <ul class="navbar-nav ms-auto gap-xl-1 align-items-xl-center">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'core:home' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'movies:explorer' %}">Browse</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'recommendations:index' %}">Recommendations</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'movies:my_ratings' %}">My Ratings</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'movies:my_list' %}">My List</a></li>
 
-                    <li class="nav-item dropdown">
-                        <button class="btn nav-link dropdown-toggle border-0 bg-transparent" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ request.user.username }}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">My Profile</a></li>
-                            <li><a class="dropdown-item" href="{% url 'movies:my_ratings' %}">My Ratings</a></li>
-                            <li><a class="dropdown-item" href="{% url 'movies:my_list' %}">My List</a></li>
-                            {% if request.user.is_staff %}
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'research:lab' %}">Research Lab</a></li>
-                            {% endif %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form method="post" action="{% url 'accounts:logout' %}">
-                                    {% csrf_token %}
-                                    <button class="dropdown-item" type="submit">Logout</button>
-                                </form>
-                            </li>
-                        </ul>
+        <!-- ==================================================
+             NAVIGATION
+             ================================================== -->
+
+        <div class="collapse navbar-collapse"
+             id="mainNavbar">
+
+            {% if request.user.is_authenticated %}
+
+                <ul class="navbar-nav ms-auto align-items-xl-center rmrs-nav-list">
+
+
+                    <!-- HOME -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link rmrs-nav-link
+                           {% if request.resolver_match.namespace == 'core' %}active{% endif %}"
+                           href="{% url 'core:home' %}">
+
+                            Home
+
+                        </a>
+
                     </li>
+
+
+                    <!-- BROWSE -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link rmrs-nav-link
+                           {% if request.resolver_match.namespace == 'movies' and request.resolver_match.url_name == 'explorer' %}active{% endif %}"
+                           href="{% url 'movies:explorer' %}">
+
+                            Browse
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- RECOMMENDATIONS -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link rmrs-nav-link
+                           {% if request.resolver_match.namespace == 'recommendations' %}active{% endif %}"
+                           href="{% url 'recommendations:index' %}">
+
+                            Recommendations
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- MY RATINGS -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link rmrs-nav-link
+                           {% if request.resolver_match.namespace == 'movies' and request.resolver_match.url_name == 'my_ratings' %}active{% endif %}"
+                           href="{% url 'movies:my_ratings' %}">
+
+                            My Ratings
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- MY LIST -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link rmrs-nav-link
+                           {% if request.resolver_match.namespace == 'movies' and request.resolver_match.url_name == 'my_list' %}active{% endif %}"
+                           href="{% url 'movies:my_list' %}">
+
+                            My List
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- ==================================================
+                         USER DROPDOWN
+                         ================================================== -->
+
+                    <li class="nav-item dropdown rmrs-user-dropdown">
+
+                        <button class="nav-link rmrs-user-button dropdown-toggle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+
+                            <span class="rmrs-user-avatar"
+                                  aria-hidden="true">
+
+                                {{ request.user.username|first|upper }}
+
+                            </span>
+
+                            <span class="rmrs-user-name">
+                                {{ request.user.username }}
+                            </span>
+
+                        </button>
+
+
+                        <ul class="dropdown-menu dropdown-menu-end rmrs-dropdown-menu">
+
+
+                            <!-- ACCOUNT SUMMARY -->
+
+                            <li class="rmrs-dropdown-header">
+
+                                <div class="rmrs-dropdown-avatar"
+                                     aria-hidden="true">
+
+                                    {{ request.user.username|first|upper }}
+
+                                </div>
+
+
+                                <div class="rmrs-dropdown-account">
+
+                                    <strong>
+                                        {{ request.user.username }}
+                                    </strong>
+
+                                    <span>
+                                        {{ request.user.email|default:"RMRS account" }}
+                                    </span>
+
+                                </div>
+
+                            </li>
+
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+
+
+                            <!-- MY PROFILE -->
+
+                            <li>
+
+                                <a class="dropdown-item rmrs-dropdown-item"
+                                   href="{% url 'accounts:profile' %}">
+
+                                    <span class="rmrs-menu-symbol"
+                                          aria-hidden="true">
+
+                                        P
+
+                                    </span>
+
+                                    <span>
+                                        My Profile
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+
+
+                            <!-- MY RATINGS -->
+
+                            <li>
+
+                                <a class="dropdown-item rmrs-dropdown-item"
+                                   href="{% url 'movies:my_ratings' %}">
+
+                                    <span class="rmrs-menu-symbol"
+                                          aria-hidden="true">
+
+                                        ★
+
+                                    </span>
+
+                                    <span>
+                                        My Ratings
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+
+
+                            <!-- MY LIST -->
+
+                            <li>
+
+                                <a class="dropdown-item rmrs-dropdown-item"
+                                   href="{% url 'movies:my_list' %}">
+
+                                    <span class="rmrs-menu-symbol"
+                                          aria-hidden="true">
+
+                                        ≡
+
+                                    </span>
+
+                                    <span>
+                                        My List
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+
+
+                            <!-- ==================================================
+                                 STAFF ONLY
+                                 ================================================== -->
+
+                            {% if request.user.is_staff %}
+
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+
+
+                                <li>
+
+                                    <a class="dropdown-item
+                                              rmrs-dropdown-item
+                                              rmrs-robustness-item"
+                                       href="{% url 'research:lab' %}">
+
+                                        <span class="rmrs-menu-symbol
+                                                     rmrs-symbol-teal"
+                                              aria-hidden="true">
+
+                                            R
+
+                                        </span>
+
+
+                                        <span class="rmrs-menu-copy">
+
+                                            <strong>
+                                                Robustness Lab
+                                            </strong>
+
+                                            <small>
+                                                Staff analysis tools
+                                            </small>
+
+                                        </span>
+
+                                    </a>
+
+                                </li>
+
+                            {% endif %}
+
+
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+
+
+                            <!-- LOGOUT -->
+
+                            <li>
+
+                                <form method="post"
+                                      action="{% url 'accounts:logout' %}">
+
+                                    {% csrf_token %}
+
+
+                                    <button class="dropdown-item
+                                                   rmrs-dropdown-item
+                                                   rmrs-logout-item"
+                                            type="submit">
+
+                                        <span class="rmrs-menu-symbol
+                                                     rmrs-symbol-red"
+                                              aria-hidden="true">
+
+                                            ↪
+
+                                        </span>
+
+                                        <span>
+                                            Logout
+                                        </span>
+
+                                    </button>
+
+                                </form>
+
+                            </li>
+
+                        </ul>
+
+                    </li>
+
                 </ul>
+
+
             {% else %}
-                <ul class="navbar-nav ms-auto gap-xl-1">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:signup' %}">Sign Up</a></li>
+
+
+                <!-- ==================================================
+                     PUBLIC NAVIGATION
+                     ================================================== -->
+
+                <ul class="navbar-nav ms-auto rmrs-public-nav">
+
+
+                    <li class="nav-item">
+
+                        <a class="nav-link rmrs-nav-link"
+                           href="{% url 'accounts:login' %}">
+
+                            Login
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="nav-item">
+
+                        <a class="btn rmrs-signup-nav-button"
+                           href="{% url 'accounts:signup' %}">
+
+                            Sign Up
+
+                        </a>
+
+                    </li>
+
                 </ul>
+
             {% endif %}
+
         </div>
+
     </div>
+
 </nav>

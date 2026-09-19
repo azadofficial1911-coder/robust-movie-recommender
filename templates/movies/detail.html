@@ -5,243 +5,437 @@
 
 {% block content %}
 
-<section class="page-section">
-    <div class="container py-5">
+<section class="page-section rmrs-detail-page">
 
-        <!-- Back Button -->
-        <a href="{% url 'movies:explorer' %}"
-           class="btn btn-outline-secondary mb-4">
-            ← Back to Browse
+    <div class="container py-4 py-lg-5">
+
+
+        <!-- =================================================
+             BACK BUTTON
+             ================================================= -->
+
+        <a
+            href="{% url 'movies:explorer' %}"
+            class="rmrs-detail-back"
+        >
+            <span aria-hidden="true">←</span>
+            Back to Browse
         </a>
 
-        <div class="row g-5 align-items-start">
 
-            <!-- Movie Poster -->
+        <div class="row g-4 g-lg-5 align-items-start mt-1">
+
+
+            <!-- =================================================
+                 MOVIE POSTER
+                 ================================================= -->
+
             <div class="col-lg-4">
 
-                {% if movie.poster %}
-                    <img
-                        src="{% static movie.poster %}?v=3"
-                        alt="{{ movie.title }}"
-                        class="img-fluid rounded shadow-sm w-100"
-                    >
-                {% else %}
-                    <div class="profile-card text-center py-5">
-                        <div class="py-5">
-                            <h2 class="fw-bold">RMRS</h2>
+                <div class="rmrs-detail-poster-wrap">
+
+
+                    {% if movie.poster %}
+
+                        <img
+                            src="{% static movie.poster %}?v=4"
+                            alt="Poster for {{ movie.title }}"
+                            class="rmrs-detail-poster"
+                            onerror="
+                                this.style.display='none';
+                                this.nextElementSibling.style.display='flex';
+                            "
+                        >
+
+
+                        <!-- Broken-image fallback -->
+
+                        <div
+                            class="rmrs-detail-poster-fallback"
+                            role="img"
+                            aria-label="Poster placeholder for {{ movie.title }}"
+                            style="display:none;"
+                        >
+
+                            <div class="rmrs-detail-poster-brand">
+                                RMRS
+                            </div>
+
+
+                            <div class="rmrs-detail-poster-content">
+
+                                <span>
+                                    MOVIE
+                                </span>
+
+                                <strong>
+                                    {{ movie.title }}
+                                </strong>
+
+                            </div>
+
                         </div>
-                    </div>
-                {% endif %}
+
+
+                    {% else %}
+
+
+                        <!-- No-poster fallback -->
+
+                        <div
+                            class="rmrs-detail-poster-fallback"
+                            role="img"
+                            aria-label="Poster placeholder for {{ movie.title }}"
+                        >
+
+                            <div class="rmrs-detail-poster-brand">
+                                RMRS
+                            </div>
+
+
+                            <div class="rmrs-detail-poster-content">
+
+                                <span>
+                                    MOVIE
+                                </span>
+
+                                <strong>
+                                    {{ movie.title }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                    {% endif %}
+
+
+                </div>
 
             </div>
 
-            <!-- Movie Information -->
+
+
+            <!-- =================================================
+                 MOVIE DETAILS
+                 ================================================= -->
+
             <div class="col-lg-8">
 
-                <div class="eyebrow mb-2">
-                    MOVIE DETAILS
+
+                <div class="rmrs-detail-heading">
+
+                    <div class="eyebrow mb-2">
+                        MOVIE DETAILS
+                    </div>
+
+
+                    <h1>
+                        {{ movie.title }}
+                    </h1>
+
+
+                    <p>
+                        {{ movie.year }}
+                        <span>·</span>
+                        {{ movie.genres }}
+                    </p>
+
                 </div>
 
-                <h1 class="display-5 fw-bold mb-3">
-                    {{ movie.title }}
-                </h1>
 
-                <p class="fs-5 text-secondary mb-4">
-                    {{ movie.year }} · {{ movie.genres }}
-                </p>
 
-                <!-- Movie Information Card -->
-                <div class="profile-card mb-4">
+                <!-- =================================================
+                     MOVIE INFORMATION
+                     ================================================= -->
 
-                    <h2 class="h4 fw-bold mb-4">
+                <section class="rmrs-detail-panel">
+
+                    <h2>
                         Movie Information
                     </h2>
 
-                    <div class="row g-4">
 
-                        <div class="col-sm-6">
-                            <div class="text-secondary small">
+                    <div class="rmrs-detail-info-grid">
+
+
+                        <div class="rmrs-detail-info-item">
+
+                            <span>
                                 Release Year
-                            </div>
+                            </span>
 
-                            <div class="fw-semibold">
+                            <strong>
                                 {{ movie.year }}
-                            </div>
+                            </strong>
+
                         </div>
 
-                        <div class="col-sm-6">
-                            <div class="text-secondary small">
+
+                        <div class="rmrs-detail-info-item">
+
+                            <span>
                                 Average Rating
+                            </span>
+
+                            <div class="rmrs-detail-average-rating">
+
+                                <span
+                                    class="rmrs-detail-stars"
+                                    aria-hidden="true"
+                                >
+                                    ★★★★★
+                                </span>
+
+                                <strong>
+                                    {{ movie.rating }}/5
+                                </strong>
+
                             </div>
 
-                            <div class="fw-semibold">
-                                {{ movie.rating }}/5
-                            </div>
                         </div>
 
-                        <div class="col-12">
-                            <div class="text-secondary small">
+
+                        <div class="rmrs-detail-info-item rmrs-detail-info-wide">
+
+                            <span>
                                 Genres
-                            </div>
+                            </span>
 
-                            <div class="fw-semibold">
+                            <strong>
                                 {{ movie.genres }}
-                            </div>
+                            </strong>
+
                         </div>
+
 
                     </div>
 
-                </div>
+                </section>
 
-                <!-- Your Rating Card -->
-                <div class="profile-card mb-4">
 
-                    <h2 class="h4 fw-bold mb-2">
-                        Your Rating
-                    </h2>
 
-                    <p class="text-secondary mb-4">
-                        Rate this movie from 1 to 5.
-                        You can change your rating at any time.
-                    </p>
+                <!-- =================================================
+                     YOUR RATING
+                     ================================================= -->
+
+                <section class="rmrs-detail-panel">
+
+                    <div class="rmrs-detail-panel-heading">
+
+                        <div>
+
+                            <h2>
+                                Your Rating
+                            </h2>
+
+                            <p>
+                                Rate this movie from 1 to 5.
+                                You can change your rating at any time.
+                            </p>
+
+                        </div>
+
+
+                        {% if saved_rating %}
+
+                            <span class="rmrs-current-rating">
+
+                                Current:
+                                {{ saved_rating.rating }}/5
+
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
 
                     <form
                         method="post"
                         action="{% url 'movies:rate' movie.id %}"
                     >
+
                         {% csrf_token %}
 
-                        <div class="mb-3">
 
-                            <label
-                                for="rating"
-                                class="form-label fw-semibold"
+                        <div class="rmrs-rating-form">
+
+                            <div class="rmrs-rating-select-wrap">
+
+                                <label
+                                    for="rating"
+                                    class="form-label fw-semibold"
+                                >
+                                    Select Rating
+                                </label>
+
+
+                                <select
+                                    id="rating"
+                                    name="rating"
+                                    class="form-select"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Choose a rating
+                                    </option>
+
+
+                                    <option
+                                        value="1"
+                                        {% if saved_rating and saved_rating.rating == 1 %}selected{% endif %}
+                                    >
+                                        ★☆☆☆☆ — 1 / 5
+                                    </option>
+
+
+                                    <option
+                                        value="2"
+                                        {% if saved_rating and saved_rating.rating == 2 %}selected{% endif %}
+                                    >
+                                        ★★☆☆☆ — 2 / 5
+                                    </option>
+
+
+                                    <option
+                                        value="3"
+                                        {% if saved_rating and saved_rating.rating == 3 %}selected{% endif %}
+                                    >
+                                        ★★★☆☆ — 3 / 5
+                                    </option>
+
+
+                                    <option
+                                        value="4"
+                                        {% if saved_rating and saved_rating.rating == 4 %}selected{% endif %}
+                                    >
+                                        ★★★★☆ — 4 / 5
+                                    </option>
+
+
+                                    <option
+                                        value="5"
+                                        {% if saved_rating and saved_rating.rating == 5 %}selected{% endif %}
+                                    >
+                                        ★★★★★ — 5 / 5
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                class="rmrs-detail-primary-button"
                             >
-                                Select Rating
-                            </label>
 
-                            <select
-                                id="rating"
-                                name="rating"
-                                class="form-select"
-                                required
-                            >
-                                <option value="">
-                                    Choose a rating
-                                </option>
+                                {% if saved_rating %}
+                                    Update Rating
+                                {% else %}
+                                    Save Rating
+                                {% endif %}
 
-                                <option value="1"
-                                    {% if saved_rating and saved_rating.rating == 1 %}selected{% endif %}>
-                                    ★☆☆☆☆ — 1 / 5
-                                </option>
-
-                                <option value="2"
-                                    {% if saved_rating and saved_rating.rating == 2 %}selected{% endif %}>
-                                    ★★☆☆☆ — 2 / 5
-                                </option>
-
-                                <option value="3"
-                                    {% if saved_rating and saved_rating.rating == 3 %}selected{% endif %}>
-                                    ★★★☆☆ — 3 / 5
-                                </option>
-
-                                <option value="4"
-                                    {% if saved_rating and saved_rating.rating == 4 %}selected{% endif %}>
-                                    ★★★★☆ — 4 / 5
-                                </option>
-
-                                <option value="5"
-                                    {% if saved_rating and saved_rating.rating == 5 %}selected{% endif %}>
-                                    ★★★★★ — 5 / 5
-                                </option>
-
-                            </select>
+                            </button>
 
                         </div>
 
-                        <button
-                            type="submit"
-                            class="btn btn-primary"
-                        >
-                            {% if saved_rating %}
-                                Update Rating
-                            {% else %}
-                                Save Rating
-                            {% endif %}
-                        </button>
-
-                        {% if saved_rating %}
-                            <span class="ms-3 text-secondary">
-                                Current rating:
-                                <strong>{{ saved_rating.rating }}/5</strong>
-                            </span>
-                        {% endif %}
-
                     </form>
 
-                </div>
+                </section>
 
-                <!-- My List Card -->
-                <div class="profile-card">
 
-                    <h2 class="h4 fw-bold mb-2">
-                        My List
-                    </h2>
 
-                    <p class="text-secondary mb-3">
-                        Save movies you want to revisit later.
-                    </p>
+                <!-- =================================================
+                     MY LIST
+                     ================================================= -->
+
+                <section class="rmrs-detail-panel">
+
+                    <div class="rmrs-detail-panel-heading">
+
+                        <div>
+
+                            <h2>
+                                My List
+                            </h2>
+
+                            <p>
+                                Save this movie so you can revisit it later.
+                            </p>
+
+                        </div>
+
+                    </div>
+
 
                     <form
                         method="post"
                         action="{% url 'movies:toggle_list' movie.id %}"
                     >
+
                         {% csrf_token %}
 
+
                         {% if in_list %}
+
                             <button
                                 type="submit"
-                                class="btn btn-outline-danger"
+                                class="rmrs-detail-danger-button"
                             >
                                 Remove from My List
                             </button>
+
                         {% else %}
+
                             <button
                                 type="submit"
-                                class="btn btn-outline-primary"
+                                class="rmrs-detail-secondary-button"
                             >
                                 + Add to My List
                             </button>
+
                         {% endif %}
 
                     </form>
 
-                </div>
+                </section>
 
-                <!-- Navigation -->
-                <div class="mt-4">
+
+
+                <!-- =================================================
+                     QUICK LINKS
+                     ================================================= -->
+
+                <div class="rmrs-detail-quick-links">
 
                     <a
                         href="{% url 'movies:my_ratings' %}"
-                        class="btn btn-outline-secondary"
+                        class="rmrs-detail-link-button"
                     >
                         View My Ratings
                     </a>
 
+
                     <a
                         href="{% url 'movies:my_list' %}"
-                        class="btn btn-outline-secondary ms-2"
+                        class="rmrs-detail-link-button"
                     >
                         View My List
                     </a>
 
                 </div>
 
+
             </div>
 
         </div>
 
     </div>
+
 </section>
 
 {% endblock %}

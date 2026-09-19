@@ -1,40 +1,443 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}Create Account · RMRS{% endblock %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+{% endblock %}
+
+
 {% block content %}
-<section class="auth-page">
-    <div class="auth-card shadow-sm">
-        <div class="eyebrow mb-2">JOIN RMRS</div>
-        <h1 class="h2 fw-bold mb-2">Create Account</h1>
-        <p class="text-secondary mb-4">Create your account and start building your movie preferences.</p>
 
-        <form method="post" novalidate>
-            {% csrf_token %}
-            <div class="mb-3">
-                <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
-                {{ form.username }}
-                {% for error in form.username.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
-                {{ form.email }}
-                {% for error in form.email.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="{{ form.password1.id_for_label }}">Password</label>
-                {{ form.password1 }}
-                {% for error in form.password1.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-            </div>
-            <div class="mb-4">
-                <label class="form-label" for="{{ form.password2.id_for_label }}">Confirm Password</label>
-                {{ form.password2 }}
-                {% for error in form.password2.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-            </div>
-            <button class="btn btn-primary w-100 py-2" type="submit">Sign Up</button>
-        </form>
+<section class="signup-page">
 
-        <p class="text-center text-secondary mt-4 mb-0">
-            Already have an account? <a href="{% url 'accounts:login' %}">Login</a>
-        </p>
+    <div class="signup-shell">
+
+
+        <!-- LEFT BRAND PANEL -->
+
+        <div class="signup-brand">
+
+            <div class="signup-brand-inner">
+
+                <div class="signup-logo">
+                    R
+                </div>
+
+                <p class="signup-brand-label">
+                    ROBUST MOVIE RECOMMENDER SYSTEM
+                </p>
+
+                <h1>
+                    Build your movie profile.
+                </h1>
+
+                <p class="signup-brand-description">
+                    Create an RMRS account to rate movies,
+                    manage your watchlist and build personalised
+                    recommendations around your preferences.
+                </p>
+
+
+                <div class="signup-feature-list">
+
+                    <div class="signup-feature">
+                        <span class="signup-feature-check">✓</span>
+                        <span>Rate movies and save your preferences</span>
+                    </div>
+
+                    <div class="signup-feature">
+                        <span class="signup-feature-check">✓</span>
+                        <span>Build and manage your personal watchlist</span>
+                    </div>
+
+                    <div class="signup-feature">
+                        <span class="signup-feature-check">✓</span>
+                        <span>Receive personalised recommendations</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="signup-brand-footer">
+                HIT401 Capstone Project · Group 15 · 2026
+            </div>
+
+        </div>
+
+
+
+        <!-- RIGHT SIGNUP PANEL -->
+
+        <div class="signup-form-panel">
+
+            <div class="signup-form-content">
+
+
+                <div class="signup-mobile-logo">
+                    R
+                </div>
+
+
+                <p class="signup-eyebrow">
+                    JOIN RMRS
+                </p>
+
+                <h2 class="signup-title">
+                    Create Account
+                </h2>
+
+                <p class="signup-subtitle">
+                    Create your account and start building your movie preferences.
+                </p>
+
+
+                {% if form.non_field_errors %}
+
+                    <div
+                        class="signup-error"
+                        role="alert"
+                    >
+                        {{ form.non_field_errors }}
+                    </div>
+
+                {% endif %}
+
+
+                <form
+                    method="post"
+                    class="signup-form"
+                    novalidate
+                >
+
+                    {% csrf_token %}
+
+
+
+                    <!-- USERNAME -->
+
+                    <div class="signup-field">
+
+                        <label for="{{ form.username.id_for_label }}">
+                            Username
+                        </label>
+
+                        <div class="signup-input-wrap">
+
+                            <span class="signup-input-icon">
+
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                                    <circle
+                                        cx="12"
+                                        cy="8"
+                                        r="4"
+                                    ></circle>
+
+                                    <path
+                                        d="M4 21c0-4 3.6-7 8-7s8 3 8 7"
+                                    ></path>
+
+                                </svg>
+
+                            </span>
+
+                            {{ form.username }}
+
+                        </div>
+
+
+                        {% for error in form.username.errors %}
+
+                            <div class="signup-field-error">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- EMAIL -->
+
+                    <div class="signup-field">
+
+                        <label for="{{ form.email.id_for_label }}">
+                            Email
+                        </label>
+
+                        <div class="signup-input-wrap">
+
+                            <span class="signup-input-icon">
+
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                                    <rect
+                                        x="3"
+                                        y="5"
+                                        width="18"
+                                        height="14"
+                                        rx="2"
+                                    ></rect>
+
+                                    <path
+                                        d="m4 7 8 6 8-6"
+                                    ></path>
+
+                                </svg>
+
+                            </span>
+
+                            {{ form.email }}
+
+                        </div>
+
+
+                        {% for error in form.email.errors %}
+
+                            <div class="signup-field-error">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="signup-field">
+
+                        <label for="{{ form.password1.id_for_label }}">
+                            Password
+                        </label>
+
+                        <div class="signup-input-wrap">
+
+                            <span class="signup-input-icon">
+
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                                    <rect
+                                        x="5"
+                                        y="10"
+                                        width="14"
+                                        height="10"
+                                        rx="2"
+                                    ></rect>
+
+                                    <path
+                                        d="M8 10V7a4 4 0 0 1 8 0v3"
+                                    ></path>
+
+                                </svg>
+
+                            </span>
+
+                            {{ form.password1 }}
+
+                            <button
+                                type="button"
+                                class="signup-password-toggle"
+                                data-password-toggle="{{ form.password1.id_for_label }}"
+                                aria-label="Show password"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+
+                        {% for error in form.password1.errors %}
+
+                            <div class="signup-field-error">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+
+                        <p class="signup-password-hint">
+                            Use a secure password that is difficult to guess.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- CONFIRM PASSWORD -->
+
+                    <div class="signup-field">
+
+                        <label for="{{ form.password2.id_for_label }}">
+                            Confirm Password
+                        </label>
+
+                        <div class="signup-input-wrap">
+
+                            <span class="signup-input-icon">
+
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                                    <rect
+                                        x="5"
+                                        y="10"
+                                        width="14"
+                                        height="10"
+                                        rx="2"
+                                    ></rect>
+
+                                    <path
+                                        d="M8 10V7a4 4 0 0 1 8 0v3"
+                                    ></path>
+
+                                </svg>
+
+                            </span>
+
+                            {{ form.password2 }}
+
+                            <button
+                                type="button"
+                                class="signup-password-toggle"
+                                data-password-toggle="{{ form.password2.id_for_label }}"
+                                aria-label="Show password"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+
+                        {% for error in form.password2.errors %}
+
+                            <div class="signup-field-error">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- SIGN UP BUTTON -->
+
+                    <button
+                        class="signup-submit"
+                        type="submit"
+                    >
+                        Create Account
+                    </button>
+
+                </form>
+
+
+
+                <!-- LOGIN LINK -->
+
+                <div class="signup-divider">
+
+                    <span>
+                        Already have an account?
+                    </span>
+
+                </div>
+
+
+                <a
+                    href="{% url 'accounts:login' %}"
+                    class="signup-login-link"
+                >
+                    Login to RMRS
+                </a>
+
+
+            </div>
+
+        </div>
+
     </div>
+
 </section>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const toggles =
+            document.querySelectorAll(
+                "[data-password-toggle]"
+            );
+
+
+        toggles.forEach(
+            function (toggle) {
+
+                const fieldId =
+                    toggle.getAttribute(
+                        "data-password-toggle"
+                    );
+
+                const password =
+                    document.getElementById(fieldId);
+
+
+                if (!password) {
+                    return;
+                }
+
+
+                toggle.addEventListener(
+                    "click",
+                    function () {
+
+                        const hidden =
+                            password.type === "password";
+
+
+                        password.type =
+                            hidden
+                                ? "text"
+                                : "password";
+
+
+                        toggle.textContent =
+                            hidden
+                                ? "Hide"
+                                : "Show";
+
+
+                        toggle.setAttribute(
+                            "aria-label",
+                            hidden
+                                ? "Hide password"
+                                : "Show password"
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+    }
+);
+
+</script>
+
 {% endblock %}

@@ -1,30 +1,182 @@
 {% load static %}
-<article class="card movie-card h-100 border-0 shadow-sm">
-    {% if movie.poster %}
-        <img src="{% static movie.poster %}?v=3" class="card-img-top movie-poster" alt="Poster for {{ movie.title }}">
-    {% else %}
-        <div class="movie-poster movie-poster-fallback" role="img" aria-label="Poster placeholder for {{ movie.title }}">
-            <span>RMRS</span>
-        </div>
-    {% endif %}
 
-    <div class="card-body d-flex flex-column">
-        <div class="d-flex justify-content-between align-items-start gap-2">
-            <h3 class="h5 card-title mb-1">{{ movie.title }}</h3>
-            <span class="badge rounded-pill text-bg-light">{{ movie.year }}</span>
-        </div>
-        <p class="text-secondary small mb-2">{{ movie.genres }}</p>
-        <div class="rating-line mb-2" aria-label="Average rating {{ movie.rating }} out of 5">
-            <span class="rating-stars" aria-hidden="true">★★★★★</span>
-            <strong>{{ movie.rating }}</strong>
-        </div>
-        {% if movie.user_rating %}
-            <div class="small fw-semibold text-success mb-3">Your rating: {{ movie.user_rating }}/5</div>
+<article class="rmrs-movie-card">
+
+    <!-- ==========================================
+         POSTER AREA
+         ========================================== -->
+
+    <div class="rmrs-movie-poster-wrap">
+
+        {% if movie.poster %}
+
+            <img
+                src="{% static movie.poster %}?v=4"
+                class="rmrs-movie-poster"
+                alt="Poster for {{ movie.title }}"
+                loading="lazy"
+                onerror="
+                    this.style.display='none';
+                    this.nextElementSibling.style.display='flex';
+                "
+            >
+
+            <!-- Fallback if the image path exists but fails -->
+
+            <div
+                class="rmrs-movie-poster-fallback"
+                role="img"
+                aria-label="Poster placeholder for {{ movie.title }}"
+                style="display:none;"
+            >
+
+                <div class="rmrs-poster-brand">
+                    RMRS
+                </div>
+
+                <div class="rmrs-poster-content">
+
+                    <span class="rmrs-poster-label">
+                        MOVIE
+                    </span>
+
+                    <strong>
+                        {{ movie.title }}
+                    </strong>
+
+                </div>
+
+            </div>
+
         {% else %}
-            <div class="small text-secondary mb-3">Not rated yet</div>
+
+            <!-- Fallback when no poster is provided -->
+
+            <div
+                class="rmrs-movie-poster-fallback"
+                role="img"
+                aria-label="Poster placeholder for {{ movie.title }}"
+            >
+
+                <div class="rmrs-poster-brand">
+                    RMRS
+                </div>
+
+                <div class="rmrs-poster-content">
+
+                    <span class="rmrs-poster-label">
+                        MOVIE
+                    </span>
+
+                    <strong>
+                        {{ movie.title }}
+                    </strong>
+
+                </div>
+
+            </div>
+
         {% endif %}
-        <div class="d-grid gap-2 mt-auto">
-            <a class="btn btn-primary" href="{% url 'movies:detail' movie.id %}">Details & Rate</a>
-        </div>
+
     </div>
+
+
+    <!-- ==========================================
+         MOVIE INFORMATION
+         ========================================== -->
+
+    <div class="rmrs-movie-body">
+
+
+        <!-- TITLE + YEAR -->
+
+        <div class="rmrs-movie-heading">
+
+            <h3>
+                {{ movie.title }}
+            </h3>
+
+            <span class="rmrs-year-badge">
+                {{ movie.year }}
+            </span>
+
+        </div>
+
+
+        <!-- GENRES -->
+
+        <p class="rmrs-movie-genres">
+            {{ movie.genres }}
+        </p>
+
+
+        <!-- RATING -->
+
+        <div
+            class="rmrs-rating-line"
+            aria-label="Average rating {{ movie.rating }} out of 5"
+        >
+
+            <span
+                class="rmrs-rating-stars"
+                aria-hidden="true"
+            >
+                ★★★★★
+            </span>
+
+            <strong>
+                {{ movie.rating }}
+            </strong>
+
+        </div>
+
+
+        <!-- USER RATING -->
+
+        <div class="rmrs-user-rating">
+
+            {% if movie.user_rating %}
+
+                <span class="rmrs-rated-state">
+
+                    <span aria-hidden="true">✓</span>
+
+                    Your rating:
+                    <strong>{{ movie.user_rating }}/5</strong>
+
+                </span>
+
+            {% else %}
+
+                <span class="rmrs-unrated-state">
+                    Not rated yet
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ACTION -->
+
+        <a
+            class="rmrs-movie-button"
+            href="{% url 'movies:detail' movie.id %}"
+        >
+
+            <span>
+                Details &amp; Rate
+            </span>
+
+            <span
+                class="rmrs-button-arrow"
+                aria-hidden="true"
+            >
+                →
+            </span>
+
+        </a>
+
+    </div>
+
 </article>
