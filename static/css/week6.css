@@ -996,3 +996,675 @@
     }
 
 }
+
+/* =========================================================
+   ROBUSTNESS COMPARISON
+   ========================================================= */
+
+
+/* =========================================================
+   CLEAN REFERENCE CARD
+   ========================================================= */
+
+.comparison-reference-card {
+    padding: 1.5rem;
+
+    border: 1px solid var(--rmrs-border);
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #f7faff 100%
+        );
+
+    box-shadow:
+        0 8px 24px rgba(20, 35, 70, 0.06);
+}
+
+
+/* Clean reference metric group */
+
+.comparison-reference-metrics {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(110px, 1fr));
+
+    gap: 12px;
+}
+
+
+.comparison-reference-metrics > div {
+    min-width: 110px;
+
+    padding: 14px 16px;
+
+    border: 1px solid #e1e8f2;
+    border-radius: 12px;
+
+    background: #ffffff;
+}
+
+
+.comparison-reference-metrics span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #7a879b;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+}
+
+
+.comparison-reference-metrics strong {
+    display: block;
+
+    color: #15203b;
+
+    font-size: 19px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   MAIN COMPARISON PANELS
+   ========================================================= */
+
+.comparison-panel {
+    height: 100%;
+
+    padding: 1.5rem;
+
+    border: 1px solid #dfe6ef;
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 8px 24px rgba(20, 35, 70, 0.06);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.comparison-panel:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 30px rgba(20, 35, 70, 0.09);
+}
+
+
+/* Without robustness */
+
+.comparison-panel-attacked {
+    border-top: 4px solid #e7a23b;
+}
+
+
+/* With robustness */
+
+.comparison-panel-defended {
+    border-top: 4px solid #10a7a5;
+}
+
+
+/* =========================================================
+   COMPARISON PANEL HEADER
+   ========================================================= */
+
+.comparison-panel-header {
+    margin-bottom: 22px;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 18px;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+   ========================================================= */
+
+.comparison-status {
+    flex: 0 0 auto;
+
+    padding: 7px 12px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.05em;
+
+    text-transform: uppercase;
+}
+
+
+.comparison-status-warning {
+    border: 1px solid #f3d598;
+
+    background: #fff7e8;
+
+    color: #a76800;
+}
+
+
+.comparison-status-success {
+    border: 1px solid #b8e5df;
+
+    background: #eaf9f6;
+
+    color: #087d7a;
+}
+
+
+/* =========================================================
+   METRIC GRID
+   ========================================================= */
+
+.comparison-metric-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+
+.comparison-metric {
+    padding: 15px;
+
+    border: 1px solid #e3e9f2;
+    border-radius: 12px;
+
+    background: #f9fbfe;
+}
+
+
+.comparison-metric span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #78859a;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+}
+
+
+.comparison-metric strong {
+    display: block;
+
+    color: #15203b;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   DEFENCE SUMMARY
+   ========================================================= */
+
+.comparison-defence-summary {
+    margin-top: 18px;
+
+    padding-top: 18px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 10px;
+
+    border-top: 1px solid #e3e9f2;
+}
+
+
+.comparison-defence-summary > div {
+    padding: 13px;
+
+    border: 1px solid #d3eeea;
+    border-radius: 11px;
+
+    background: #effaf8;
+}
+
+
+.comparison-defence-summary span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #607d7c;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+}
+
+
+.comparison-defence-summary strong {
+    display: block;
+
+    color: #087e7c;
+
+    font-size: 19px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   ROBUSTNESS IMPACT FLOW
+   ========================================================= */
+
+.comparison-flow {
+    display: grid;
+
+    grid-template-columns:
+        minmax(150px, 1fr)
+        auto
+        minmax(150px, 1fr)
+        auto
+        minmax(150px, 1fr);
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.comparison-flow-node {
+    padding: 18px;
+
+    text-align: center;
+
+    border: 1px solid #dfe6ef;
+    border-radius: 14px;
+
+    background: #f8faff;
+}
+
+
+.comparison-flow-node-warning {
+    border-color: #f0d49c;
+
+    background: #fff9ed;
+}
+
+
+.comparison-flow-node-success {
+    border-color: #a9ded7;
+
+    background: #eefaf8;
+}
+
+
+.comparison-flow-label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #66738b;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+
+.comparison-flow-node strong {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #15203b;
+
+    font-size: 26px;
+    font-weight: 800;
+}
+
+
+.comparison-flow-node small {
+    color: #7a879b;
+
+    font-size: 11px;
+}
+
+
+.comparison-flow-arrow {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    color: #246bfd;
+
+    font-size: 25px;
+    font-weight: 800;
+}
+
+
+.comparison-flow-arrow small {
+    margin-top: 3px;
+
+    color: #7a879b;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   TARGET RANK MOVEMENT
+   ========================================================= */
+
+.rank-comparison-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+
+.rank-comparison-item {
+    padding: 18px;
+
+    border: 1px solid #e1e7f0;
+    border-radius: 14px;
+
+    background: #f9fbfe;
+}
+
+
+.rank-comparison-item > span {
+    display: block;
+
+    margin-bottom: 10px;
+
+    color: #66738b;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.07em;
+
+    text-transform: uppercase;
+}
+
+
+.rank-comparison-item > strong {
+    display: block;
+
+    margin-top: 10px;
+
+    color: #15203b;
+
+    font-size: 24px;
+    font-weight: 800;
+}
+
+
+/* Rank status bars */
+
+.rank-comparison-bar {
+    width: 100%;
+    height: 8px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
+    background: #e5eaf2;
+}
+
+
+.rank-comparison-fill {
+    width: 100%;
+    height: 100%;
+
+    border-radius: inherit;
+}
+
+
+/* Clean */
+
+.rank-clean {
+    background:
+        linear-gradient(
+            90deg,
+            #5273a2,
+            #246bfd
+        );
+}
+
+
+/* Attacked */
+
+.rank-attacked {
+    background:
+        linear-gradient(
+            90deg,
+            #efb34f,
+            #e8852b
+        );
+}
+
+
+/* Defended */
+
+.rank-defended {
+    background:
+        linear-gradient(
+            90deg,
+            #19b3aa,
+            #087e7c
+        );
+}
+
+
+/* =========================================================
+   SCENARIO SELECTOR
+   ========================================================= */
+
+.profile-card form .form-select {
+    min-width: 150px;
+
+    border-color: #d7e0ed;
+
+    border-radius: 10px;
+
+    background-color: #ffffff;
+
+    font-weight: 600;
+}
+
+
+.profile-card form .form-select:focus {
+    border-color: #246bfd;
+
+    box-shadow:
+        0 0 0 3px rgba(36, 107, 253, 0.12);
+}
+
+
+/* Compare button */
+
+.profile-card form .btn-primary {
+    min-height: 42px;
+
+    padding-left: 18px;
+    padding-right: 18px;
+
+    border: none;
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #246bfd,
+            #347ef6
+        );
+
+    font-weight: 700;
+
+    box-shadow:
+        0 7px 16px rgba(36, 107, 253, 0.16);
+}
+
+
+.profile-card form .btn-primary:hover {
+    background:
+        linear-gradient(
+            135deg,
+            #195de6,
+            #286ee6
+        );
+
+    box-shadow:
+        0 10px 20px rgba(36, 107, 253, 0.22);
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .comparison-reference-metrics {
+        margin-top: 18px;
+
+        grid-template-columns:
+            repeat(2, minmax(120px, 1fr));
+    }
+
+
+    .comparison-flow {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+
+    .comparison-flow-arrow {
+        margin: -3px 0;
+
+        transform: rotate(90deg);
+    }
+
+
+    .comparison-flow-arrow small {
+        display: none;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .comparison-reference-card,
+    .comparison-panel {
+        padding: 1.1rem;
+    }
+
+
+    .comparison-reference-metrics {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .comparison-panel-header {
+        flex-direction: column;
+    }
+
+
+    .comparison-metric-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .comparison-defence-summary {
+        grid-template-columns: 1fr;
+    }
+
+
+    .rank-comparison-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .profile-card form {
+        width: 100%;
+    }
+
+
+    .profile-card form > div {
+        flex: 1;
+    }
+
+
+    .profile-card form .form-select {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .comparison-reference-metrics {
+        grid-template-columns: 1fr;
+    }
+
+
+    .comparison-panel {
+        border-radius: 14px;
+    }
+
+
+    .comparison-flow-node strong {
+        font-size: 22px;
+    }
+
+}
