@@ -1,0 +1,539 @@
+{% extends "base.html" %}
+
+{% block title %}Robustness Comparison | RMRS{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <a href="{% url 'research:lab' %}" class="btn btn-outline-secondary mb-4">
+        ← Back to Robustness Lab
+    </a>
+
+    <div class="eyebrow mb-2">
+        ROBUSTNESS ANALYSIS
+    </div>
+
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-4">
+
+        <div>
+            <h1 class="display-6 fw-bold mb-2">
+                Robustness Comparison
+            </h1>
+
+            <p class="text-secondary mb-0" style="max-width: 850px;">
+                Compare the same recommender under the same attack with robustness
+                disabled and enabled. Clean performance is shown as the reference condition.
+            </p>
+        </div>
+
+        <span class="status-chip align-self-start align-self-lg-auto">
+            Staff Access Only
+        </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         SCENARIO SELECTOR
+         ===================================================== -->
+
+    <div class="profile-card mb-4">
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3">
+
+            <div>
+                <div class="eyebrow mb-1">
+                    ATTACK SCENARIO
+                </div>
+
+                <h2 class="h5 fw-bold mb-1">
+                    Select Comparison Scenario
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    Use the same experimental setup to compare defence OFF versus defence ON.
+                </p>
+            </div>
+
+
+            <form method="get" class="d-flex gap-2 align-items-end">
+
+                <div>
+                    <label for="scenario" class="form-label fw-semibold">
+                        Scenario
+                    </label>
+
+                    <select
+                        id="scenario"
+                        name="scenario"
+                        class="form-select"
+                    >
+                        <option
+                            value="random"
+                            {% if selected_scenario == "random" %}selected{% endif %}
+                        >
+                            Random Push
+                        </option>
+
+                        <option
+                            value="average"
+                            {% if selected_scenario == "average" %}selected{% endif %}
+                        >
+                            Average Push
+                        </option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Compare
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    {% if results_available %}
+
+
+        <!-- =================================================
+             CLEAN REFERENCE
+             ================================================= -->
+
+        <section class="comparison-reference-card mb-4">
+
+            <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
+
+                <div>
+                    <div class="eyebrow mb-1">
+                        CLEAN REFERENCE
+                    </div>
+
+                    <h2 class="h4 fw-bold mb-2">
+                        Clean Baseline
+                    </h2>
+
+                    <p class="text-secondary mb-0">
+                        Genuine training data using the same recommender before attack or defence.
+                    </p>
+                </div>
+
+
+                <div class="comparison-reference-metrics">
+
+                    <div>
+                        <span>Target Rank</span>
+                        <strong>
+                            {{ comparison.clean.target_rank|floatformat:1 }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Target Score</span>
+                        <strong>
+                            {{ comparison.clean.target_score|floatformat:2 }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>RMSE</span>
+                        <strong>
+                            {{ comparison.clean.rmse|floatformat:4 }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>MAE</span>
+                        <strong>
+                            {{ comparison.clean.mae|floatformat:4 }}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             MAIN COMPARISON
+             ================================================= -->
+
+        <div class="row g-4 mb-4">
+
+
+            <!-- WITHOUT ROBUSTNESS -->
+
+            <div class="col-lg-6">
+
+                <section class="comparison-panel comparison-panel-attacked h-100">
+
+                    <div class="comparison-panel-header">
+
+                        <div>
+                            <div class="eyebrow mb-1">
+                                WITHOUT ROBUSTNESS
+                            </div>
+
+                            <h2 class="h4 fw-bold mb-1">
+                                Defence OFF
+                            </h2>
+
+                            <p class="text-secondary mb-0">
+                                {{ comparison.scenario_label }} attack data is sent directly
+                                to the recommender.
+                            </p>
+                        </div>
+
+                        <span class="comparison-status comparison-status-warning">
+                            Attacked
+                        </span>
+
+                    </div>
+
+
+                    <div class="comparison-metric-grid">
+
+                        <div class="comparison-metric">
+                            <span>Target Rank</span>
+                            <strong>
+                                {{ comparison.without_robustness.target_rank|floatformat:1 }}
+                            </strong>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span>Target Score</span>
+                            <strong>
+                                {{ comparison.without_robustness.target_score|floatformat:2 }}
+                            </strong>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span>RMSE</span>
+                            <strong>
+                                {{ comparison.without_robustness.rmse|floatformat:4 }}
+                            </strong>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span>MAE</span>
+                            <strong>
+                                {{ comparison.without_robustness.mae|floatformat:4 }}
+                            </strong>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span>Hit Rate @10</span>
+                            <strong>
+                                {{ comparison.without_robustness.hit_rate|floatformat:2 }}
+                            </strong>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span>Defence</span>
+                            <strong class="text-danger">
+                                OFF
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+
+            <!-- WITH ROBUSTNESS -->
+
+            <div class="col-lg-6">
+
+                <section class="comparison-panel comparison-panel-defended h-100">
+
+                    <div class="comparison-panel-header">
+
+                        <div>
+                            <div class="eyebrow mb-1">
+                                WITH ROBUSTNESS
+                            </div>
+
+                            <h2 class="h4 fw-bold mb-1">
+                                Detection + Defence ON
+                            </h2>
+
+                            <p class="text-secondary mb-0">
+                                The same {{ comparison.scenario_label }} attack is processed
+                                through detection and defence before recommendation.
+                            </p>
+                        </div>
+
+                        <span class="comparison-status comparison-status-success">
+                            Defended
+                        </span>
+
+                    </div>
+
+
+                    <div class="comparison-metric-grid">
+
+                        <div class="comparison-metric">
+                            <span>Target Rank</span>
+                            <strong>
+                                {{ comparison.with_robustness.target_rank|floatformat:1 }}
+                            </strong>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span>Target Score</span>
+                            <strong>
+                                {{ comparison.with_robustness.target_score|floatformat:2 }}
+                            </strong>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span>RMSE</span>
+                            <strong>
+                                {{ comparison.with_robustness.rmse|floatformat:4 }}
+                            </strong>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span>MAE</span>
+                            <strong>
+                                {{ comparison.with_robustness.mae|floatformat:4 }}
+                            </strong>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span>Hit Rate @10</span>
+                            <strong>
+                                {{ comparison.with_robustness.hit_rate|floatformat:2 }}
+                            </strong>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span>Defence</span>
+                            <strong class="text-success">
+                                ON
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    {% if comparison.defence %}
+
+                        <div class="comparison-defence-summary">
+
+                            <div>
+                                <span>Detected Users</span>
+                                <strong>
+                                    {{ comparison.defence.suspicious_profiles_detected }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Removed Users</span>
+                                <strong>
+                                    {{ comparison.defence.users_removed }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Ratings Removed</span>
+                                <strong>
+                                    {{ comparison.defence.ratings_removed }}
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </section>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FLOW
+             ================================================= -->
+
+        <section class="profile-card mb-4">
+
+            <div class="eyebrow mb-1">
+                ROBUSTNESS IMPACT FLOW
+            </div>
+
+            <h2 class="h5 fw-bold mb-4">
+                Clean → Attacked → Defended
+            </h2>
+
+
+            <div class="comparison-flow">
+
+                <div class="comparison-flow-node">
+                    <span class="comparison-flow-label">
+                        CLEAN
+                    </span>
+
+                    <strong>
+                        {{ comparison.clean.target_rank|floatformat:1 }}
+                    </strong>
+
+                    <small>
+                        Target Rank
+                    </small>
+                </div>
+
+
+                <div class="comparison-flow-arrow">
+                    →
+                    <small>Attack</small>
+                </div>
+
+
+                <div class="comparison-flow-node comparison-flow-node-warning">
+                    <span class="comparison-flow-label">
+                        ATTACKED
+                    </span>
+
+                    <strong>
+                        {{ comparison.without_robustness.target_rank|floatformat:1 }}
+                    </strong>
+
+                    <small>
+                        Target Rank
+                    </small>
+                </div>
+
+
+                <div class="comparison-flow-arrow">
+                    →
+                    <small>Defence</small>
+                </div>
+
+
+                <div class="comparison-flow-node comparison-flow-node-success">
+                    <span class="comparison-flow-label">
+                        DEFENDED
+                    </span>
+
+                    <strong>
+                        {{ comparison.with_robustness.target_rank|floatformat:1 }}
+                    </strong>
+
+                    <small>
+                        Target Rank
+                    </small>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             TARGET RANK RECOVERY
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <div class="eyebrow mb-1">
+                TARGET RANK MOVEMENT
+            </div>
+
+            <h2 class="h5 fw-bold mb-2">
+                Attack Damage and Defence Recovery
+            </h2>
+
+            <p class="text-secondary mb-4">
+                Lower target-rank values indicate that the target movie has moved
+                closer to the top of the recommendation ranking.
+            </p>
+
+
+            <div class="rank-comparison-grid">
+
+                <div class="rank-comparison-item">
+
+                    <span>Clean</span>
+
+                    <div class="rank-comparison-bar">
+                        <div class="rank-comparison-fill rank-clean"></div>
+                    </div>
+
+                    <strong>
+                        {{ comparison.clean.target_rank|floatformat:1 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="rank-comparison-item">
+
+                    <span>Attacked</span>
+
+                    <div class="rank-comparison-bar">
+                        <div class="rank-comparison-fill rank-attacked"></div>
+                    </div>
+
+                    <strong>
+                        {{ comparison.without_robustness.target_rank|floatformat:1 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="rank-comparison-item">
+
+                    <span>Defended</span>
+
+                    <div class="rank-comparison-bar">
+                        <div class="rank-comparison-fill rank-defended"></div>
+                    </div>
+
+                    <strong>
+                        {{ comparison.with_robustness.target_rank|floatformat:1 }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    {% else %}
+
+
+        <!-- =================================================
+             NO RESULTS
+             ================================================= -->
+
+        <div class="integration-notice">
+
+            <strong>
+                Robustness Comparison Integration Ready
+            </strong>
+
+            <p class="mb-0 mt-2 text-secondary">
+                The comparison interface is ready, but the required experiment
+                result files are not currently available. No artificial result
+                numbers are generated by the Django presentation layer.
+            </p>
+
+        </div>
+
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

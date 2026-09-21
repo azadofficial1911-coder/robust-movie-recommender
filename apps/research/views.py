@@ -220,3 +220,100 @@ def evaluation(request):
             "results_available": experiment_results is not None,
         },
     )
+
+
+@staff_required
+def robustness_comparison(request):
+    """
+    Staff-only lecturer-facing Robustness Comparison page.
+
+    The page compares the same recommender across:
+    - Clean
+    - Attacked / Without Robustness
+    - Defended / With Robustness
+
+    Values are loaded from real experiment result files.
+    No metrics are calculated or invented in this Django view.
+    """
+
+    selected_scenario = request.GET.get(
+        "scenario",
+        "random",
+    ).lower()
+
+    if selected_scenario not in {
+        "random",
+        "average",
+    }:
+        selected_scenario = "random"
+
+    experiment_results = load_experiment_results()
+    defence_summary = load_defence_summary()
+
+    comparison = None
+
+    if experiment_results:
+
+        results_by_condition = {
+            row["condition"]: row
+            for row in experiment_results
+        }
+
+        clean = results_by_condition.get("clean")
+
+        attacked = results_by_condition.get(
+            selected_scenario
+        )
+
+        defended = results_by_condition.get(
+            f"{selected_scenario}_defended"
+        )
+
+        defence_row = None
+
+        if defence_summary:
+            defence_row = next(
+                (
+                    row
+                    for row in defence_summary
+                    if str(
+                        row.get(
+                            "scenario",
+                            "",
+                        )
+                    ).lower()
+                    == selected_scenario
+                ),
+                None,
+            )
+
+        if clean and attacked and defended:
+
+            comparison = {
+                "scenario": selected_scenario,
+
+                "scenario_label": (
+                    "Random Push"
+                    if selected_scenario == "random"
+                    else "Average Push"
+                ),
+
+                "clean": clean,
+
+                "without_robustness": attacked,
+
+                "with_robustness": defended,
+
+                "defence": defence_row,
+            }
+
+    return render(
+        request,
+        "research/robustness_comparison.html",
+        {
+            "page_title": "Robustness Comparison",
+            "selected_scenario": selected_scenario,
+            "comparison": comparison,
+            "results_available": comparison is not None,
+        },
+    )

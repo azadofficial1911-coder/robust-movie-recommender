@@ -11,6 +11,7 @@
         </div>
 
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-4">
+
             <div>
                 <h1 class="display-6 fw-bold mb-2">
                     Robustness Lab
@@ -18,84 +19,264 @@
 
                 <p class="text-secondary mb-0" style="max-width: 820px;">
                     Configure and review the RMRS robustness workflow across attack,
-                    suspicious-user detection, defence and evaluation experiments.
+                    suspicious-user detection, defence, evaluation and robustness
+                    comparison experiments.
                 </p>
             </div>
 
             <span class="status-chip align-self-start align-self-lg-auto">
                 Staff Access Only
             </span>
+
         </div>
+
 
         <div class="row g-4">
 
-            <div class="col-md-6">
-                <a class="research-link-card" href="{% url 'research:attack_lab' %}">
-                    <div class="d-flex align-items-start justify-content-between gap-3">
-                        <div class="d-flex align-items-start gap-3">
-                            <div class="research-icon" aria-hidden="true">A</div>
-                            <div>
-                                <strong class="d-block h5 mb-1">Attack Lab</strong>
-                                <span class="text-secondary">
-                                    Configure Random Push and Average Push attack experiments.
-                                </span>
-                            </div>
-                        </div>
-                        <span class="fw-bold text-primary" aria-hidden="true">→</span>
-                    </div>
-                </a>
-            </div>
+            <!-- =====================================================
+                 ATTACK LAB
+                 ===================================================== -->
 
             <div class="col-md-6">
-                <a class="research-link-card" href="{% url 'research:detection' %}">
+
+                <a
+                    class="research-link-card"
+                    href="{% url 'research:attack_lab' %}"
+                >
+
                     <div class="d-flex align-items-start justify-content-between gap-3">
+
                         <div class="d-flex align-items-start gap-3">
-                            <div class="research-icon" aria-hidden="true">D</div>
-                            <div>
-                                <strong class="d-block h5 mb-1">Detection</strong>
-                                <span class="text-secondary">
-                                    Configure suspicious-user detection and review classification settings.
-                                </span>
+
+                            <div class="research-icon" aria-hidden="true">
+                                A
                             </div>
+
+                            <div>
+
+                                <strong class="d-block h5 mb-1">
+                                    Attack Lab
+                                </strong>
+
+                                <span class="text-secondary">
+                                    Configure Random Push and Average Push
+                                    attack experiments.
+                                </span>
+
+                            </div>
+
                         </div>
-                        <span class="fw-bold text-primary" aria-hidden="true">→</span>
+
+                        <span
+                            class="fw-bold text-primary"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+
                     </div>
+
                 </a>
+
             </div>
 
-            <div class="col-md-6">
-                <a class="research-link-card" href="{% url 'research:defence' %}">
-                    <div class="d-flex align-items-start justify-content-between gap-3">
-                        <div class="d-flex align-items-start gap-3">
-                            <div class="research-icon" aria-hidden="true">F</div>
-                            <div>
-                                <strong class="d-block h5 mb-1">Defence</strong>
-                                <span class="text-secondary">
-                                    Review the defence pipeline and suspicious-profile removal results.
-                                </span>
-                            </div>
-                        </div>
-                        <span class="fw-bold text-primary" aria-hidden="true">→</span>
-                    </div>
-                </a>
-            </div>
+
+            <!-- =====================================================
+                 DETECTION
+                 ===================================================== -->
 
             <div class="col-md-6">
-                <a class="research-link-card" href="{% url 'research:evaluation' %}">
+
+                <a
+                    class="research-link-card"
+                    href="{% url 'research:detection' %}"
+                >
+
                     <div class="d-flex align-items-start justify-content-between gap-3">
+
                         <div class="d-flex align-items-start gap-3">
-                            <div class="research-icon" aria-hidden="true">E</div>
-                            <div>
-                                <strong class="d-block h5 mb-1">Evaluation</strong>
-                                <span class="text-secondary">
-                                    Compare clean, attacked and defended recommendation performance.
-                                </span>
+
+                            <div class="research-icon" aria-hidden="true">
+                                D
                             </div>
+
+                            <div>
+
+                                <strong class="d-block h5 mb-1">
+                                    Detection
+                                </strong>
+
+                                <span class="text-secondary">
+                                    Configure suspicious-user detection and
+                                    review classification settings.
+                                </span>
+
+                            </div>
+
                         </div>
-                        <span class="fw-bold text-primary" aria-hidden="true">→</span>
+
+                        <span
+                            class="fw-bold text-primary"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+
                     </div>
+
                 </a>
+
             </div>
+
+
+            <!-- =====================================================
+                 DEFENCE
+                 ===================================================== -->
+
+            <div class="col-md-6">
+
+                <a
+                    class="research-link-card"
+                    href="{% url 'research:defence' %}"
+                >
+
+                    <div class="d-flex align-items-start justify-content-between gap-3">
+
+                        <div class="d-flex align-items-start gap-3">
+
+                            <div class="research-icon" aria-hidden="true">
+                                F
+                            </div>
+
+                            <div>
+
+                                <strong class="d-block h5 mb-1">
+                                    Defence
+                                </strong>
+
+                                <span class="text-secondary">
+                                    Review the defence pipeline and
+                                    suspicious-profile removal results.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <span
+                            class="fw-bold text-primary"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            <!-- =====================================================
+                 EVALUATION
+                 ===================================================== -->
+
+            <div class="col-md-6">
+
+                <a
+                    class="research-link-card"
+                    href="{% url 'research:evaluation' %}"
+                >
+
+                    <div class="d-flex align-items-start justify-content-between gap-3">
+
+                        <div class="d-flex align-items-start gap-3">
+
+                            <div class="research-icon" aria-hidden="true">
+                                E
+                            </div>
+
+                            <div>
+
+                                <strong class="d-block h5 mb-1">
+                                    Evaluation
+                                </strong>
+
+                                <span class="text-secondary">
+                                    Compare clean, attacked and defended
+                                    recommendation performance.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <span
+                            class="fw-bold text-primary"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            <!-- =====================================================
+                 ROBUSTNESS COMPARISON
+                 ===================================================== -->
+
+            <div class="col-12">
+
+                <a
+                    class="research-link-card"
+                    href="{% url 'research:robustness_comparison' %}"
+                >
+
+                    <div class="d-flex align-items-start justify-content-between gap-3">
+
+                        <div class="d-flex align-items-start gap-3">
+
+                            <div class="research-icon" aria-hidden="true">
+                                C
+                            </div>
+
+                            <div>
+
+                                <div class="eyebrow mb-1">
+                                    FINAL ROBUSTNESS COMPARISON
+                                </div>
+
+                                <strong class="d-block h5 mb-1">
+                                    Robustness Comparison
+                                </strong>
+
+                                <span class="text-secondary">
+                                    Compare Clean, Without Robustness and
+                                    With Robustness using the same Random Push
+                                    or Average Push attack scenario.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <span
+                            class="fw-bold text-primary"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </div>
+
 
         </div>
 
