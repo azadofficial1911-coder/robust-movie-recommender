@@ -90,3 +90,37 @@ Defended → attacked data after suspicious-profile detection and removal
 Therefore, changes observed between the conditions can be attributed to the attack and defence pipeline rather than changes to the recommender algorithm.
 
 The exact recovery observed in the defended pilot applies to the tested configuration and should not be interpreted as proof of perfect defence under every possible attack setting.
+## Top-N Consistency Verification
+
+A Top-N consistency test was run using the same user-based collaborative filtering configuration across Clean, Random Push, Random Defended, Average Push and Average Defended conditions.
+
+The fixed configuration used:
+
+- Top-K neighbours: 30
+- Minimum neighbours: 3
+- Top-N recommendations: 10
+- Target movie ID: 758
+- Genuine test ratings: 19,971
+- Evaluation users: 7
+
+Results:
+
+- Random defended Top-N equals Clean: True
+- Average defended Top-N equals Clean: True
+- Overall consistency result: PASS
+
+The detailed results are stored in:
+
+`results/tables/topn_consistency_results.csv`
+
+## Movie ID Verification
+
+The Django website movie IDs were checked against the MovieLens training data and `movie_statistics.csv`.
+
+Results:
+
+- All website movie IDs exist in MovieLens training data.
+- All website movie IDs exist in `movie_statistics.csv`.
+- Target movie ID 758 exists in both datasets.
+- Website movie IDs use the same MovieLens `movie_id` namespace.
+- Final movie ID verification result: PASS.
