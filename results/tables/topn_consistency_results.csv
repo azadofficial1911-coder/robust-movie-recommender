@@ -1,0 +1,351 @@
+condition,user_id,rank,movie_id,title,predicted_rating
+clean,49,1,1368,mina tannenbaum,4.3749
+clean,49,2,1367,faust,4.2943
+clean,49,3,1591,duoluo tianshi,3.8545
+clean,49,4,100,fargo,3.8315
+clean,49,5,868,hearts and minds,3.827
+clean,49,6,867,whole wide world the,3.7512
+clean,49,7,474,dr strangelove or how i learned to stop worrying and love the bomb,3.735
+clean,49,8,1174,caught,3.7345
+clean,49,9,1449,pather panchali,3.7052
+clean,49,10,114,wallace  gromit the best of aardman animation,3.7037
+clean,117,1,64,shawshank redemption the,5.0
+clean,117,2,113,horseman on the roof the hussard sur le toit le,5.0
+clean,117,3,114,wallace  gromit the best of aardman animation,5.0
+clean,117,4,169,wrong trousers the,5.0
+clean,117,5,302,la confidential,5.0
+clean,117,6,853,braindead,5.0
+clean,117,7,954,unzipped,5.0
+clean,117,8,1142,when we were kings,5.0
+clean,117,9,1143,hard eight,5.0
+clean,117,10,1233,nénette et boni,5.0
+clean,246,1,1368,mina tannenbaum,4.3971
+clean,246,2,119,maya lin a strong clear vision,4.2632
+clean,246,3,172,empire strikes back the,4.1734
+clean,246,4,64,shawshank redemption the,4.1115
+clean,246,5,1367,faust,4.028
+clean,246,6,603,rear window,4.0251
+clean,246,7,134,citizen kane,4.0201
+clean,246,8,408,close shave a,4.0064
+clean,246,9,483,casablanca,3.9882
+clean,246,10,114,wallace  gromit the best of aardman animation,3.9842
+clean,366,1,57,priest,5.0
+clean,366,2,64,shawshank redemption the,5.0
+clean,366,3,74,faster pussycat kill kill,5.0
+clean,366,4,113,horseman on the roof the hussard sur le toit le,5.0
+clean,366,5,128,supercop,5.0
+clean,366,6,134,citizen kane,5.0
+clean,366,7,153,fish called wanda a,5.0
+clean,366,8,169,wrong trousers the,5.0
+clean,366,9,178,12 angry men,5.0
+clean,366,10,189,grand day out a,5.0
+clean,374,1,113,horseman on the roof the hussard sur le toit le,4.9124
+clean,374,2,1524,kaspar hauser,4.7783
+clean,374,3,1449,pather panchali,4.6399
+clean,374,4,1367,faust,4.6208
+clean,374,5,1125,innocents the,4.6001
+clean,374,6,318,schindlers list,4.5841
+clean,374,7,1251,a chef in love,4.5029
+clean,374,8,50,star wars,4.4868
+clean,374,9,114,wallace  gromit the best of aardman animation,4.4196
+clean,374,10,272,good will hunting,4.4177
+clean,417,1,613,my man godfrey,4.5485
+clean,417,2,318,schindlers list,4.51
+clean,417,3,1233,nénette et boni,4.4765
+clean,417,4,1143,hard eight,4.4177
+clean,417,5,1368,mina tannenbaum,4.4142
+clean,417,6,408,close shave a,4.3636
+clean,417,7,1125,innocents the,4.3517
+clean,417,8,1388,gabbeh,4.3218
+clean,417,9,1449,pather panchali,4.2919
+clean,417,10,114,wallace  gromit the best of aardman animation,4.2786
+clean,457,1,173,princess bride the,5.0
+clean,457,2,320,paradise lost the child murders at robin hood hills,5.0
+clean,457,3,483,casablanca,5.0
+clean,457,4,1367,faust,5.0
+clean,457,5,1368,mina tannenbaum,5.0
+clean,457,6,1449,pather panchali,5.0
+clean,457,7,408,close shave a,4.9941
+clean,457,8,867,whole wide world the,4.9908
+clean,457,9,272,good will hunting,4.9774
+clean,457,10,520,great escape the,4.9661
+random,49,1,1368,mina tannenbaum,4.3749
+random,49,2,1463,boys les,3.9889
+random,49,3,1500,santa with muscles,3.9359
+random,49,4,1367,faust,3.9184
+random,49,5,814,great day in harlem a,3.8384
+random,49,6,100,fargo,3.8315
+random,49,7,474,dr strangelove or how i learned to stop worrying and love the bomb,3.735
+random,49,8,114,wallace  gromit the best of aardman animation,3.6993
+random,49,9,867,whole wide world the,3.6883
+random,49,10,1449,pather panchali,3.6843
+random,117,1,64,shawshank redemption the,5.0
+random,117,2,113,horseman on the roof the hussard sur le toit le,5.0
+random,117,3,114,wallace  gromit the best of aardman animation,5.0
+random,117,4,169,wrong trousers the,5.0
+random,117,5,302,la confidential,5.0
+random,117,6,853,braindead,5.0
+random,117,7,1142,when we were kings,5.0
+random,117,8,1233,nénette et boni,5.0
+random,117,9,1340,crude oasis the,5.0
+random,117,10,1367,faust,5.0
+random,246,1,1543,johns,4.3729
+random,246,2,1642,some mothers son,4.3093
+random,246,3,1368,mina tannenbaum,4.2164
+random,246,4,172,empire strikes back the,4.1734
+random,246,5,1347,ballad of narayama the narayama bushiko,4.1189
+random,246,6,64,shawshank redemption the,4.1115
+random,246,7,1467,saint of fort washington the,4.0989
+random,246,8,1450,golden earrings,4.0892
+random,246,9,1492,window to paris,4.0322
+random,246,10,603,rear window,4.0251
+random,366,1,57,priest,5.0
+random,366,2,64,shawshank redemption the,5.0
+random,366,3,74,faster pussycat kill kill,5.0
+random,366,4,113,horseman on the roof the hussard sur le toit le,5.0
+random,366,5,128,supercop,5.0
+random,366,6,134,citizen kane,5.0
+random,366,7,153,fish called wanda a,5.0
+random,366,8,169,wrong trousers the,5.0
+random,366,9,178,12 angry men,5.0
+random,366,10,189,grand day out a,5.0
+random,374,1,868,hearts and minds,4.9638
+random,374,2,113,horseman on the roof the hussard sur le toit le,4.9124
+random,374,3,1524,kaspar hauser,4.7783
+random,374,4,814,great day in harlem a,4.7617
+random,374,5,1449,pather panchali,4.6399
+random,374,6,1125,innocents the,4.6001
+random,374,7,318,schindlers list,4.5841
+random,374,8,50,star wars,4.4868
+random,374,9,1500,santa with muscles,4.4819
+random,374,10,1550,destiny turns on the radio,4.4477
+random,417,1,1554,safe passage,4.574
+random,417,2,318,schindlers list,4.51
+random,417,3,613,my man godfrey,4.5052
+random,417,4,1233,nénette et boni,4.4392
+random,417,5,1388,gabbeh,4.3865
+random,417,6,408,close shave a,4.3636
+random,417,7,1143,hard eight,4.3174
+random,417,8,1368,mina tannenbaum,4.2982
+random,417,9,1550,destiny turns on the radio,4.2877
+random,417,10,114,wallace  gromit the best of aardman animation,4.2786
+random,457,1,173,princess bride the,5.0
+random,457,2,320,paradise lost the child murders at robin hood hills,5.0
+random,457,3,483,casablanca,5.0
+random,457,4,814,great day in harlem a,5.0
+random,457,5,1189,prefontaine,5.0
+random,457,6,1367,faust,5.0
+random,457,7,1368,mina tannenbaum,5.0
+random,457,8,1500,santa with muscles,5.0
+random,457,9,1348,every other weekend,4.9978
+random,457,10,408,close shave a,4.9941
+random_defended,49,1,1368,mina tannenbaum,4.3749
+random_defended,49,2,1367,faust,4.2943
+random_defended,49,3,1591,duoluo tianshi,3.8545
+random_defended,49,4,100,fargo,3.8315
+random_defended,49,5,868,hearts and minds,3.827
+random_defended,49,6,867,whole wide world the,3.7512
+random_defended,49,7,474,dr strangelove or how i learned to stop worrying and love the bomb,3.735
+random_defended,49,8,1174,caught,3.7345
+random_defended,49,9,1449,pather panchali,3.7052
+random_defended,49,10,114,wallace  gromit the best of aardman animation,3.7037
+random_defended,117,1,64,shawshank redemption the,5.0
+random_defended,117,2,113,horseman on the roof the hussard sur le toit le,5.0
+random_defended,117,3,114,wallace  gromit the best of aardman animation,5.0
+random_defended,117,4,169,wrong trousers the,5.0
+random_defended,117,5,302,la confidential,5.0
+random_defended,117,6,853,braindead,5.0
+random_defended,117,7,954,unzipped,5.0
+random_defended,117,8,1142,when we were kings,5.0
+random_defended,117,9,1143,hard eight,5.0
+random_defended,117,10,1233,nénette et boni,5.0
+random_defended,246,1,1368,mina tannenbaum,4.3971
+random_defended,246,2,119,maya lin a strong clear vision,4.2632
+random_defended,246,3,172,empire strikes back the,4.1734
+random_defended,246,4,64,shawshank redemption the,4.1115
+random_defended,246,5,1367,faust,4.028
+random_defended,246,6,603,rear window,4.0251
+random_defended,246,7,134,citizen kane,4.0201
+random_defended,246,8,408,close shave a,4.0064
+random_defended,246,9,483,casablanca,3.9882
+random_defended,246,10,114,wallace  gromit the best of aardman animation,3.9842
+random_defended,366,1,57,priest,5.0
+random_defended,366,2,64,shawshank redemption the,5.0
+random_defended,366,3,74,faster pussycat kill kill,5.0
+random_defended,366,4,113,horseman on the roof the hussard sur le toit le,5.0
+random_defended,366,5,128,supercop,5.0
+random_defended,366,6,134,citizen kane,5.0
+random_defended,366,7,153,fish called wanda a,5.0
+random_defended,366,8,169,wrong trousers the,5.0
+random_defended,366,9,178,12 angry men,5.0
+random_defended,366,10,189,grand day out a,5.0
+random_defended,374,1,113,horseman on the roof the hussard sur le toit le,4.9124
+random_defended,374,2,1524,kaspar hauser,4.7783
+random_defended,374,3,1449,pather panchali,4.6399
+random_defended,374,4,1367,faust,4.6208
+random_defended,374,5,1125,innocents the,4.6001
+random_defended,374,6,318,schindlers list,4.5841
+random_defended,374,7,1251,a chef in love,4.5029
+random_defended,374,8,50,star wars,4.4868
+random_defended,374,9,114,wallace  gromit the best of aardman animation,4.4196
+random_defended,374,10,272,good will hunting,4.4177
+random_defended,417,1,613,my man godfrey,4.5485
+random_defended,417,2,318,schindlers list,4.51
+random_defended,417,3,1233,nénette et boni,4.4765
+random_defended,417,4,1143,hard eight,4.4177
+random_defended,417,5,1368,mina tannenbaum,4.4142
+random_defended,417,6,408,close shave a,4.3636
+random_defended,417,7,1125,innocents the,4.3517
+random_defended,417,8,1388,gabbeh,4.3218
+random_defended,417,9,1449,pather panchali,4.2919
+random_defended,417,10,114,wallace  gromit the best of aardman animation,4.2786
+random_defended,457,1,173,princess bride the,5.0
+random_defended,457,2,320,paradise lost the child murders at robin hood hills,5.0
+random_defended,457,3,483,casablanca,5.0
+random_defended,457,4,1367,faust,5.0
+random_defended,457,5,1368,mina tannenbaum,5.0
+random_defended,457,6,1449,pather panchali,5.0
+random_defended,457,7,408,close shave a,4.9941
+random_defended,457,8,867,whole wide world the,4.9908
+random_defended,457,9,272,good will hunting,4.9774
+random_defended,457,10,520,great escape the,4.9661
+average,49,1,814,great day in harlem a,4.5744
+average,49,2,1368,mina tannenbaum,4.3789
+average,49,3,1500,santa with muscles,4.2854
+average,49,4,1599,someone elses america,4.2785
+average,49,5,1405,boys life 2,4.1757
+average,49,6,1467,saint of fort washington the,4.1374
+average,49,7,1463,boys les,4.0952
+average,49,8,1367,faust,4.0812
+average,49,9,1642,some mothers son,3.9385
+average,49,10,100,fargo,3.8315
+average,117,1,64,shawshank redemption the,5.0
+average,117,2,113,horseman on the roof the hussard sur le toit le,5.0
+average,117,3,114,wallace  gromit the best of aardman animation,5.0
+average,117,4,119,maya lin a strong clear vision,5.0
+average,117,5,169,wrong trousers the,5.0
+average,117,6,302,la confidential,5.0
+average,117,7,814,great day in harlem a,5.0
+average,117,8,853,braindead,5.0
+average,117,9,867,whole wide world the,5.0
+average,117,10,868,hearts and minds,5.0
+average,246,1,814,great day in harlem a,4.8312
+average,246,2,1293,star kid,4.671
+average,246,3,1467,saint of fort washington the,4.5789
+average,246,4,1599,someone elses america,4.5123
+average,246,5,1500,santa with muscles,4.5111
+average,246,6,1368,mina tannenbaum,4.508
+average,246,7,1639,bitter sugar azucar amargo,4.3225
+average,246,8,1629,nico icon,4.2942
+average,246,9,1462,thieves voleurs les,4.2156
+average,246,10,172,empire strikes back the,4.1734
+average,366,1,57,priest,5.0
+average,366,2,64,shawshank redemption the,5.0
+average,366,3,74,faster pussycat kill kill,5.0
+average,366,4,113,horseman on the roof the hussard sur le toit le,5.0
+average,366,5,128,supercop,5.0
+average,366,6,134,citizen kane,5.0
+average,366,7,153,fish called wanda a,5.0
+average,366,8,169,wrong trousers the,5.0
+average,366,9,178,12 angry men,5.0
+average,366,10,189,grand day out a,5.0
+average,374,1,814,great day in harlem a,5.0
+average,374,2,1293,star kid,5.0
+average,374,3,1500,santa with muscles,5.0
+average,374,4,1536,aiqing wansui,5.0
+average,374,5,868,hearts and minds,4.9552
+average,374,6,113,horseman on the roof the hussard sur le toit le,4.9124
+average,374,7,1524,kaspar hauser,4.7783
+average,374,8,1449,pather panchali,4.6399
+average,374,9,1125,innocents the,4.6001
+average,374,10,318,schindlers list,4.5841
+average,417,1,814,great day in harlem a,5.0
+average,417,2,1122,they made me a criminal,5.0
+average,417,3,1201,marlene dietrich shadow and light ,4.9695
+average,417,4,1500,santa with muscles,4.9657
+average,417,5,1368,mina tannenbaum,4.7437
+average,417,6,1467,saint of fort washington the,4.695
+average,417,7,1189,prefontaine,4.5936
+average,417,8,613,my man godfrey,4.5273
+average,417,9,1629,nico icon,4.5178
+average,417,10,318,schindlers list,4.51
+average,457,1,173,princess bride the,5.0
+average,457,2,320,paradise lost the child murders at robin hood hills,5.0
+average,457,3,483,casablanca,5.0
+average,457,4,814,great day in harlem a,5.0
+average,457,5,850,perfect candidate a,5.0
+average,457,6,1122,they made me a criminal,5.0
+average,457,7,1189,prefontaine,5.0
+average,457,8,1252,contempt mépris le,5.0
+average,457,9,1293,star kid,5.0
+average,457,10,1367,faust,5.0
+average_defended,49,1,1368,mina tannenbaum,4.3749
+average_defended,49,2,1367,faust,4.2943
+average_defended,49,3,1591,duoluo tianshi,3.8545
+average_defended,49,4,100,fargo,3.8315
+average_defended,49,5,868,hearts and minds,3.827
+average_defended,49,6,867,whole wide world the,3.7512
+average_defended,49,7,474,dr strangelove or how i learned to stop worrying and love the bomb,3.735
+average_defended,49,8,1174,caught,3.7345
+average_defended,49,9,1449,pather panchali,3.7052
+average_defended,49,10,114,wallace  gromit the best of aardman animation,3.7037
+average_defended,117,1,64,shawshank redemption the,5.0
+average_defended,117,2,113,horseman on the roof the hussard sur le toit le,5.0
+average_defended,117,3,114,wallace  gromit the best of aardman animation,5.0
+average_defended,117,4,169,wrong trousers the,5.0
+average_defended,117,5,302,la confidential,5.0
+average_defended,117,6,853,braindead,5.0
+average_defended,117,7,954,unzipped,5.0
+average_defended,117,8,1142,when we were kings,5.0
+average_defended,117,9,1143,hard eight,5.0
+average_defended,117,10,1233,nénette et boni,5.0
+average_defended,246,1,1368,mina tannenbaum,4.3971
+average_defended,246,2,119,maya lin a strong clear vision,4.2632
+average_defended,246,3,172,empire strikes back the,4.1734
+average_defended,246,4,64,shawshank redemption the,4.1115
+average_defended,246,5,1367,faust,4.028
+average_defended,246,6,603,rear window,4.0251
+average_defended,246,7,134,citizen kane,4.0201
+average_defended,246,8,408,close shave a,4.0064
+average_defended,246,9,483,casablanca,3.9882
+average_defended,246,10,114,wallace  gromit the best of aardman animation,3.9842
+average_defended,366,1,57,priest,5.0
+average_defended,366,2,64,shawshank redemption the,5.0
+average_defended,366,3,74,faster pussycat kill kill,5.0
+average_defended,366,4,113,horseman on the roof the hussard sur le toit le,5.0
+average_defended,366,5,128,supercop,5.0
+average_defended,366,6,134,citizen kane,5.0
+average_defended,366,7,153,fish called wanda a,5.0
+average_defended,366,8,169,wrong trousers the,5.0
+average_defended,366,9,178,12 angry men,5.0
+average_defended,366,10,189,grand day out a,5.0
+average_defended,374,1,113,horseman on the roof the hussard sur le toit le,4.9124
+average_defended,374,2,1524,kaspar hauser,4.7783
+average_defended,374,3,1449,pather panchali,4.6399
+average_defended,374,4,1367,faust,4.6208
+average_defended,374,5,1125,innocents the,4.6001
+average_defended,374,6,318,schindlers list,4.5841
+average_defended,374,7,1251,a chef in love,4.5029
+average_defended,374,8,50,star wars,4.4868
+average_defended,374,9,114,wallace  gromit the best of aardman animation,4.4196
+average_defended,374,10,272,good will hunting,4.4177
+average_defended,417,1,613,my man godfrey,4.5485
+average_defended,417,2,318,schindlers list,4.51
+average_defended,417,3,1233,nénette et boni,4.4765
+average_defended,417,4,1143,hard eight,4.4177
+average_defended,417,5,1368,mina tannenbaum,4.4142
+average_defended,417,6,408,close shave a,4.3636
+average_defended,417,7,1125,innocents the,4.3517
+average_defended,417,8,1388,gabbeh,4.3218
+average_defended,417,9,1449,pather panchali,4.2919
+average_defended,417,10,114,wallace  gromit the best of aardman animation,4.2786
+average_defended,457,1,173,princess bride the,5.0
+average_defended,457,2,320,paradise lost the child murders at robin hood hills,5.0
+average_defended,457,3,483,casablanca,5.0
+average_defended,457,4,1367,faust,5.0
+average_defended,457,5,1368,mina tannenbaum,5.0
+average_defended,457,6,1449,pather panchali,5.0
+average_defended,457,7,408,close shave a,4.9941
+average_defended,457,8,867,whole wide world the,4.9908
+average_defended,457,9,272,good will hunting,4.9774
+average_defended,457,10,520,great escape the,4.9661
