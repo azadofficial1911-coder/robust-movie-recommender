@@ -17,14 +17,23 @@ from .services.results_loader import (
     load_experiment_results,
     load_result_figures,
 )
+from .services.robustness_comparison import (
+    build_robustness_comparison,
+    normalise_scenario,
+)
+
 
 def staff_required(view_func):
-    """Require a genuine authenticated staff/research account."""
+    """Require an authenticated staff/research account."""
+
     @wraps(view_func)
     @login_required
     def wrapped(request, *args, **kwargs):
         if not request.user.is_staff:
-            raise PermissionDenied("Research Lab access is restricted to staff.")
+            raise PermissionDenied(
+                "Research Lab access is restricted to staff."
+            )
+
         return view_func(request, *args, **kwargs)
 
     return wrapped
@@ -32,7 +41,10 @@ def staff_required(view_func):
 
 @staff_required
 def lab(request):
-    return render(request, "research/index.html")
+    return render(
+        request,
+        "research/index.html",
+    )
 
 
 @staff_required
@@ -125,6 +137,7 @@ def attack_lab(request):
         },
     )
 
+
 @staff_required
 def detection(request):
     """
@@ -142,17 +155,27 @@ def detection(request):
 
     if request.method == "POST":
         detection_requested = True
-        threshold = request.POST.get("threshold", "0.5")
+
+        threshold = request.POST.get(
+            "threshold",
+            "0.5",
+        )
 
         try:
-            threshold_value = float(threshold)
+            threshold_value = float(
+                threshold
+            )
 
-            validate_threshold(threshold_value)
+            validate_threshold(
+                threshold_value
+            )
 
             config_valid = True
 
         except (TypeError, ValueError) as exc:
-            errors.append(str(exc))
+            errors.append(
+                str(exc)
+            )
 
     return render(
         request,
@@ -174,13 +197,12 @@ def defence(request):
     Staff-only Defence Centre.
 
     Django only reads and displays results already produced by the
-    research scripts (experiments/apply_defence.py) -- no defence
-    calculation happens inside this view. When those results don't
-    exist yet, the template falls back to its original "integration
-    ready, pending real data" presentation.
+    research scripts. No defence calculation happens inside this view.
     """
 
-    defence_summary = load_defence_summary()
+    defence_summary = (
+        load_defence_summary()
+    )
 
     return render(
         request,
@@ -189,7 +211,10 @@ def defence(request):
             "page_title": "Defence Centre",
             "integration_ready": True,
             "defence_summary": defence_summary,
-            "results_available": defence_summary is not None,
+            "results_available": (
+                defence_summary
+                is not None
+            ),
         },
     )
 
@@ -200,13 +225,13 @@ def evaluation(request):
     Staff-only evaluation dashboard.
 
     Django only reads and displays results already produced by the
-    research scripts (experiments/build_experiment_results.py,
-    results/generate_reports.py) -- all metric calculation happens in
-    those scripts, not here. When those results don't exist yet, the
-    template falls back to its original "pending" presentation.
+    research scripts. Metric calculation remains in the experiment
+    and reporting pipeline.
     """
 
-    experiment_results = load_experiment_results()
+    experiment_results = (
+        load_experiment_results()
+    )
 
     return render(
         request,
@@ -217,7 +242,10 @@ def evaluation(request):
             "expected_metrics": EXPECTED_METRICS,
             "experiment_results": experiment_results,
             "result_figures": load_result_figures(),
-            "results_available": experiment_results is not None,
+            "results_available": (
+                experiment_results
+                is not None
+            ),
         },
     )
 
@@ -227,85 +255,33 @@ def robustness_comparison(request):
     """
     Staff-only lecturer-facing Robustness Comparison page.
 
-    The page compares the same recommender across:
-    - Clean
-    - Attacked / Without Robustness
-    - Defended / With Robustness
-
-    Values are loaded from real experiment result files.
-    No metrics are calculated or invented in this Django view.
+    Comparison logic is handled by the dedicated robustness
+    comparison service. The Django view only selects the scenario
+    and renders the returned real experiment data.
     """
 
-    selected_scenario = request.GET.get(
-        "scenario",
-        "random",
-    ).lower()
+    requested_scenario = (
+        request.GET.get(
+            "scenario",
+            "random",
+        )
+    )
 
-    if selected_scenario not in {
-        "random",
-        "average",
-    }:
+    try:
+        selected_scenario = (
+            normalise_scenario(
+                requested_scenario
+            )
+        )
+
+    except ValueError:
         selected_scenario = "random"
 
-    experiment_results = load_experiment_results()
-    defence_summary = load_defence_summary()
-
-    comparison = None
-
-    if experiment_results:
-
-        results_by_condition = {
-            row["condition"]: row
-            for row in experiment_results
-        }
-
-        clean = results_by_condition.get("clean")
-
-        attacked = results_by_condition.get(
+    comparison = (
+        build_robustness_comparison(
             selected_scenario
         )
-
-        defended = results_by_condition.get(
-            f"{selected_scenario}_defended"
-        )
-
-        defence_row = None
-
-        if defence_summary:
-            defence_row = next(
-                (
-                    row
-                    for row in defence_summary
-                    if str(
-                        row.get(
-                            "scenario",
-                            "",
-                        )
-                    ).lower()
-                    == selected_scenario
-                ),
-                None,
-            )
-
-        if clean and attacked and defended:
-
-            comparison = {
-                "scenario": selected_scenario,
-
-                "scenario_label": (
-                    "Random Push"
-                    if selected_scenario == "random"
-                    else "Average Push"
-                ),
-
-                "clean": clean,
-
-                "without_robustness": attacked,
-
-                "with_robustness": defended,
-
-                "defence": defence_row,
-            }
+    )
 
     return render(
         request,
@@ -314,6 +290,9 @@ def robustness_comparison(request):
             "page_title": "Robustness Comparison",
             "selected_scenario": selected_scenario,
             "comparison": comparison,
-            "results_available": comparison is not None,
+            "results_available": (
+                comparison
+                is not None
+            ),
         },
     )
