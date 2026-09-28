@@ -14,14 +14,22 @@
           crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/week6.css' %}">
+    {% if request.user.is_authenticated and request.user.is_staff %}
+    <link rel="stylesheet"
+          href="{% static 'css/robustness-control.css' %}">
+    {% endif %}
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     {% include "partials/navbar.html" %}
 
     <main>
-        {% block content %}{% endblock %}
+    {% block content %}{% endblock %}
     </main>
+
+    {% if request.user.is_authenticated and request.user.is_staff %}
+    {% include "partials/robustness_control.html" %}
+    {% endif %}
 
     {% include "partials/footer.html" %}
 
@@ -29,6 +37,9 @@
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
             crossorigin="anonymous"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    {% if request.user.is_authenticated and request.user.is_staff %}
+    <script src="{% static 'js/robustness-control.js' %}"></script>
+    {% endif %}
     {% block extra_js %}{% endblock %}
 </body>
 </html>

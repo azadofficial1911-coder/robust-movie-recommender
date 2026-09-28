@@ -1,0 +1,376 @@
+/* =========================================================
+   RMRS — STAFF ROBUSTNESS CONTROL
+   ========================================================= */
+
+.rmrs-robustness-control {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 1040;
+}
+
+
+/* =========================================================
+   DESKTOP PILL
+   ========================================================= */
+
+.rmrs-robustness-pill {
+    min-height: 58px;
+
+    padding: 8px 10px 8px 9px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    border: 1px solid #d8e3e8;
+    border-radius: 999px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 16px 38px rgba(11, 23, 54, 0.16),
+        0 4px 12px rgba(11, 23, 54, 0.07);
+}
+
+
+.rmrs-robustness-shield {
+    width: 40px;
+    height: 40px;
+
+    flex: 0 0 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #087f7d,
+            #10a7a5
+        );
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 800;
+}
+
+
+.rmrs-robustness-copy {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    line-height: 1.15;
+}
+
+
+.rmrs-robustness-copy strong {
+    color: #15203b;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+
+.rmrs-robustness-copy small {
+    margin-top: 3px;
+
+    color: #65718b;
+
+    font-size: 10px;
+}
+
+
+.rmrs-robustness-state {
+    min-width: 42px;
+
+    padding: 6px 9px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.05em;
+}
+
+
+.rmrs-robustness-state-on {
+    border: 1px solid #b8e5df;
+
+    background: #eaf9f6;
+
+    color: #087d7a;
+}
+
+
+.rmrs-robustness-state-off {
+    border: 1px solid #edb4b4;
+
+    background: #fff0f0;
+
+    color: #b33a3a;
+}
+
+
+/* =========================================================
+   MOBILE BUTTON
+   ========================================================= */
+
+.rmrs-robustness-mobile-button {
+    display: none;
+}
+
+
+/* =========================================================
+   MOBILE BOTTOM SHEET
+   ========================================================= */
+
+.rmrs-robustness-sheet {
+    position: fixed;
+    inset: 0;
+
+    z-index: 1060;
+}
+
+
+.rmrs-robustness-sheet[hidden] {
+    display: none;
+}
+
+
+.rmrs-robustness-sheet-backdrop {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(11, 23, 54, 0.45);
+}
+
+
+.rmrs-robustness-sheet-panel {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    padding: 22px 20px 28px;
+
+    border-radius: 22px 22px 0 0;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 -18px 45px rgba(11, 23, 54, 0.18);
+}
+
+
+.rmrs-robustness-sheet-header {
+    margin-bottom: 20px;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 16px;
+}
+
+
+.rmrs-robustness-sheet-eyebrow {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #087f7d;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.12em;
+}
+
+
+.rmrs-robustness-sheet-header h2 {
+    margin: 0;
+
+    color: #15203b;
+
+    font-size: 21px;
+    font-weight: 800;
+}
+
+
+.rmrs-robustness-sheet-close {
+    width: 38px;
+    height: 38px;
+
+    flex: 0 0 38px;
+
+    border: 1px solid #dfe6ef;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #65718b;
+
+    font-size: 23px;
+    line-height: 1;
+}
+
+
+.rmrs-robustness-current-state {
+    padding: 16px;
+
+    display: flex;
+    align-items: flex-start;
+
+    gap: 13px;
+
+    border: 1px solid #d3eeea;
+    border-radius: 14px;
+
+    background: #effaf8;
+}
+
+
+.rmrs-robustness-current-state strong {
+    display: block;
+
+    color: #15203b;
+
+    font-size: 14px;
+    font-weight: 800;
+}
+
+
+.rmrs-robustness-current-state p {
+    margin: 5px 0 0;
+
+    color: #65718b;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+.rmrs-robustness-sheet-note {
+    margin-top: 14px;
+
+    padding: 12px 14px;
+
+    border: 1px dashed #cfd9e6;
+    border-radius: 11px;
+
+    color: #65718b;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .rmrs-robustness-control {
+        right: 18px;
+        bottom: 18px;
+    }
+
+
+    .rmrs-robustness-pill {
+        min-height: 50px;
+
+        padding: 6px 8px;
+    }
+
+
+    .rmrs-robustness-shield {
+        width: 36px;
+        height: 36px;
+
+        flex-basis: 36px;
+    }
+
+
+    .rmrs-robustness-copy small {
+        display: none;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .rmrs-robustness-control {
+        right: 16px;
+        bottom: 16px;
+    }
+
+
+    .rmrs-robustness-pill {
+        display: none;
+    }
+
+
+    .rmrs-robustness-mobile-button {
+        width: 54px;
+        height: 54px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        border: 0;
+        border-radius: 50%;
+
+        background:
+            linear-gradient(
+                135deg,
+                #087f7d,
+                #10a7a5
+            );
+
+        color: #ffffff;
+
+        font-size: 16px;
+        font-weight: 800;
+
+        box-shadow:
+            0 12px 28px rgba(11, 23, 54, 0.22);
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .rmrs-robustness-control *,
+    .rmrs-robustness-sheet * {
+        scroll-behavior: auto !important;
+        animation: none !important;
+        transition: none !important;
+    }
+
+}
