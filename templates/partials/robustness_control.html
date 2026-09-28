@@ -1,0 +1,98 @@
+<div class="rmrs-robustness-control"
+     id="rmrsRobustnessControl"
+     aria-label="Robustness protection controls">
+
+    <!-- Desktop / Tablet Control -->
+    <div class="rmrs-robustness-pill">
+
+        <span class="rmrs-robustness-shield"
+              aria-hidden="true">
+            R
+        </span>
+
+        <span class="rmrs-robustness-copy">
+            <strong>Robustness</strong>
+            <small>Protected mode</small>
+        </span>
+
+        <span class="rmrs-robustness-state rmrs-robustness-state-on">
+            ON
+        </span>
+
+    </div>
+
+
+    <!-- Mobile Floating Button -->
+    <button class="rmrs-robustness-mobile-button"
+            id="rmrsRobustnessMobileButton"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rmrsRobustnessSheet"
+            aria-label="Open robustness controls">
+
+        <span aria-hidden="true">R</span>
+
+    </button>
+
+
+    <!-- Mobile Bottom Sheet -->
+    <div class="rmrs-robustness-sheet"
+         id="rmrsRobustnessSheet"
+         hidden>
+
+        <div class="rmrs-robustness-sheet-backdrop"
+             data-robustness-close>
+        </div>
+
+        <section class="rmrs-robustness-sheet-panel"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-labelledby="rmrsRobustnessSheetTitle">
+
+            <div class="rmrs-robustness-sheet-header">
+
+                <div>
+                    <span class="rmrs-robustness-sheet-eyebrow">
+                        STAFF DEMONSTRATION
+                    </span>
+
+                    <h2 id="rmrsRobustnessSheetTitle">
+                        Robustness Protection
+                    </h2>
+                </div>
+
+                <button class="rmrs-robustness-sheet-close"
+                        type="button"
+                        data-robustness-close
+                        aria-label="Close robustness controls">
+                    ×
+                </button>
+
+            </div>
+
+            <div class="rmrs-robustness-current-state">
+
+                <span class="rmrs-robustness-state rmrs-robustness-state-on">
+                    ON
+                </span>
+
+                <div>
+                    <strong>Protected recommendations</strong>
+                    <p>
+                        Detection and defence are enabled for the
+                        recommendation experience.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="rmrs-robustness-sheet-note">
+                The OFF demonstration state will become available when
+                the staff robustness endpoint is connected.
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
