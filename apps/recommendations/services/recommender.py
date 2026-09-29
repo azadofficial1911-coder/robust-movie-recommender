@@ -15,17 +15,66 @@ TOP_K_NEIGHBORS = 30
 MIN_NEIGHBORS = 3
 
 
-def get_recommendations(user_id: int, top_n: int = 10) -> list[dict]:
+def _load_training_ratings(training_ratings=None) -> pd.DataFrame:
+    """Return a defensive copy of the requested training dataset."""
+
+    if training_ratings is None:
+        return pd.read_csv(TRAIN_FILE)
+
+    if not isinstance(training_ratings, pd.DataFrame):
+        raise TypeError("training_ratings must be a pandas DataFrame.")
+
+    required_columns = {"user_id", "movie_id", "rating"}
+    missing_columns = required_columns.difference(training_ratings.columns)
+
+    if missing_columns:
+        raise ValueError(
+            "training_ratings is missing required columns: "
+            + ", ".join(sorted(missing_columns))
+        )
+
+    return training_ratings[
+        ["user_id", "movie_id", "rating"]
+    ].copy(deep=True)
+
+
+def _load_movie_stats(movie_stats=None) -> pd.DataFrame:
+    """Return movie metadata/statistics for recommendation output."""
+
+    if movie_stats is None:
+        return pd.read_csv(MOVIE_STATS_FILE)
+
+    if not isinstance(movie_stats, pd.DataFrame):
+        raise TypeError("movie_stats must be a pandas DataFrame.")
+
+    required_columns = {"movie_id"}
+    missing_columns = required_columns.difference(movie_stats.columns)
+
+    if missing_columns:
+        raise ValueError(
+            "movie_stats is missing required columns: "
+            + ", ".join(sorted(missing_columns))
+        )
+
+    return movie_stats.copy(deep=True)
+
+
+def get_recommendations(
+    user_id: int,
+    top_n: int = 10,
+    *,
+    training_ratings=None,
+    movie_stats=None,
+    candidate_movie_ids=None,
+) -> list[dict]:
     """
     Generate personalised recommendations for a real Django website user.
 
-    The website user's saved ratings are compared with genuine MovieLens
-    users from the fixed training dataset.
+    By default this uses the fixed genuine MovieLens training dataset.
+    Research/demo callers may pass an alternative ratings DataFrame so the
+    exact same collaborative-filtering logic can be evaluated on clean,
+    attacked, and defended data.
     """
-
-    # ---------------------------------------------------------
-    # 1. Load the website user's real ratings.
-    # ---------------------------------------------------------
 
     website_ratings = list(
         WebsiteRating.objects.filter(user_id=user_id).values(
@@ -34,17 +83,14 @@ def get_recommendations(user_id: int, top_n: int = 10) -> list[dict]:
         )
     )
 
-    # A personalised CF model needs some rating history.
     if len(website_ratings) < 3:
         return []
 
     user_profile = pd.DataFrame(website_ratings)
 
-    # ---------------------------------------------------------
-    # 2. Load genuine MovieLens training data.
-    # ---------------------------------------------------------
-
-    train_ratings = pd.read_csv(TRAIN_FILE)
+    train_ratings = _load_training_ratings(
+        training_ratings
+    )
 
     user_item_matrix = train_ratings.pivot_table(
         index="user_id",
@@ -52,25 +98,23 @@ def get_recommendations(user_id: int, top_n: int = 10) -> list[dict]:
         values="rating",
     )
 
-    movie_stats = pd.read_csv(MOVIE_STATS_FILE)
+    movie_stats_frame = _load_movie_stats(
+        movie_stats
+    )
 
-    # ---------------------------------------------------------
-    # 3. Find movies shared between the website user and
-    #    MovieLens training data.
-    # ---------------------------------------------------------
-
-    website_movie_ids = set(user_profile["movie_id"])
+    website_movie_ids = set(
+        user_profile["movie_id"].astype(int)
+    )
 
     common_movies = [
-        movie_id
+        int(movie_id)
         for movie_id in website_movie_ids
-        if movie_id in user_item_matrix.columns
+        if int(movie_id) in user_item_matrix.columns
     ]
 
     if len(common_movies) < 3:
         return []
 
-    # Website-user ratings for common movies.
     website_series = (
         user_profile[
             user_profile["movie_id"].isin(common_movies)
@@ -81,15 +125,6 @@ def get_recommendations(user_id: int, top_n: int = 10) -> list[dict]:
     )
 
     website_mean = website_series.mean()
-
-    website_centred = (
-        website_series - website_mean
-    )
-
-    # ---------------------------------------------------------
-    # 4. Calculate similarity between the website user
-    #    and each MovieLens user.
-    # ---------------------------------------------------------
 
     similarities = {}
 
@@ -122,7 +157,6 @@ def get_recommendations(user_id: int, top_n: int = 10) -> list[dict]:
             neighbour_values - neighbour_values.mean()
         ).values.reshape(1, -1)
 
-        # Skip profiles with no rating variation.
         if (
             (active_centred == 0).all()
             or (neighbour_centred == 0).all()
@@ -140,29 +174,39 @@ def get_recommendations(user_id: int, top_n: int = 10) -> list[dict]:
     if not similarities:
         return []
 
-    similarity_series = pd.Series(similarities).sort_values(
+    similarity_series = pd.Series(
+        similarities
+    ).sort_values(
         ascending=False
-    )
-
-    # Keep the most similar users.
-    similarity_series = similarity_series.head(
+    ).head(
         TOP_K_NEIGHBORS
     )
 
-    # ---------------------------------------------------------
-    # 5. Predict ratings for movies the website user
-    #    has not already rated.
-    # ---------------------------------------------------------
-
     rated_movie_ids = set(
-        user_profile["movie_id"]
+        user_profile["movie_id"].astype(int)
     )
+
+    allowed_movie_ids = None
+
+    if candidate_movie_ids is not None:
+        allowed_movie_ids = {
+            int(movie_id)
+            for movie_id in candidate_movie_ids
+        }
 
     recommendations = []
 
     for movie_id in user_item_matrix.columns:
 
+        movie_id = int(movie_id)
+
         if movie_id in rated_movie_ids:
+            continue
+
+        if (
+            allowed_movie_ids is not None
+            and movie_id not in allowed_movie_ids
+        ):
             continue
 
         neighbour_ratings = user_item_matrix.loc[
@@ -203,29 +247,30 @@ def get_recommendations(user_id: int, top_n: int = 10) -> list[dict]:
             min(5.0, prediction),
         )
 
-        movie_row = movie_stats[
-            movie_stats["movie_id"] == movie_id
+        movie_row = movie_stats_frame[
+            movie_stats_frame["movie_id"] == movie_id
         ]
 
-        if movie_row.empty:
-            continue
+        title = f"Movie {movie_id}"
+
+        if (
+            not movie_row.empty
+            and "title" in movie_stats_frame.columns
+        ):
+            title = str(
+                movie_row.iloc[0]["title"]
+            )
 
         recommendations.append(
             {
-                "movie_id": int(movie_id),
-                "title": str(
-                    movie_row.iloc[0]["title"]
-                ),
+                "movie_id": movie_id,
+                "title": title,
                 "predicted_rating": round(
                     float(prediction),
                     4,
                 ),
             }
         )
-
-    # ---------------------------------------------------------
-    # 6. Return highest predicted movies.
-    # ---------------------------------------------------------
 
     recommendations.sort(
         key=lambda item: item["predicted_rating"],
