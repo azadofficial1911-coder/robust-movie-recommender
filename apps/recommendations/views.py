@@ -1,6 +1,8 @@
 """Views for the recommendation presentation layer."""
 
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
+from django.db.models import Max
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
@@ -29,9 +31,13 @@ def index(request):
 
     top_n = min(max(top_n, 1), 50)
 
-    rating_count = WebsiteRating.objects.filter(
+    user_ratings = WebsiteRating.objects.filter(
         user=request.user
-    ).count()
+    )
+    rating_count = user_ratings.count()
+    latest_timestamp = user_ratings.aggregate(
+        latest=Max("timestamp")
+    )["latest"]
 
     robustness_enabled = True
 
@@ -47,13 +53,30 @@ def index(request):
     demo_error = None
 
     if rating_count >= 3:
-        try:
-            demo = build_user_robustness_demo(
-                request.user.id
-            )
-        except Exception as exc:
-            if request.user.is_staff:
-                demo_error = str(exc)
+        timestamp_key = (
+            latest_timestamp.isoformat()
+            if latest_timestamp is not None
+            else "none"
+        )
+        cache_key = (
+            f"robustness-demo:user:{request.user.id}:"
+            f"ratings:{rating_count}:{timestamp_key}"
+        )
+        demo = cache.get(cache_key)
+
+        if demo is None:
+            try:
+                demo = build_user_robustness_demo(
+                    request.user.id
+                )
+                cache.set(
+                    cache_key,
+                    demo,
+                    timeout=900,
+                )
+            except Exception as exc:
+                if request.user.is_staff:
+                    demo_error = str(exc)
 
     if demo:
         if request.user.is_staff and not robustness_enabled:
@@ -114,10 +137,6 @@ def toggle_robustness(request):
     return JsonResponse(
         {
             "robustness_enabled": enabled,
-            "mode": (
-                "protected"
-                if enabled
-                else "attacked"
-            ),
+            "mode": "protected" if enabled else "attacked",
         }
     )
