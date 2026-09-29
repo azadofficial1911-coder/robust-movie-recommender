@@ -1,13 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const openButton = document.getElementById(
+    const desktopToggle = document.getElementById(
+        "rmrsRobustnessDesktopToggle"
+    );
+    const mobileButton = document.getElementById(
         "rmrsRobustnessMobileButton"
     );
-
     const sheet = document.getElementById(
         "rmrsRobustnessSheet"
     );
+    const sheetToggle = document.getElementById(
+        "rmrsRobustnessSheetToggle"
+    );
 
-    if (!openButton || !sheet) {
+    if (!desktopToggle || !mobileButton || !sheet) {
         return;
     }
 
@@ -15,32 +20,82 @@ document.addEventListener("DOMContentLoaded", () => {
         "[data-robustness-close]"
     );
 
-    const openSheet = () => {
-        sheet.hidden = false;
-        openButton.setAttribute("aria-expanded", "true");
+    const getCookie = (name) => {
+        const cookie = document.cookie
+            .split(";")
+            .map((item) => item.trim())
+            .find((item) => item.startsWith(`${name}=`));
 
-        const closeButton = sheet.querySelector(
-            ".rmrs-robustness-sheet-close"
+        if (!cookie) {
+            return "";
+        }
+
+        return decodeURIComponent(
+            cookie.substring(name.length + 1)
         );
+    };
 
-        if (closeButton) {
-            closeButton.focus();
+    const toggleRobustness = async () => {
+        desktopToggle.disabled = true;
+        if (sheetToggle) {
+            sheetToggle.disabled = true;
+        }
+
+        try {
+            const response = await fetch(
+                "/recommendations/toggle-robustness/",
+                {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken"),
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    `Robustness toggle failed (${response.status}).`
+                );
+            }
+
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+            desktopToggle.disabled = false;
+            if (sheetToggle) {
+                sheetToggle.disabled = false;
+            }
         }
     };
 
+    const openSheet = () => {
+        sheet.hidden = false;
+        mobileButton.setAttribute("aria-expanded", "true");
+    };
 
     const closeSheet = () => {
         sheet.hidden = true;
-        openButton.setAttribute("aria-expanded", "false");
-        openButton.focus();
+        mobileButton.setAttribute("aria-expanded", "false");
+        mobileButton.focus();
     };
 
+    desktopToggle.addEventListener(
+        "click",
+        toggleRobustness
+    );
 
-    openButton.addEventListener(
+    mobileButton.addEventListener(
         "click",
         openSheet
     );
 
+    if (sheetToggle) {
+        sheetToggle.addEventListener(
+            "click",
+            toggleRobustness
+        );
+    }
 
     closeButtons.forEach((button) => {
         button.addEventListener(
@@ -49,12 +104,8 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     });
 
-
     document.addEventListener("keydown", (event) => {
-        if (
-            event.key === "Escape"
-            && !sheet.hidden
-        ) {
+        if (event.key === "Escape" && !sheet.hidden) {
             closeSheet();
         }
     });
