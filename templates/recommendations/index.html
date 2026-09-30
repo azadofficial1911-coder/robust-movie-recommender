@@ -38,9 +38,9 @@
 
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Movie</th>
-                            <th>Predicted Score</th>
+                            <th scope="col">Rank</th>
+                            <th scope="col">Movie</th>
+                            <th scope="col">Predicted Score</th>
                         </tr>
                     </thead>
 
@@ -49,15 +49,33 @@
                         {% for item in results %}
 
                             <tr>
-                                <td>{{ forloop.counter }}</td>
 
-                                <td class="fw-semibold">
-                                    {{ item.title }}
+                                <td class="fw-bold">
+                                    #{{ item.rank|default:forloop.counter }}
                                 </td>
 
                                 <td>
-                                    {{ item.predicted_rating|floatformat:2 }}
+
+                                    <div class="fw-semibold">
+                                        {% firstof item.display_name item.title "Movie" %}
+                                    </div>
+
+                                    {% if item.reason %}
+                                        <div class="small text-secondary mt-1">
+                                            {{ item.reason }}
+                                        </div>
+                                    {% endif %}
+
                                 </td>
+
+                                <td class="fw-semibold">
+
+                                    {% firstof item.predicted_score item.predicted_rating as recommendation_score %}
+
+                                    {{ recommendation_score|floatformat:2 }}
+
+                                </td>
+
                             </tr>
 
                         {% endfor %}
@@ -79,9 +97,9 @@
             </strong>
 
             <p class="mb-0 mt-2 text-secondary">
-                Your movie ratings are stored successfully.
-                Personalised recommendation results will appear here when
-                the recommendation backend is connected to RMRS.
+                Add more movie ratings to strengthen your preference profile.
+                Personalised recommendations will appear when enough matching
+                rating information is available.
             </p>
 
         </div>
