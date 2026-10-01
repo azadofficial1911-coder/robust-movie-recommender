@@ -11,12 +11,18 @@ Produces:
   - results/figures/target_hit_rate.png
   - results/figures/detection_metrics.png
   - results/figures/confusion_matrix.png
+  - results/figures/target_frequency.png   (only if target_freq_* columns are filled)
+
+Every figure is then copied to static/images/research/ so the Django
+Evaluation Dashboard always shows the figures generated from the current
+results file (never a stale, hand-copied version).
 
 If experiment_results.csv has no rows, this script reports that and
 exits without creating anything -- every figure/table here comes only
 from real rows already written by the pilot scripts.
 """
 
+import shutil
 import sys
 from pathlib import Path
 
@@ -35,6 +41,16 @@ AVERAGE_DETECTION_FILE = PROJECT_ROOT / "results" / "tables" / "average_detectio
 
 TABLES_DIR = PROJECT_ROOT / "results" / "tables"
 FIGURES_DIR = PROJECT_ROOT / "results" / "figures"
+STATIC_FIGURES_DIR = PROJECT_ROOT / "static" / "images" / "research"
+
+RESULT_FIGURE_FILES = [
+    "clean_attacked_defended.png",
+    "target_rank_comparison.png",
+    "target_hit_rate.png",
+    "detection_metrics.png",
+    "confusion_matrix.png",
+    "target_frequency.png",
+]
 
 CONDITION_ORDER = ["clean", "random", "random_defended", "average", "average_defended"]
 
@@ -149,6 +165,42 @@ def plot_confusion_matrix() -> None:
     plt.close()
 
 
+def plot_target_frequency(results: pd.DataFrame) -> bool:
+    """Target frequency @10/@50/@100 over the wider genuine-user sample."""
+    columns = ["target_freq_at_10", "target_freq_at_50", "target_freq_at_100"]
+    if not set(columns).issubset(results.columns) or results[columns].isna().all().all():
+        print("Skipping target frequency figure: target_freq_* columns are empty.")
+        return False
+
+    sample = results["target_freq_sample_users"].dropna()
+    sample_label = f"{int(sample.iloc[0])} genuine users" if not sample.empty else "genuine users"
+
+    table = results[columns].astype(float)
+    table.columns = ["Top-10", "Top-50", "Top-100"]
+
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    table.plot(kind="bar")
+    plt.title(f"Target in Top-K -- share of {sample_label}")
+    plt.ylabel("Share of users")
+    plt.xticks(rotation=30, ha="right")
+    plt.tight_layout()
+    plt.savefig(FIGURES_DIR / "target_frequency.png")
+    plt.close()
+    return True
+
+
+def sync_figures_to_static() -> list[str]:
+    """Copy the freshly generated figures into Django's static folder."""
+    STATIC_FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    copied = []
+    for name in RESULT_FIGURE_FILES:
+        source = FIGURES_DIR / name
+        if source.exists():
+            shutil.copy2(source, STATIC_FIGURES_DIR / name)
+            copied.append(name)
+    return copied
+
+
 def main() -> None:
     results = load_results()
 
@@ -161,10 +213,14 @@ def main() -> None:
     plot_hit_rate(attack_table)
     plot_detection_metrics(detection_table)
     plot_confusion_matrix()
+    plot_target_frequency(results)
+
+    copied = sync_figures_to_static()
 
     print("Reports generated from the real experiment_results.csv data:")
     print(f"  Tables  -> {TABLES_DIR}")
     print(f"  Figures -> {FIGURES_DIR}")
+    print(f"  Copied to Django static ({len(copied)}) -> {STATIC_FIGURES_DIR}")
 
 
 if __name__ == "__main__":

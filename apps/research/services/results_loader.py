@@ -54,6 +54,10 @@ RESULT_FIGURES = [
         "file": "images/research/confusion_matrix.png",
         "title": "Detection Confusion Matrix",
     },
+    {
+        "file": "images/research/target_frequency.png",
+        "title": "Target Frequency @10 / @50 / @100 -- wider genuine-user sample",
+    },
 ]
 
 
@@ -68,6 +72,12 @@ def _read_csv_safely(path: Path) -> pd.DataFrame | None:
     return df if not df.empty else None
 
 
+def _clean_record(record: dict) -> dict:
+    """Blank CSV cells arrive from pandas as NaN; templates should see None
+    (renders as empty / falsy) rather than the string "nan"."""
+    return {key: (None if pd.isna(value) else value) for key, value in record.items()}
+
+
 def load_defence_summary() -> list[dict] | None:
     """Return one row per attack scenario: users/ratings before & after,
     defence method, suspicious profiles detected."""
@@ -75,7 +85,7 @@ def load_defence_summary() -> list[dict] | None:
     df = _read_csv_safely(DEFENCE_SUMMARY_PATH)
     if df is None:
         return None
-    return df.to_dict(orient="records")
+    return [_clean_record(row) for row in df.to_dict(orient="records")]
 
 
 def load_experiment_results() -> list[dict] | None:
@@ -92,7 +102,7 @@ def load_experiment_results() -> list[dict] | None:
     for condition in CONDITION_ORDER:
         if condition not in df.index:
             continue
-        row = df.loc[condition].to_dict()
+        row = _clean_record(df.loc[condition].to_dict())
         row["condition"] = condition
         row["condition_label"] = CONDITION_LABELS.get(condition, condition)
         rows.append(row)
