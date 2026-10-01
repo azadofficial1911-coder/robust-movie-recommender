@@ -6,7 +6,6 @@
 
 ## What this delivers
 
-The work division plan (section 6) says Member 4 is done when *"every number shown on the Robustness Comparison page can be traced back to a real experiment output, and the defended result can be directly compared with the same Clean and Attacked setup."*
 
 This branch adds four things to make that true and checkable:
 
