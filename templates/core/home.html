@@ -1,8 +1,12 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Home · RMRS{% endblock %}
 
 {% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/home-robustness.css' %}">
+
 <style>
     /* Full-catalogue additions only. The page keeps the original RMRS theme. */
     .catalogue-row-head {
@@ -204,48 +208,267 @@
 <section class="page-section">
     <div class="container">
 
-        <section class="rmrs-recommendation-section mb-5">
-            <div class="rmrs-section-header">
-                <div>
-                    <p class="rmrs-section-eyebrow">PERSONALISED DISCOVERY</p>
-                    <h2>Recommended For You</h2>
-                    <p class="rmrs-section-description">
-                        Movie suggestions based on your saved ratings and preference profile.
-                    </p>
-                </div>
+        {% if request.user.is_staff and robustness_demo %}
+<section class="home-robustness-impact mb-5">
 
-                <a class="rmrs-section-link" href="{% url 'recommendations:index' %}">
-                    View recommendations <span aria-hidden="true">→</span>
-                </a>
-            </div>
+    <div class="home-robustness-impact-head">
+        <div>
+            <p class="rmrs-section-eyebrow">
+                STAFF ROBUSTNESS DEMONSTRATION
+            </p>
 
-            {% if recommended %}
-            <div class="horizontal-movie-row">
-                {% for item in recommended %}
-                <div class="stream-card">
-                    <a class="catalogue-card" href="{% url 'movies:detail' item.movie_id %}">
-                        <div class="catalogue-art">
-                            <span class="catalogue-art-brand">RMRS</span>
-                            <strong class="catalogue-art-title">{{ item.title }}</strong>
-                        </div>
-                        <div class="catalogue-card-body">
-                            <span class="recommend-badge">RECOMMENDED</span>
-                            <div class="catalogue-card-title">{{ item.title }}</div>
-                            <div class="catalogue-card-meta">
-                                <span>Personalised</span>
-                                <span class="catalogue-score">★ {{ item.predicted_rating|floatformat:2 }}</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {% endfor %}
-            </div>
+            <h2>
+                Robustness Impact
+            </h2>
+
+            {% if active_mode == "attacked" %}
+            <p>
+                Protection is currently bypassed.
+                The recommendations below use the attacked state.
+            </p>
             {% else %}
-            <div class="catalogue-empty">
-                Rate more movies to build your personalised recommendations. Your full MovieLens catalogue is available below.
-            </div>
+            <p>
+                Detection and defence are active.
+                The recommendations below use the protected state.
+            </p>
             {% endif %}
-        </section>
+        </div>
+
+        <div
+            class="
+                home-robustness-status
+                {% if active_mode == 'attacked' %}
+                    home-robustness-status-off
+                {% else %}
+                    home-robustness-status-on
+                {% endif %}
+            "
+        >
+            {% if active_mode == "attacked" %}
+                ROBUSTNESS OFF
+            {% else %}
+                ROBUSTNESS ON
+            {% endif %}
+        </div>
+    </div>
+
+
+    <div class="home-robustness-flow">
+
+        {% for movement in robustness_demo.target_movements %}
+
+        <article class="home-robustness-target">
+
+            <span class="home-robustness-target-label">
+                {{ movement.display_name }}
+            </span>
+
+            <div class="home-robustness-ranks">
+
+                <div>
+                    <small>Clean</small>
+                    <strong>
+                        #{{ movement.clean_rank|default:"—" }}
+                    </strong>
+                </div>
+
+                <span aria-hidden="true">→</span>
+
+                <div
+                    class="
+                        {% if active_mode == 'attacked' %}
+                            home-rank-active-off
+                        {% endif %}
+                    "
+                >
+                    <small>Attacked</small>
+                    <strong>
+                        #{{ movement.attacked_rank|default:"—" }}
+                    </strong>
+                </div>
+
+                <span aria-hidden="true">→</span>
+
+                <div
+                    class="
+                        {% if active_mode == 'protected' %}
+                            home-rank-active-on
+                        {% endif %}
+                    "
+                >
+                    <small>Protected</small>
+                    <strong>
+                        #{{ movement.defended_rank|default:"—" }}
+                    </strong>
+                </div>
+
+            </div>
+
+            {% if movement.attack_gain != None %}
+            <p class="home-robustness-movement-note">
+                Attack gain:
+                <strong>{{ movement.attack_gain }}</strong>
+                position{{ movement.attack_gain|pluralize }}
+
+                {% if movement.recovery != None %}
+                    · Recovery:
+                    <strong>{{ movement.recovery }}</strong>
+                    position{{ movement.recovery|pluralize }}
+                {% endif %}
+            </p>
+            {% endif %}
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+    <a
+        class="rmrs-section-link home-robustness-link"
+        href="{% url 'recommendations:index' %}"
+    >
+        View full robustness recommendations →
+    </a>
+
+</section>
+{% endif %}
+
+<!-- =================================================
+     RECOMMENDED FOR YOU
+================================================= -->
+
+<section class="rmrs-recommendation-section mb-5">
+
+    <!-- HEADER -->
+    <div class="rmrs-section-header">
+
+        <div>
+            <p class="rmrs-section-eyebrow">
+                PERSONALISED DISCOVERY
+            </p>
+
+            <h2>
+                Recommended For You
+            </h2>
+
+            <p class="rmrs-section-description">
+                Movie suggestions based on your saved ratings
+                and preference profile.
+            </p>
+        </div>
+
+        <a
+            class="rmrs-section-link"
+            href="{% url 'recommendations:index' %}"
+        >
+            View recommendations
+
+            <span aria-hidden="true">
+                →
+            </span>
+        </a>
+
+    </div>
+
+
+    <!-- =============================================
+         REAL RECOMMENDATIONS
+         ============================================= -->
+
+    {% if recommended %}
+
+        <div class="horizontal-movie-row rmrs-recommendation-row">
+
+            {% for item in recommended %}
+
+                <a
+                    class="rmrs-recommendation-card"
+                    href="{% url 'recommendations:index' %}"
+                >
+
+                    <div
+                        class="rmrs-recommendation-icon"
+                        aria-hidden="true"
+                    >
+                        R
+                    </div>
+
+                    <div class="rmrs-recommendation-content">
+
+                        <span class="rmrs-recommendation-label">
+                            RECOMMENDED
+                        </span>
+
+                        <strong>
+                            {{ item.title }}
+                        </strong>
+
+                        <span class="rmrs-predicted-score">
+                            Predicted rating:
+                            {{ item.predicted_rating|floatformat:2 }}/5
+                        </span>
+
+                    </div>
+
+                    <span
+                        class="rmrs-recommendation-arrow"
+                        aria-hidden="true"
+                    >
+                        →
+                    </span>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+
+    <!-- =============================================
+         EMPTY / ONBOARDING STATE
+         ============================================= -->
+
+    {% else %}
+
+        <div class="rmrs-recommendation-empty">
+
+            <div
+                class="rmrs-recommendation-empty-icon"
+                aria-hidden="true"
+            >
+                R
+            </div>
+
+            <div class="rmrs-recommendation-empty-content">
+
+                <strong>
+                    Build your personalised recommendations
+                </strong>
+
+                <p>
+                    Rate movies to strengthen your preference profile.
+                    Your personalised recommendations will appear here.
+                </p>
+
+            </div>
+
+            <a
+                class="rmrs-recommendation-action"
+                href="{% url 'movies:explorer' %}"
+            >
+                Browse &amp; Rate Movies
+
+                <span aria-hidden="true">
+                    →
+                </span>
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</section>
 
         <div class="movie-row-section">
             <div class="catalogue-row-head">
