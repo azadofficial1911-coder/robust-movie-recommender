@@ -1,16 +1,15 @@
 from functools import wraps
 
+import pandas as pd
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
-
-from apps.movies.services.catalog import get_all_movies
 
 from .services.attacks import AttackConfig, validate_attack_config
 from .services.detection import CANDIDATE_FEATURES, validate_threshold
 from .services.evaluation import EXPECTED_METRICS
 from .services.live_workflow import (
-    get_workflow,
+    MOVIE_STATS_FILE,
     run_attack,
     run_defence,
     run_detection,
@@ -47,6 +46,34 @@ def _session_key(request) -> str:
     return str(request.session.session_key)
 
 
+def _research_movie_catalogue() -> list[dict]:
+    """Load the real processed MovieLens catalogue used by the experiments."""
+
+    movie_stats = pd.read_csv(MOVIE_STATS_FILE)
+
+    required_columns = {"movie_id", "title"}
+    missing = required_columns.difference(movie_stats.columns)
+    if missing:
+        raise ValueError(
+            "movie_statistics.csv is missing required columns: "
+            + ", ".join(sorted(missing))
+        )
+
+    movies = []
+
+    for row in movie_stats.sort_values("movie_id").itertuples(index=False):
+        movies.append(
+            {
+                "id": int(row.movie_id),
+                "title": str(row.title),
+                "rating_count": int(getattr(row, "rating_count", 0)),
+                "mean_rating": float(getattr(row, "mean_rating", 0.0)),
+            }
+        )
+
+    return movies
+
+
 @staff_required
 def lab(request):
     status = workflow_status(_session_key(request))
@@ -61,7 +88,12 @@ def lab(request):
 def attack_lab(request):
     """Configure and execute a real Random Push or Average Push attack."""
 
-    movies = get_all_movies()
+    movies = _research_movie_catalogue()
+    movie_lookup = {
+        int(movie["id"]): movie
+        for movie in movies
+    }
+
     errors = []
     attack_requested = False
     attack_result = None
@@ -85,22 +117,35 @@ def attack_lab(request):
         }
 
         try:
+            target_movie_id = int(form_data["target_movie_id"])
+
+            if target_movie_id not in movie_lookup:
+                errors.append(
+                    "Target movie ID does not exist in the processed MovieLens catalogue."
+                )
+
             config = AttackConfig(
                 attack_type=form_data["attack_type"],
-                target_movie_id=int(form_data["target_movie_id"]),
+                target_movie_id=target_movie_id,
                 attack_size_percent=float(form_data["attack_size_percent"]),
                 filler_size_percent=float(form_data["filler_size_percent"]),
                 random_seed=int(form_data["random_seed"]),
             )
-            errors = validate_attack_config(config)
+            errors.extend(validate_attack_config(config))
 
             if not errors:
                 attack_result = run_attack(
                     _session_key(request),
                     config,
                 )
+                attack_result["target_movie_title"] = movie_lookup[
+                    target_movie_id
+                ]["title"]
         except (TypeError, ValueError) as exc:
-            errors.append(str(exc) or "Please enter valid values for the attack configuration.")
+            errors.append(
+                str(exc)
+                or "Please enter valid values for the attack configuration."
+            )
 
     status = workflow_status(_session_key(request))
 
@@ -110,6 +155,7 @@ def attack_lab(request):
         {
             "page_title": "Attack Laboratory",
             "movies": movies,
+            "movie_count": len(movies),
             "errors": errors,
             "attack_requested": attack_requested,
             "attack_result": attack_result,
