@@ -2,336 +2,288 @@
 
 {% block title %}Home · RMRS{% endblock %}
 
+{% block extra_css %}
+<style>
+    .catalogue-home {
+        background: #111;
+        color: #f5f5f5;
+        min-height: 100vh;
+        padding-bottom: 4rem;
+    }
+    .catalogue-hero {
+        min-height: 430px;
+        display: flex;
+        align-items: end;
+        background:
+            linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.62) 55%, rgba(0,0,0,.20) 100%),
+            linear-gradient(180deg, #401015 0%, #14090a 72%, #111 100%);
+        padding: 4rem 0 3rem;
+    }
+    .catalogue-hero-copy { max-width: 720px; }
+    .catalogue-kicker {
+        color: #ef3340;
+        font-weight: 800;
+        letter-spacing: .12em;
+        font-size: .78rem;
+    }
+    .catalogue-hero h1 {
+        font-size: clamp(2.8rem, 7vw, 6rem);
+        line-height: .95;
+        margin: .5rem 0 1rem;
+    }
+    .catalogue-meta { color: #d6d6d6; }
+    .catalogue-shell { margin-top: -1rem; position: relative; z-index: 2; }
+    .catalogue-row { margin-bottom: 2.4rem; }
+    .catalogue-row-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: .8rem;
+    }
+    .catalogue-row-head h2 { margin: 0; font-size: 1.45rem; }
+    .catalogue-row-head span { color: #9d9d9d; font-size: .9rem; }
+    .catalogue-strip {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(190px, 190px);
+        gap: .85rem;
+        overflow-x: auto;
+        padding: .3rem .1rem 1rem;
+        scrollbar-width: thin;
+    }
+    .catalogue-card {
+        display: block;
+        color: inherit;
+        text-decoration: none;
+        background: #1d1d1d;
+        border: 1px solid #2d2d2d;
+        border-radius: .7rem;
+        overflow: hidden;
+        transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+    }
+    .catalogue-card:hover {
+        color: inherit;
+        transform: translateY(-5px) scale(1.015);
+        border-color: #ef3340;
+        box-shadow: 0 14px 32px rgba(0,0,0,.36);
+    }
+    .catalogue-art {
+        aspect-ratio: 2 / 3;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background:
+            radial-gradient(circle at 80% 15%, rgba(239,51,64,.28), transparent 35%),
+            linear-gradient(145deg, #2a2a2a, #111);
+        border-bottom: 1px solid #303030;
+    }
+    .catalogue-art-brand {
+        color: #ef3340;
+        font-weight: 900;
+        letter-spacing: .12em;
+        font-size: .72rem;
+    }
+    .catalogue-art-title {
+        font-size: 1.08rem;
+        line-height: 1.15;
+        overflow-wrap: anywhere;
+    }
+    .catalogue-card-body { padding: .8rem .9rem .95rem; }
+    .catalogue-card-title {
+        font-weight: 750;
+        line-height: 1.2;
+        min-height: 2.4em;
+        margin-bottom: .45rem;
+    }
+    .catalogue-card-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: .5rem;
+        color: #b8b8b8;
+        font-size: .82rem;
+    }
+    .catalogue-score { color: #f4d35e; font-weight: 700; }
+    .recommend-strip .catalogue-card { border-color: rgba(239,51,64,.45); }
+    .recommend-badge {
+        display: inline-block;
+        padding: .2rem .45rem;
+        border-radius: 999px;
+        background: #b51d28;
+        color: white;
+        font-size: .68rem;
+        font-weight: 800;
+        letter-spacing: .05em;
+        margin-bottom: .45rem;
+    }
+    .alphabet-jump {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .35rem;
+        margin: 1rem 0 2rem;
+    }
+    .alphabet-jump a {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        border: 1px solid #3a3a3a;
+        color: #ddd;
+        text-decoration: none;
+        font-size: .82rem;
+    }
+    .alphabet-jump a:hover { background: #b51d28; border-color: #b51d28; color: white; }
+    @media (max-width: 767.98px) {
+        .catalogue-hero { min-height: 360px; }
+        .catalogue-strip { grid-auto-columns: minmax(155px, 155px); }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
+<div class="catalogue-home">
 
-
-<!-- =========================================================
-     FEATURED MOVIE
-     ========================================================= -->
-
-{% if featured %}
-
-<section class="stream-hero">
-
-    <div class="container py-5">
-
-        <div class="stream-hero-content">
-
-            <div class="eyebrow mb-2 text-info">
-                FEATURED MOVIE
-            </div>
-
-
-            <h1 class="display-4 fw-bold">
-                {{ featured.title }}
-            </h1>
-
-
-            <p class="lead mb-2">
-                {{ featured.year }}
-                ·
-                {{ featured.genres }}
+    {% if featured %}
+    <section class="catalogue-hero">
+        <div class="container catalogue-hero-copy">
+            <div class="catalogue-kicker">FEATURED FROM YOUR MOVIELENS CATALOGUE</div>
+            <h1>{{ featured.title }}</h1>
+            <p class="catalogue-meta mb-2">
+                Average rating <strong>{{ featured.rating|floatformat:2 }}/5</strong>
+                · {{ featured.rating_count }} dataset ratings
             </p>
-
-
-            <p class="opacity-75">
-                Average rating:
-                {{ featured.rating }}/5
+            <p class="text-light-emphasis mb-4">
+                Browse and rate movies from the same real catalogue used by the recommender and robustness experiments.
             </p>
-
-
-            <div class="d-flex flex-wrap gap-2 mt-4">
-
-                <a
-                    class="btn btn-light"
-                    href="{% url 'movies:detail' featured.id %}"
-                >
-                    Details &amp; Rate
-                </a>
-
-
-                <a
-                    class="btn btn-outline-light"
-                    href="{% url 'movies:explorer' %}"
-                >
-                    Browse Movies
-                </a>
-
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-light" href="{% url 'movies:detail' featured.id %}">Details &amp; Rate</a>
+                <a class="btn btn-outline-light" href="#all-movies">Browse All {{ movie_count }} Movies</a>
             </div>
-
         </div>
+    </section>
+    {% endif %}
 
-    </div>
+    <div class="container catalogue-shell">
 
-</section>
-
-{% endif %}
-
-
-
-<!-- =========================================================
-     HOME CONTENT
-     ========================================================= -->
-
-<section class="page-section">
-
-    <div class="container">
-
-
-        <!-- =================================================
-             RECOMMENDED FOR YOU
-             ================================================= -->
-
-        <section class="rmrs-recommendation-section">
-
-
-            <!-- HEADER -->
-
-            <div class="rmrs-section-header">
-
-                <div>
-
-                    <p class="rmrs-section-eyebrow">
-                        PERSONALISED DISCOVERY
-                    </p>
-
-
-                    <h2>
-                        Recommended For You
-                    </h2>
-
-
-                    <p class="rmrs-section-description">
-                        Movie suggestions based on your saved ratings
-                        and preference profile.
-                    </p>
-
-                </div>
-
-
-                <a
-                    class="rmrs-section-link"
-                    href="{% url 'recommendations:index' %}"
-                >
-                    View recommendations
-
-                    <span aria-hidden="true">
-                        →
-                    </span>
-
-                </a>
-
+        {% if recommended %}
+        <section class="catalogue-row">
+            <div class="catalogue-row-head">
+                <h2>Recommended For You</h2>
+                <a class="link-light" href="{% url 'recommendations:index' %}">View recommendation details →</a>
             </div>
-
-
-
-            <!-- =============================================
-                 REAL RECOMMENDATIONS
-                 ============================================= -->
-
-            {% if recommended %}
-
-                <div class="horizontal-movie-row rmrs-recommendation-row">
-
-
-                    {% for item in recommended %}
-
-                        <a
-                            class="rmrs-recommendation-card"
-                            href="{% url 'recommendations:index' %}"
-                        >
-
-
-                            <div
-                                class="rmrs-recommendation-icon"
-                                aria-hidden="true"
-                            >
-                                R
-                            </div>
-
-
-                            <div class="rmrs-recommendation-content">
-
-                                <span class="rmrs-recommendation-label">
-                                    RECOMMENDED
-                                </span>
-
-
-                                <strong>
-                                    {{ item.title }}
-                                </strong>
-
-
-                                <span class="rmrs-predicted-score">
-                                    Predicted rating:
-                                    {{ item.predicted_rating|floatformat:2 }}/5
-                                </span>
-
-                            </div>
-
-
-                            <span
-                                class="rmrs-recommendation-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-
-                        </a>
-
-                    {% endfor %}
-
-
-                </div>
-
-
-
-            <!-- =============================================
-                 EMPTY / ONBOARDING STATE
-                 ============================================= -->
-
-            {% else %}
-
-
-                <div class="rmrs-recommendation-empty">
-
-
-                    <div
-                        class="rmrs-recommendation-empty-icon"
-                        aria-hidden="true"
-                    >
-                        R
+            <div class="catalogue-strip recommend-strip">
+                {% for item in recommended %}
+                <a class="catalogue-card" href="{% url 'movies:detail' item.movie_id %}">
+                    <div class="catalogue-art">
+                        <span class="catalogue-art-brand">RMRS</span>
+                        <strong class="catalogue-art-title">{{ item.title }}</strong>
                     </div>
-
-
-                    <div class="rmrs-recommendation-empty-content">
-
-                        <strong>
-                            Build your personalised recommendations
-                        </strong>
-
-
-                        <p>
-                            Rate movies to strengthen your preference profile.
-                            Your personalised recommendations will appear here.
-                        </p>
-
+                    <div class="catalogue-card-body">
+                        <span class="recommend-badge">RECOMMENDED</span>
+                        <div class="catalogue-card-title">{{ item.title }}</div>
+                        <div class="catalogue-card-meta">
+                            <span>Personalised</span>
+                            <span class="catalogue-score">★ {{ item.predicted_rating|floatformat:2 }}</span>
+                        </div>
                     </div>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
 
-
-                    <a
-                        class="rmrs-recommendation-action"
-                        href="{% url 'movies:explorer' %}"
-                    >
-                        Browse &amp; Rate Movies
-
-                        <span aria-hidden="true">
-                            →
-                        </span>
-
-                    </a>
-
-
-                </div>
-
-
-            {% endif %}
-
-
+        <section class="catalogue-row">
+            <div class="catalogue-row-head">
+                <h2>Most Rated</h2>
+                <span>Movies with the most rating evidence in the dataset</span>
+            </div>
+            <div class="catalogue-strip">
+                {% for movie in most_rated %}
+                <a class="catalogue-card" href="{% url 'movies:detail' movie.id %}">
+                    <div class="catalogue-art">
+                        <span class="catalogue-art-brand">RMRS</span>
+                        <strong class="catalogue-art-title">{{ movie.title }}</strong>
+                    </div>
+                    <div class="catalogue-card-body">
+                        <div class="catalogue-card-title">{{ movie.title }}</div>
+                        <div class="catalogue-card-meta">
+                            <span>{{ movie.rating_count }} ratings</span>
+                            <span class="catalogue-score">★ {{ movie.rating|floatformat:2 }}</span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
         </section>
 
-
-
-        <!-- =================================================
-             POPULAR MOVIES
-             ================================================= -->
-
-        <div class="movie-row-section">
-
-            <h2 class="h3 fw-bold mb-3">
-                Popular Movies
-            </h2>
-
-
-            <div class="horizontal-movie-row">
-
-                {% for movie in popular_movies %}
-
-                    <div class="stream-card">
-
-                        {% include "components/movie_card.html" with movie=movie %}
-
+        <section class="catalogue-row">
+            <div class="catalogue-row-head">
+                <h2>Top Rated</h2>
+                <span>High average rating with at least 50 dataset ratings</span>
+            </div>
+            <div class="catalogue-strip">
+                {% for movie in top_rated %}
+                <a class="catalogue-card" href="{% url 'movies:detail' movie.id %}">
+                    <div class="catalogue-art">
+                        <span class="catalogue-art-brand">RMRS</span>
+                        <strong class="catalogue-art-title">{{ movie.title }}</strong>
                     </div>
-
+                    <div class="catalogue-card-body">
+                        <div class="catalogue-card-title">{{ movie.title }}</div>
+                        <div class="catalogue-card-meta">
+                            <span>{{ movie.rating_count }} ratings</span>
+                            <span class="catalogue-score">★ {{ movie.rating|floatformat:2 }}</span>
+                        </div>
+                    </div>
+                </a>
                 {% endfor %}
+            </div>
+        </section>
 
+        <section id="all-movies" class="pt-2">
+            <div class="catalogue-row-head">
+                <div>
+                    <div class="catalogue-kicker">FULL DATASET CATALOGUE</div>
+                    <h2>All {{ movie_count }} Movies</h2>
+                </div>
+                <span>Every movie available in the processed MovieLens statistics data</span>
             </div>
 
-        </div>
-
-
-
-        <!-- =================================================
-             ACTION MOVIES
-             ================================================= -->
-
-        <div class="movie-row-section">
-
-            <h2 class="h3 fw-bold mb-3">
-                Action Movies
-            </h2>
-
-
-            <div class="horizontal-movie-row">
-
-                {% for movie in action_movies %}
-
-                    <div class="stream-card">
-
-                        {% include "components/movie_card.html" with movie=movie %}
-
-                    </div>
-
+            <nav class="alphabet-jump" aria-label="Jump to movie title letter">
+                {% for row in alphabetical_rows %}
+                    <a href="#movies-{{ row.key|slugify }}">{{ row.key }}</a>
                 {% endfor %}
+            </nav>
 
-            </div>
-
-        </div>
-
-
-
-        <!-- =================================================
-             COMEDY MOVIES
-             ================================================= -->
-
-        <div class="movie-row-section">
-
-            <h2 class="h3 fw-bold mb-3">
-                Comedy
-            </h2>
-
-
-            <div class="horizontal-movie-row">
-
-                {% for movie in comedy_movies %}
-
-                    <div class="stream-card">
-
-                        {% include "components/movie_card.html" with movie=movie %}
-
-                    </div>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
+            {% for row in alphabetical_rows %}
+            <section class="catalogue-row" id="movies-{{ row.key|slugify }}">
+                <div class="catalogue-row-head">
+                    <h2>{{ row.title }}</h2>
+                    <span>{{ row.movies|length }} movies</span>
+                </div>
+                <div class="catalogue-strip">
+                    {% for movie in row.movies %}
+                    <a class="catalogue-card" href="{% url 'movies:detail' movie.id %}">
+                        <div class="catalogue-art">
+                            <span class="catalogue-art-brand">RMRS</span>
+                            <strong class="catalogue-art-title">{{ movie.title }}</strong>
+                        </div>
+                        <div class="catalogue-card-body">
+                            <div class="catalogue-card-title">{{ movie.title }}</div>
+                            <div class="catalogue-card-meta">
+                                <span>{{ movie.rating_count }} ratings</span>
+                                <span class="catalogue-score">★ {{ movie.rating|floatformat:2 }}</span>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endfor %}
+        </section>
 
     </div>
-
-</section>
-
-
+</div>
 {% endblock %}
