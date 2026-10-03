@@ -1,0 +1,6 @@
+condition,sample_users,ranked_users,mean_target_rank,median_target_rank,target_freq_at_10,target_freq_at_50,target_freq_at_100
+clean,100,99,1188.5757575757575,1201.0,0.0,0.0,0.0
+random,100,100,524.21,501.5,0.05,0.12,0.18
+random_defended,100,99,1188.5757575757575,1201.0,0.0,0.0,0.0
+average,100,100,270.78,204.5,0.11,0.3,0.38
+average_defended,100,99,1188.5757575757575,1201.0,0.0,0.0,0.0
