@@ -4,279 +4,258 @@
 
 {% block extra_css %}
 <style>
-    .catalogue-home {
-        background: #111;
-        color: #f5f5f5;
-        min-height: 100vh;
-        padding-bottom: 4rem;
-    }
-    .catalogue-hero {
-        min-height: 430px;
-        display: flex;
-        align-items: end;
-        background:
-            linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.62) 55%, rgba(0,0,0,.20) 100%),
-            linear-gradient(180deg, #401015 0%, #14090a 72%, #111 100%);
-        padding: 4rem 0 3rem;
-    }
-    .catalogue-hero-copy { max-width: 720px; }
-    .catalogue-kicker {
-        color: #ef3340;
-        font-weight: 800;
-        letter-spacing: .12em;
-        font-size: .78rem;
-    }
-    .catalogue-hero h1 {
-        font-size: clamp(2.8rem, 7vw, 6rem);
-        line-height: .95;
-        margin: .5rem 0 1rem;
-    }
-    .catalogue-meta { color: #d6d6d6; }
-    .catalogue-shell { margin-top: -1rem; position: relative; z-index: 2; }
-    .catalogue-row { margin-bottom: 2.4rem; }
+    /* Full-catalogue additions only. The page keeps the original RMRS theme. */
     .catalogue-row-head {
         display: flex;
         align-items: end;
         justify-content: space-between;
         gap: 1rem;
-        margin-bottom: .8rem;
+        margin-bottom: 1rem;
     }
-    .catalogue-row-head h2 { margin: 0; font-size: 1.45rem; }
-    .catalogue-row-head span { color: #9d9d9d; font-size: .9rem; }
-    .catalogue-strip {
-        display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: minmax(190px, 190px);
-        gap: .85rem;
-        overflow-x: auto;
-        padding: .3rem .1rem 1rem;
-        scrollbar-width: thin;
+
+    .catalogue-row-head h2 {
+        margin: 0;
     }
+
+    .catalogue-row-note {
+        color: var(--rmrs-muted);
+        font-size: .9rem;
+        text-align: right;
+    }
+
     .catalogue-card {
-        display: block;
-        color: inherit;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        color: var(--rmrs-text);
         text-decoration: none;
-        background: #1d1d1d;
-        border: 1px solid #2d2d2d;
-        border-radius: .7rem;
+        background: var(--rmrs-surface);
+        border: 1px solid var(--rmrs-border);
+        border-radius: var(--rmrs-radius);
         overflow: hidden;
         transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
     }
+
     .catalogue-card:hover {
-        color: inherit;
-        transform: translateY(-5px) scale(1.015);
-        border-color: #ef3340;
-        box-shadow: 0 14px 32px rgba(0,0,0,.36);
+        color: var(--rmrs-text);
+        transform: translateY(-4px);
+        border-color: rgba(36, 107, 253, .45);
+        box-shadow: 0 14px 30px rgba(11, 23, 54, .12);
     }
+
     .catalogue-art {
-        aspect-ratio: 2 / 3;
-        padding: 1rem;
+        min-height: 250px;
+        padding: 1.15rem;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        color: #fff;
         background:
-            radial-gradient(circle at 80% 15%, rgba(239,51,64,.28), transparent 35%),
-            linear-gradient(145deg, #2a2a2a, #111);
-        border-bottom: 1px solid #303030;
+            radial-gradient(circle at 82% 18%, rgba(16, 167, 165, .65), transparent 31%),
+            linear-gradient(145deg, var(--rmrs-navy-2), var(--rmrs-blue));
     }
+
     .catalogue-art-brand {
-        color: #ef3340;
+        font-size: .72rem;
         font-weight: 900;
         letter-spacing: .12em;
-        font-size: .72rem;
+        opacity: .85;
     }
+
     .catalogue-art-title {
         font-size: 1.08rem;
-        line-height: 1.15;
+        line-height: 1.2;
         overflow-wrap: anywhere;
     }
-    .catalogue-card-body { padding: .8rem .9rem .95rem; }
+
+    .catalogue-card-body {
+        flex: 1;
+        padding: .9rem 1rem 1rem;
+    }
+
     .catalogue-card-title {
+        min-height: 2.4em;
+        margin-bottom: .55rem;
         font-weight: 750;
         line-height: 1.2;
-        min-height: 2.4em;
-        margin-bottom: .45rem;
     }
+
     .catalogue-card-meta {
         display: flex;
         justify-content: space-between;
         gap: .5rem;
-        color: #b8b8b8;
+        color: var(--rmrs-muted);
         font-size: .82rem;
     }
-    .catalogue-score { color: #f4d35e; font-weight: 700; }
-    .recommend-strip .catalogue-card { border-color: rgba(239,51,64,.45); }
+
+    .catalogue-score {
+        color: var(--rmrs-blue);
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
     .recommend-badge {
         display: inline-block;
-        padding: .2rem .45rem;
+        margin-bottom: .5rem;
+        padding: .22rem .48rem;
         border-radius: 999px;
-        background: #b51d28;
-        color: white;
+        background: rgba(36, 107, 253, .10);
+        color: var(--rmrs-blue);
         font-size: .68rem;
         font-weight: 800;
         letter-spacing: .05em;
-        margin-bottom: .45rem;
     }
-    .recommend-empty {
-        border: 1px solid #303030;
-        border-radius: .75rem;
-        background: #191919;
-        padding: 1rem 1.1rem;
-        color: #cfcfcf;
+
+    .catalogue-empty {
+        padding: 1.25rem;
+        border: 1px solid var(--rmrs-border);
+        border-radius: var(--rmrs-radius);
+        background: var(--rmrs-surface);
+        color: var(--rmrs-muted);
     }
+
     .alphabet-jump {
         display: flex;
         flex-wrap: wrap;
-        gap: .35rem;
+        gap: .4rem;
         margin: 1rem 0 2rem;
     }
+
     .alphabet-jump a {
-        width: 34px;
-        height: 34px;
+        width: 36px;
+        height: 36px;
         display: grid;
         place-items: center;
-        border-radius: 50%;
-        border: 1px solid #3a3a3a;
-        color: #ddd;
+        border: 1px solid var(--rmrs-border);
+        border-radius: 999px;
+        background: var(--rmrs-surface);
+        color: var(--rmrs-text);
         text-decoration: none;
         font-size: .82rem;
+        font-weight: 700;
     }
-    .alphabet-jump a:hover { background: #b51d28; border-color: #b51d28; color: white; }
+
+    .alphabet-jump a:hover {
+        border-color: var(--rmrs-blue);
+        background: var(--rmrs-blue);
+        color: #fff;
+    }
+
+    .catalogue-divider {
+        margin: 3rem 0 2rem;
+        border-top: 1px solid var(--rmrs-border);
+    }
+
     @media (max-width: 767.98px) {
-        .catalogue-hero { min-height: 360px; }
-        .catalogue-strip { grid-auto-columns: minmax(155px, 155px); }
+        .catalogue-row-head {
+            align-items: start;
+            flex-direction: column;
+        }
+
+        .catalogue-row-note {
+            text-align: left;
+        }
+
+        .stream-card {
+            flex-basis: 190px;
+        }
+
+        .catalogue-art {
+            min-height: 220px;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="catalogue-home">
 
-    {% if featured %}
-    <section class="catalogue-hero">
-        <div class="container catalogue-hero-copy">
-            <div class="catalogue-kicker">FEATURED FROM YOUR MOVIELENS CATALOGUE</div>
-            <h1>{{ featured.title }}</h1>
-            <p class="catalogue-meta mb-2">
-                Average rating <strong>{{ featured.rating|floatformat:2 }}/5</strong>
+{% if featured %}
+<section class="stream-hero">
+    <div class="container py-5">
+        <div class="stream-hero-content">
+            <div class="eyebrow mb-2 text-info">FEATURED MOVIE</div>
+
+            <h1 class="display-4 fw-bold">
+                {{ featured.title }}
+            </h1>
+
+            <p class="lead mb-2">
+                Average rating {{ featured.rating|floatformat:2 }}/5
                 · {{ featured.rating_count }} dataset ratings
             </p>
-            <p class="text-light-emphasis mb-4">
-                Browse and rate movies from the same real catalogue used by the recommender and robustness experiments.
+
+            <p class="opacity-75">
+                Browse movies from the same MovieLens catalogue used by the recommender and robustness experiments.
             </p>
-            <div class="d-flex flex-wrap gap-2">
-                <a class="btn btn-light" href="{% url 'movies:detail' featured.id %}">Details &amp; Rate</a>
-                <a class="btn btn-outline-light" href="#all-movies">Browse All {{ movie_count }} Movies</a>
+
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <a class="btn btn-light" href="{% url 'movies:detail' featured.id %}">
+                    Details &amp; Rate
+                </a>
+                <a class="btn btn-outline-light" href="#all-movies">
+                    Browse All {{ movie_count }} Movies
+                </a>
             </div>
         </div>
-    </section>
-    {% endif %}
+    </div>
+</section>
+{% endif %}
 
-    <div class="container catalogue-shell">
+<section class="page-section">
+    <div class="container">
 
-        <section class="catalogue-row">
-            <div class="catalogue-row-head">
-                <h2>Recommended For You</h2>
-                <a class="link-light" href="{% url 'recommendations:index' %}">View recommendation details →</a>
+        <section class="rmrs-recommendation-section mb-5">
+            <div class="rmrs-section-header">
+                <div>
+                    <p class="rmrs-section-eyebrow">PERSONALISED DISCOVERY</p>
+                    <h2>Recommended For You</h2>
+                    <p class="rmrs-section-description">
+                        Movie suggestions based on your saved ratings and preference profile.
+                    </p>
+                </div>
+
+                <a class="rmrs-section-link" href="{% url 'recommendations:index' %}">
+                    View recommendations <span aria-hidden="true">→</span>
+                </a>
             </div>
 
             {% if recommended %}
-            <div class="catalogue-strip recommend-strip">
+            <div class="horizontal-movie-row">
                 {% for item in recommended %}
-                <a class="catalogue-card" href="{% url 'movies:detail' item.movie_id %}">
-                    <div class="catalogue-art">
-                        <span class="catalogue-art-brand">RMRS</span>
-                        <strong class="catalogue-art-title">{{ item.title }}</strong>
-                    </div>
-                    <div class="catalogue-card-body">
-                        <span class="recommend-badge">RECOMMENDED</span>
-                        <div class="catalogue-card-title">{{ item.title }}</div>
-                        <div class="catalogue-card-meta">
-                            <span>Personalised</span>
-                            <span class="catalogue-score">★ {{ item.predicted_rating|floatformat:2 }}</span>
+                <div class="stream-card">
+                    <a class="catalogue-card" href="{% url 'movies:detail' item.movie_id %}">
+                        <div class="catalogue-art">
+                            <span class="catalogue-art-brand">RMRS</span>
+                            <strong class="catalogue-art-title">{{ item.title }}</strong>
                         </div>
-                    </div>
-                </a>
+                        <div class="catalogue-card-body">
+                            <span class="recommend-badge">RECOMMENDED</span>
+                            <div class="catalogue-card-title">{{ item.title }}</div>
+                            <div class="catalogue-card-meta">
+                                <span>Personalised</span>
+                                <span class="catalogue-score">★ {{ item.predicted_rating|floatformat:2 }}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
                 {% endfor %}
             </div>
             {% else %}
-            <div class="recommend-empty">
-                Rate more movies to build your personalised recommendation shelf. Your real MovieLens catalogue remains available below.
+            <div class="catalogue-empty">
+                Rate more movies to build your personalised recommendations. Your full MovieLens catalogue is available below.
             </div>
             {% endif %}
         </section>
 
-        <section class="catalogue-row">
+        <div class="movie-row-section">
             <div class="catalogue-row-head">
-                <h2>Most Rated</h2>
-                <span>Movies with the most rating evidence in the dataset</span>
+                <h2 class="h3 fw-bold">Most Rated</h2>
+                <span class="catalogue-row-note">Movies with the most rating evidence in the dataset</span>
             </div>
-            <div class="catalogue-strip">
+
+            <div class="horizontal-movie-row">
                 {% for movie in most_rated %}
-                <a class="catalogue-card" href="{% url 'movies:detail' movie.id %}">
-                    <div class="catalogue-art">
-                        <span class="catalogue-art-brand">RMRS</span>
-                        <strong class="catalogue-art-title">{{ movie.title }}</strong>
-                    </div>
-                    <div class="catalogue-card-body">
-                        <div class="catalogue-card-title">{{ movie.title }}</div>
-                        <div class="catalogue-card-meta">
-                            <span>{{ movie.rating_count }} ratings</span>
-                            <span class="catalogue-score">★ {{ movie.rating|floatformat:2 }}</span>
-                        </div>
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
-        </section>
-
-        <section class="catalogue-row">
-            <div class="catalogue-row-head">
-                <h2>Top Rated</h2>
-                <span>High average rating with at least 50 dataset ratings</span>
-            </div>
-            <div class="catalogue-strip">
-                {% for movie in top_rated %}
-                <a class="catalogue-card" href="{% url 'movies:detail' movie.id %}">
-                    <div class="catalogue-art">
-                        <span class="catalogue-art-brand">RMRS</span>
-                        <strong class="catalogue-art-title">{{ movie.title }}</strong>
-                    </div>
-                    <div class="catalogue-card-body">
-                        <div class="catalogue-card-title">{{ movie.title }}</div>
-                        <div class="catalogue-card-meta">
-                            <span>{{ movie.rating_count }} ratings</span>
-                            <span class="catalogue-score">★ {{ movie.rating|floatformat:2 }}</span>
-                        </div>
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
-        </section>
-
-        <section id="all-movies" class="pt-2">
-            <div class="catalogue-row-head">
-                <div>
-                    <div class="catalogue-kicker">FULL DATASET CATALOGUE</div>
-                    <h2>All {{ movie_count }} Movies</h2>
-                </div>
-                <span>Every movie available in the processed MovieLens statistics data</span>
-            </div>
-
-            <nav class="alphabet-jump" aria-label="Jump to movie title letter">
-                {% for row in alphabetical_rows %}
-                    <a href="#movies-{{ row.key|slugify }}">{{ row.key }}</a>
-                {% endfor %}
-            </nav>
-
-            {% for row in alphabetical_rows %}
-            <section class="catalogue-row" id="movies-{{ row.key|slugify }}">
-                <div class="catalogue-row-head">
-                    <h2>{{ row.title }}</h2>
-                    <span>{{ row.movies|length }} movies</span>
-                </div>
-                <div class="catalogue-strip">
-                    {% for movie in row.movies %}
+                <div class="stream-card">
                     <a class="catalogue-card" href="{% url 'movies:detail' movie.id %}">
                         <div class="catalogue-art">
                             <span class="catalogue-art-brand">RMRS</span>
@@ -290,12 +269,88 @@
                             </div>
                         </div>
                     </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="movie-row-section">
+            <div class="catalogue-row-head">
+                <h2 class="h3 fw-bold">Top Rated</h2>
+                <span class="catalogue-row-note">High average rating with at least 50 dataset ratings</span>
+            </div>
+
+            <div class="horizontal-movie-row">
+                {% for movie in top_rated %}
+                <div class="stream-card">
+                    <a class="catalogue-card" href="{% url 'movies:detail' movie.id %}">
+                        <div class="catalogue-art">
+                            <span class="catalogue-art-brand">RMRS</span>
+                            <strong class="catalogue-art-title">{{ movie.title }}</strong>
+                        </div>
+                        <div class="catalogue-card-body">
+                            <div class="catalogue-card-title">{{ movie.title }}</div>
+                            <div class="catalogue-card-meta">
+                                <span>{{ movie.rating_count }} ratings</span>
+                                <span class="catalogue-score">★ {{ movie.rating|floatformat:2 }}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="catalogue-divider"></div>
+
+        <section id="all-movies">
+            <div class="catalogue-row-head">
+                <div>
+                    <p class="eyebrow mb-1">FULL DATASET CATALOGUE</p>
+                    <h2 class="h3 fw-bold">All {{ movie_count }} Movies</h2>
+                </div>
+                <span class="catalogue-row-note">
+                    Every movie available in the processed MovieLens statistics data
+                </span>
+            </div>
+
+            <nav class="alphabet-jump" aria-label="Jump to movie title letter">
+                {% for row in alphabetical_rows %}
+                <a href="#movies-{{ row.key|slugify }}">{{ row.key }}</a>
+                {% endfor %}
+            </nav>
+
+            {% for row in alphabetical_rows %}
+            <div class="movie-row-section" id="movies-{{ row.key|slugify }}">
+                <div class="catalogue-row-head">
+                    <h2 class="h4 fw-bold">{{ row.title }}</h2>
+                    <span class="catalogue-row-note">{{ row.movies|length }} movies</span>
+                </div>
+
+                <div class="horizontal-movie-row">
+                    {% for movie in row.movies %}
+                    <div class="stream-card">
+                        <a class="catalogue-card" href="{% url 'movies:detail' movie.id %}">
+                            <div class="catalogue-art">
+                                <span class="catalogue-art-brand">RMRS</span>
+                                <strong class="catalogue-art-title">{{ movie.title }}</strong>
+                            </div>
+                            <div class="catalogue-card-body">
+                                <div class="catalogue-card-title">{{ movie.title }}</div>
+                                <div class="catalogue-card-meta">
+                                    <span>{{ movie.rating_count }} ratings</span>
+                                    <span class="catalogue-score">★ {{ movie.rating|floatformat:2 }}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                     {% endfor %}
                 </div>
-            </section>
+            </div>
             {% endfor %}
         </section>
 
     </div>
-</div>
+</section>
+
 {% endblock %}
