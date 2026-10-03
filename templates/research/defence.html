@@ -3,147 +3,70 @@
 {% block title %}Defence Centre | RMRS{% endblock %}
 
 {% block content %}
-
 <div class="container py-5">
+    <a href="{% url 'research:detection' %}" class="btn btn-outline-secondary mb-4">← Back to Detection</a>
 
-    <a href="{% url 'research:lab' %}" class="btn btn-outline-secondary mb-4">
-        ← Back to Robustness Lab
-    </a>
+    <div class="eyebrow mb-2">LIVE ROBUSTNESS WORKFLOW · STEP 3</div>
+    <h1 class="display-6 fw-bold">Defence Centre</h1>
+    <p class="text-secondary mb-4">Apply the existing defence to the exact attacked dataset in this session by removing profiles predicted as suspicious.</p>
 
-    <div class="eyebrow mb-2">
-        ROBUSTNESS ANALYSIS
-    </div>
+    {% if errors %}
+        <div class="alert alert-danger"><strong>Defence failed:</strong><ul class="mb-0 mt-2">{% for error in errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
+    {% endif %}
 
-    <h1 class="display-6 fw-bold">
-        Defence Centre
-    </h1>
-
-    <p class="text-secondary mb-4">
-        Defence methods use attack and detection outputs to improve the robustness of the recommendation pipeline.
-    </p>
+    {% if not workflow_status.has_detection %}
+        <div class="alert alert-warning">Detection has not been completed for the current attack. <a href="{% url 'research:detection' %}" class="alert-link">Run detection first.</a></div>
+    {% endif %}
 
     <div class="row g-4">
-
         <div class="col-lg-5">
-
             <div class="profile-card">
+                <div class="eyebrow mb-1">DEFENCE METHOD</div>
+                <h2 class="h4 fw-bold mb-3">Remove Predicted Suspicious Profiles</h2>
+                <p class="text-secondary">This stage uses detector predictions only. It removes every rating belonging to users classified as suspicious and creates a defended dataset.</p>
 
-                <div class="d-flex align-items-center gap-3 mb-4">
-                    <div class="research-icon" aria-hidden="true">F</div>
-                    <div>
-                        <div class="eyebrow mb-1">DEFENCE WORKFLOW</div>
-                        <h2 class="h4 fw-bold mb-0">Defence Pipeline</h2>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <div class="fw-semibold">1. Attack Analysis</div>
-                    <div class="text-secondary">Receive attacked rating data from the Attack Lab.</div>
-                </div>
-
-                <div class="mb-4">
-                    <div class="fw-semibold">2. Suspicious-User Detection</div>
-                    <div class="text-secondary">Receive suspicious-user classifications and scores.</div>
-                </div>
-
-                <div class="mb-4">
-                    <div class="fw-semibold">3. Defence Processing</div>
-                    <div class="text-secondary">
-                        Pass the research data to the approved defence method when the backend implementation is available.
-                    </div>
-                </div>
-
-                <div>
-                    <div class="fw-semibold">4. Evaluation</div>
-                    <div class="text-secondary">Send defended results to the evaluation stage for robustness comparison.</div>
-                </div>
-
+                <form method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-primary w-100" type="submit" {% if not workflow_status.has_detection %}disabled{% endif %}>Apply Defence</button>
+                </form>
             </div>
 
+            <div class="profile-card mt-4">
+                <div class="fw-semibold mb-3">Live Pipeline</div>
+                <div class="mb-2">Attack {% if workflow_status.has_attack %}✓{% else %}—{% endif %}</div>
+                <div class="mb-2">Detection {% if workflow_status.has_detection %}✓{% else %}—{% endif %}</div>
+                <div class="mb-2">Defence {% if workflow_status.has_defence %}✓{% else %}—{% endif %}</div>
+                <div>Evaluation {% if workflow_status.has_evaluation %}✓{% else %}—{% endif %}</div>
+            </div>
         </div>
 
         <div class="col-lg-7">
+            {% if defence_result %}
+                <div class="profile-card">
+                    <div class="eyebrow mb-2">DEFENCE APPLIED</div>
+                    <h2 class="h4 fw-bold mb-3">Defended Dataset Created</h2>
 
-            {% if results_available %}
-
-                <div class="integration-notice">
-                    <strong>Defence Applied -- Real Pilot Results</strong>
-                    <p class="mb-0 mt-2 text-secondary">
-                        The figures below come directly from <code>results/tables/defence_summary_pilot.csv</code>, produced by running the primary defence (remove suspicious profiles) against the real attacked datasets and detection output.
-                    </p>
-                </div>
-
-                <div class="profile-card mt-4">
-                    <h2 class="h5 fw-bold mb-3">Defence Summary</h2>
-
-                    <div class="table-responsive">
-                        <table class="table align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Scenario</th>
-                                    <th>Method</th>
-                                    <th>Suspicious&nbsp;Profiles</th>
-                                    <th>Users&nbsp;Before</th>
-                                    <th>Users&nbsp;Removed</th>
-                                    <th>Users&nbsp;After</th>
-                                    <th>Ratings&nbsp;Removed</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {% for row in defence_summary %}
-                                    <tr>
-                                        <td class="fw-semibold text-capitalize">{{ row.scenario }}</td>
-                                        <td>{{ row.defence_method }}</td>
-                                        <td>{{ row.suspicious_profiles_detected }}</td>
-                                        <td>{{ row.users_before }}</td>
-                                        <td>{{ row.users_removed }}</td>
-                                        <td>{{ row.users_after }}</td>
-                                        <td>{{ row.ratings_removed }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    <div class="row g-3 mb-4">
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">Suspicious Profiles</div><div class="h3 mb-0">{{ defence_result.suspicious_profiles_detected }}</div></div></div>
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">Users Removed</div><div class="h3 mb-0">{{ defence_result.users_removed }}</div></div></div>
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">Ratings Removed</div><div class="h3 mb-0">{{ defence_result.ratings_removed }}</div></div></div>
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">Users Remaining</div><div class="h3 mb-0">{{ defence_result.users_after }}</div></div></div>
                     </div>
-                </div>
 
+                    <dl class="row mb-4">
+                        <dt class="col-sm-5">Method</dt><dd class="col-sm-7">{{ defence_result.method }}</dd>
+                        <dt class="col-sm-5">Users Before</dt><dd class="col-sm-7">{{ defence_result.users_before }}</dd>
+                        <dt class="col-sm-5">Users After</dt><dd class="col-sm-7">{{ defence_result.users_after }}</dd>
+                        <dt class="col-sm-5">Ratings Before</dt><dd class="col-sm-7">{{ defence_result.ratings_before }}</dd>
+                        <dt class="col-sm-5">Ratings After</dt><dd class="col-sm-7">{{ defence_result.ratings_after }}</dd>
+                    </dl>
+
+                    <a class="btn btn-primary" href="{% url 'research:evaluation' %}">Continue to Evaluation →</a>
+                </div>
             {% else %}
-
-                <div class="integration-notice">
-                    <strong>Defence Integration Ready</strong>
-                    <p class="mb-0 mt-2 text-secondary">
-                        The RMRS presentation layer is prepared to receive the final defence implementation. No placeholder defence calculations or artificial robustness results are generated by the Django application. Run <code>experiments/apply_defence.py</code> to populate this page with real results.
-                    </p>
-                </div>
-
-                <div class="profile-card mt-4">
-                    <h2 class="h5 fw-bold mb-3">Expected Integration Flow</h2>
-
-                    <div class="table-responsive">
-                        <table class="table align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Stage</th>
-                                    <th>Purpose</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr><td class="fw-semibold">Attack</td><td>Generate attacked rating data.</td></tr>
-                                <tr><td class="fw-semibold">Detection</td><td>Identify suspicious user profiles.</td></tr>
-                                <tr><td class="fw-semibold">Defence</td><td>Apply the approved robustness method.</td></tr>
-                                <tr><td class="fw-semibold">Evaluation</td><td>Compare clean, attacked and defended results.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
+                <div class="integration-notice"><strong>Defence has not been applied.</strong><p class="mb-0 mt-2 text-secondary">After detection is complete, press <b>Apply Defence</b>. This creates the real defended ratings dataset used in the next stage.</p></div>
             {% endif %}
-
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}
