@@ -18,14 +18,144 @@
         RMRS uses your saved movie preferences to support personalised recommendations.
     </p>
 
-    {% if rating_count < 10 %}
+    {% if request.user.is_staff and robustness_demo %}
+        <div class="alert {% if active_mode == 'attacked' %}alert-danger{% else %}alert-success{% endif %} mb-4">
+
+            <strong>
+                {% if active_mode == 'attacked' %}
+                    Demonstration mode: Robustness OFF
+                {% else %}
+                    Robustness protection ON
+                {% endif %}
+            </strong>
+
+            <div class="small mt-1">
+                {% if active_mode == 'attacked' %}
+                    Detection and defence are bypassed.
+                    These recommendations use the attacked dataset.
+                {% else %}
+                    Suspicious profiles are detected and removed
+                    before recommendations are generated.
+                {% endif %}
+            </div>
+
+        </div>
+    {% endif %}
+
+    {% if request.user.is_staff and demo_error %}
         <div class="alert alert-warning">
+            Robustness demo could not be generated:
+            {{ demo_error }}
+        </div>
+    {% endif %}
+
+    {% if rating_count < 10 %}
+
+        <div class="alert alert-warning">
+
             You currently have {{ rating_count }} saved rating(s).
+
             For a stronger preference profile,
-            <a href="{% url 'movies:onboarding' %}" class="alert-link">
+
+            <a
+                href="{% url 'movies:onboarding' %}"
+                class="alert-link"
+            >
                 rate at least 10 movies
             </a>.
+
         </div>
+
+    {% endif %}
+
+    {% if request.user.is_staff and robustness_demo %}
+
+        <div class="row g-3 mb-4">
+
+            {% for target in robustness_demo.target_movements %}
+
+                <div class="col-md-4">
+
+                    <div class="profile-card h-100">
+
+                        <div class="eyebrow mb-1">
+                            {{ target.display_name }}
+                        </div>
+
+                        <div class="fw-bold">
+                            Clean #{{ target.clean_rank }}
+                            →
+                            Attacked #{{ target.attacked_rank }}
+                            →
+                            Protected #{{ target.defended_rank }}
+                        </div>
+
+                        <div class="small text-secondary mt-2">
+                            Attack gain:
+                            {{ target.attack_gain }}
+                            positions
+                            ·
+                            Recovery:
+                            {{ target.recovery }}
+                            positions
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+        <div class="profile-card mb-4">
+
+            <div class="row g-3">
+
+                <div class="col-md-3">
+                    <strong>
+                        {{ robustness_demo.attack.fake_profiles }}
+                    </strong>
+
+                    <div class="small text-secondary">
+                        Fake profiles generated
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <strong>
+                        {{ robustness_demo.detection.suspicious_profiles_detected }}
+                    </strong>
+
+                    <div class="small text-secondary">
+                        Suspicious profiles detected
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <strong>
+                        {{ robustness_demo.defence.users_removed }}
+                    </strong>
+
+                    <div class="small text-secondary">
+                        Profiles removed
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <strong>
+                        {{ robustness_demo.attack.attack_size_percent_per_target }}%
+                    </strong>
+
+                    <div class="small text-secondary">
+                        Attack size per target
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
     {% endif %}
 
     {% if results %}
@@ -38,9 +168,17 @@
 
                     <thead>
                         <tr>
-                            <th scope="col">Rank</th>
-                            <th scope="col">Movie</th>
-                            <th scope="col">Predicted Score</th>
+                            <th scope="col">
+                                Rank
+                            </th>
+
+                            <th scope="col">
+                                Movie
+                            </th>
+
+                            <th scope="col">
+                                Predicted Score
+                            </th>
                         </tr>
                     </thead>
 
@@ -48,7 +186,11 @@
 
                         {% for item in results %}
 
-                            <tr>
+                            <tr
+                                {% if item.role == 'target' %}
+                                    class="table-danger"
+                                {% endif %}
+                            >
 
                                 <td class="fw-bold">
                                     #{{ item.rank|default:forloop.counter }}
@@ -57,7 +199,21 @@
                                 <td>
 
                                     <div class="fw-semibold">
+
                                         {% firstof item.display_name item.title "Movie" %}
+
+                                        {% if item.role == 'target' %}
+                                            <span class="badge text-bg-danger ms-2">
+                                                TARGET
+                                            </span>
+                                        {% endif %}
+
+                                        {% if item.role == 'good' %}
+                                            <span class="badge text-bg-success ms-2">
+                                                GOOD
+                                            </span>
+                                        {% endif %}
+
                                     </div>
 
                                     {% if item.reason %}
