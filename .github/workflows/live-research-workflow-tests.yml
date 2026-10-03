@@ -1,0 +1,19 @@
+name: Live Research Workflow Tests
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ feature/live-research-workflow ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: python manage.py check
+      - run: python manage.py test tests.test_live_research_workflow tests.test_interactive_robustness_demo

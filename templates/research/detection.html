@@ -3,133 +3,78 @@
 {% block title %}Detection | RMRS{% endblock %}
 
 {% block content %}
-
 <div class="container py-5">
+    <a href="{% url 'research:attack_lab' %}" class="btn btn-outline-secondary mb-4">← Back to Attack</a>
 
-    <a href="{% url 'research:lab' %}" class="btn btn-outline-secondary mb-4">
-        ← Back to Robustness Lab
-    </a>
-
-    <div class="eyebrow mb-2">
-        ROBUSTNESS ANALYSIS
-    </div>
-
-    <h1 class="display-6 fw-bold">
-        Suspicious-User Detection
-    </h1>
-
-    <p class="text-secondary mb-4">
-        Configure the suspicious-user detection stage for the RMRS research environment.
-    </p>
+    <div class="eyebrow mb-2">LIVE ROBUSTNESS WORKFLOW · STEP 2</div>
+    <h1 class="display-6 fw-bold">Suspicious-User Detection</h1>
+    <p class="text-secondary mb-4">Analyse the exact attacked dataset created in this session and classify suspicious profiles using the existing behavioural detector.</p>
 
     {% if errors %}
-        <div class="alert alert-danger">
-            <strong>Please check the detection configuration:</strong>
-            <ul class="mb-0 mt-2">
-                {% for error in errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+        <div class="alert alert-danger"><strong>Detection failed:</strong><ul class="mb-0 mt-2">{% for error in errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
+    {% endif %}
+
+    {% if not workflow_status.has_attack %}
+        <div class="alert alert-warning">No attacked dataset exists in this session. <a href="{% url 'research:attack_lab' %}" class="alert-link">Run an attack first.</a></div>
     {% endif %}
 
     <div class="row g-4">
-
         <div class="col-lg-5">
-
             <div class="profile-card">
-
-                <div class="d-flex align-items-center gap-3 mb-4">
-                    <div class="research-icon" aria-hidden="true">D</div>
-                    <div>
-                        <div class="eyebrow mb-1">DETECTION SETUP</div>
-                        <h2 class="h4 fw-bold mb-0">Detection Configuration</h2>
-                    </div>
-                </div>
-
+                <div class="eyebrow mb-1">DETECTION SETUP</div>
+                <h2 class="h4 fw-bold mb-4">Run Detector</h2>
                 <form method="post">
                     {% csrf_token %}
-
                     <div class="mb-4">
                         <label class="form-label">Suspicion Threshold</label>
                         <input class="form-control" type="number" name="threshold" min="0" max="1" step="0.01" value="{{ threshold }}" required>
-
-                        <div class="form-text">
-                            Scores at or above this threshold will be classified as suspicious.
-                        </div>
+                        <div class="form-text">Scores at or above the threshold are classified as suspicious.</div>
                     </div>
-
-                    <button class="btn btn-primary w-100" type="submit">
-                        Validate Detection Setup
-                    </button>
+                    <button class="btn btn-primary w-100" type="submit" {% if not workflow_status.has_attack %}disabled{% endif %}>Run Detection</button>
                 </form>
-
             </div>
 
             <div class="profile-card mt-4">
-                <h2 class="h5 fw-bold mb-3">Candidate Behavioural Features</h2>
-
-                <ul class="mb-0">
-                    {% for feature in candidate_features %}
-                        <li class="mb-2">{{ feature|title }}</li>
-                    {% endfor %}
-                </ul>
+                <h2 class="h5 fw-bold mb-3">Behavioural Features</h2>
+                <ul class="mb-0">{% for feature in candidate_features %}<li class="mb-2">{{ feature|title }}</li>{% endfor %}</ul>
             </div>
-
         </div>
 
         <div class="col-lg-7">
-
-            {% if config_valid %}
-
+            {% if detection_result %}
                 <div class="profile-card">
-                    <div class="eyebrow mb-2">CONFIGURATION VALID</div>
-                    <h2 class="h4 fw-bold">Detection Configuration Validated</h2>
+                    <div class="eyebrow mb-2">DETECTION COMPLETE</div>
+                    <h2 class="h4 fw-bold mb-3">Detector Results</h2>
 
-                    <p class="text-secondary">
-                        The detection threshold is valid and the interface is ready to receive results from the detection backend.
-                    </p>
+                    <div class="row g-3 mb-4">
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">Users Analysed</div><div class="h3 mb-0">{{ detection_result.users_analysed }}</div></div></div>
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">Suspicious Detected</div><div class="h3 mb-0">{{ detection_result.suspicious_profiles_detected }}</div></div></div>
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">Precision</div><div class="h3 mb-0">{{ detection_result.detection_precision|floatformat:3 }}</div></div></div>
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">Recall</div><div class="h3 mb-0">{{ detection_result.detection_recall|floatformat:3 }}</div></div></div>
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">F1</div><div class="h3 mb-0">{{ detection_result.detection_f1|floatformat:3 }}</div></div></div>
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">False Positive Rate</div><div class="h3 mb-0">{{ detection_result.false_positive_rate|floatformat:3 }}</div></div></div>
+                    </div>
 
-                    <dl class="row mb-0">
-                        <dt class="col-sm-5">Suspicion Threshold</dt>
-                        <dd class="col-sm-7">{{ threshold }}</dd>
+                    {% if detection_result.top_suspicious %}
+                        <h3 class="h6 fw-bold">Highest Suspicion Scores</h3>
+                        <div class="table-responsive mb-4">
+                            <table class="table align-middle">
+                                <thead><tr><th>User</th><th>Score</th><th>Prediction</th><th>Ground Truth</th></tr></thead>
+                                <tbody>
+                                    {% for row in detection_result.top_suspicious %}
+                                    <tr><td>{{ row.user_id }}</td><td>{{ row.suspicion_score|floatformat:4 }}</td><td class="text-danger fw-semibold">{{ row.predicted_label }}</td><td>{{ row.true_label }}</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
 
-                        <dt class="col-sm-5">Result Structure</dt>
-                        <dd class="col-sm-7">User ID, Suspicion Score, Status</dd>
-                    </dl>
+                    <a class="btn btn-primary" href="{% url 'research:defence' %}">Continue to Defence →</a>
                 </div>
-
-                <div class="integration-notice mt-4">
-                    <strong>Detection Backend Integration Pending</strong>
-                    <p class="mb-0 mt-2 text-secondary">
-                        Users analysed, suspicious-user counts, suspicion scores and classification results will appear here when the final detector is connected.
-                    </p>
-                </div>
-
-            {% elif detection_requested %}
-
-                <div class="integration-notice">
-                    <strong>Detection Configuration Pending</strong>
-                    <p class="mb-0 mt-2 text-secondary">
-                        Correct the configuration values and try again.
-                    </p>
-                </div>
-
             {% else %}
-
-                <div class="integration-notice">
-                    <strong>Detection Configuration</strong>
-                    <p class="mb-0 mt-2 text-secondary">
-                        Configure and validate the detection threshold. Suspicious-user results will be shown here when supplied by the detection backend.
-                    </p>
-                </div>
-
+                <div class="integration-notice"><strong>Detector has not been run.</strong><p class="mb-0 mt-2 text-secondary">Once an attack exists, press <b>Run Detection</b> to calculate real suspicion scores and classifications.</p></div>
             {% endif %}
-
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}
