@@ -4,162 +4,109 @@
 {% block title %}Evaluation Dashboard | RMRS{% endblock %}
 
 {% block content %}
-
 <div class="container py-5">
+    <a href="{% url 'research:defence' %}" class="btn btn-outline-secondary mb-4">← Back to Defence</a>
 
-    <a href="{% url 'research:lab' %}" class="btn btn-outline-secondary mb-4">
-        ← Back to Robustness Lab
-    </a>
+    <div class="eyebrow mb-2">LIVE ROBUSTNESS WORKFLOW · STEP 4</div>
+    <h1 class="display-6 fw-bold">Evaluation Dashboard</h1>
+    <p class="text-secondary mb-4">Evaluate the exact clean, attacked and defended datasets produced in this browser session using the same recommender.</p>
 
-    <div class="eyebrow mb-2">
-        ROBUSTNESS ANALYSIS
-    </div>
+    {% if errors %}
+        <div class="alert alert-danger"><strong>Evaluation failed:</strong><ul class="mb-0 mt-2">{% for error in errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
+    {% endif %}
 
-    <h1 class="display-6 fw-bold">
-        Evaluation Dashboard
-    </h1>
-
-    <p class="text-secondary mb-4">
-        Compare recommendation quality across clean, attacked and defended experimental conditions.
-    </p>
+    {% if not workflow_status.has_defence %}
+        <div class="alert alert-warning">A defended dataset is not available. <a href="{% url 'research:defence' %}" class="alert-link">Complete defence first.</a></div>
+    {% endif %}
 
     <div class="row g-4">
-
-        <div class="col-lg-5">
-
+        <div class="col-lg-4">
             <div class="profile-card">
-
-                <div class="d-flex align-items-center gap-3 mb-4">
-                    <div class="research-icon" aria-hidden="true">E</div>
-                    <div>
-                        <div class="eyebrow mb-1">EVALUATION DESIGN</div>
-                        <h2 class="h4 fw-bold mb-0">Evaluation Framework</h2>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <div class="fw-semibold">1. Clean Baseline</div>
-                    <div class="text-secondary">Measure recommendation performance before an attack is introduced.</div>
-                </div>
-
-                <div class="mb-4">
-                    <div class="fw-semibold">2. Attacked System</div>
-                    <div class="text-secondary">Measure recommendation performance after attack data affects the recommender.</div>
-                </div>
-
-                <div class="mb-4">
-                    <div class="fw-semibold">3. Defended System</div>
-                    <div class="text-secondary">Measure performance after the approved defence method has been applied.</div>
-                </div>
-
-                <div>
-                    <div class="fw-semibold mb-2">Expected Metrics</div>
-                    <ul class="mb-0">
-                        {% for metric in expected_metrics %}
-                            <li class="mb-2">{{ metric }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
+                <div class="eyebrow mb-1">EVALUATION</div>
+                <h2 class="h4 fw-bold mb-3">Run Live Comparison</h2>
+                <p class="text-secondary">The evaluator compares target rank/score/Hit@10 and computes RMSE/MAE on the same genuine test rows that are predictable in all three conditions.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-primary w-100" type="submit" {% if not workflow_status.has_defence %}disabled{% endif %}>Run Evaluation</button>
+                </form>
             </div>
 
+            {% if evaluation_result %}
+            <div class="profile-card mt-4">
+                <h2 class="h6 fw-bold">Experiment Identity</h2>
+                <dl class="row mb-0 small">
+                    <dt class="col-7">Target Movie ID</dt><dd class="col-5">{{ evaluation_result.target_movie_id }}</dd>
+                    <dt class="col-7">Evaluation Users</dt><dd class="col-5">{{ evaluation_result.evaluation_users|length }}</dd>
+                    <dt class="col-7">Attack promoted target</dt><dd class="col-5">{% if evaluation_result.attack_promoted_target %}YES{% else %}NO{% endif %}</dd>
+                    <dt class="col-7">Defence reduced attack</dt><dd class="col-5">{% if evaluation_result.defence_reduced_attack %}YES{% else %}NO{% endif %}</dd>
+                </dl>
+            </div>
+            {% endif %}
         </div>
 
-        <div class="col-lg-7">
-
-            {% if results_available %}
-
-                <div class="integration-notice">
-                    <strong>Evaluation Complete -- Real Pilot Results</strong>
-                    <p class="mb-0 mt-2 text-secondary">
-                        The table and figures below come directly from <code>results/experiment_results.csv</code>, produced by evaluating the real recommender across Clean, Attacked and Defended conditions.
-                    </p>
-                </div>
-
-                <div class="profile-card mt-4">
-                    <h2 class="h5 fw-bold mb-3">Experiment Comparison</h2>
+        <div class="col-lg-8">
+            {% if experiment_results %}
+                <div class="profile-card">
+                    <div class="eyebrow mb-2">LIVE RESULTS</div>
+                    <h2 class="h4 fw-bold mb-3">Clean vs Attacked vs Defended</h2>
 
                     <div class="table-responsive">
                         <table class="table align-middle mb-0">
                             <thead>
                                 <tr>
                                     <th>Condition</th>
+                                    <th>Target Rank ↓</th>
+                                    <th>Target Score</th>
+                                    <th>Hit@10</th>
                                     <th>RMSE</th>
                                     <th>MAE</th>
-                                    <th>Target&nbsp;Rank</th>
-                                    <th>Target&nbsp;Score</th>
-                                    <th>Hit&nbsp;Rate@10</th>
                                 </tr>
                             </thead>
-
                             <tbody>
                                 {% for row in experiment_results %}
-                                    <tr>
-                                        <td class="fw-semibold">{{ row.condition_label }}</td>
-                                        <td>{{ row.rmse|floatformat:4 }}</td>
-                                        <td>{{ row.mae|floatformat:4 }}</td>
-                                        <td>{{ row.target_rank|floatformat:1 }}</td>
-                                        <td>{{ row.target_score|floatformat:2 }}</td>
-                                        <td>{{ row.hit_rate|floatformat:2 }}</td>
-                                    </tr>
+                                <tr>
+                                    <td class="fw-semibold">{{ row.condition_label }}</td>
+                                    <td>{% if row.target_rank != None %}{{ row.target_rank|floatformat:1 }}{% else %}N/A{% endif %}</td>
+                                    <td>{% if row.target_score != None %}{{ row.target_score|floatformat:3 }}{% else %}N/A{% endif %}</td>
+                                    <td>{{ row.hit_rate|floatformat:3 }}</td>
+                                    <td>{% if row.rmse != None %}{{ row.rmse|floatformat:4 }}{% else %}N/A{% endif %}</td>
+                                    <td>{% if row.mae != None %}{{ row.mae|floatformat:4 }}{% else %}N/A{% endif %}</td>
+                                </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                {% if result_figures %}
-                    <div class="profile-card mt-4">
-                        <h2 class="h5 fw-bold mb-3">Result Figures</h2>
-
-                        <div class="row g-3">
-                            {% for figure in result_figures %}
-                                <div class="col-md-6">
-                                    <img src="{% static figure.file %}" alt="{{ figure.title }}" class="img-fluid rounded border">
-                                    <div class="text-secondary small mt-1 text-center">{{ figure.title }}</div>
-                                </div>
-                            {% endfor %}
+                <div class="row g-4 mt-1">
+                    <div class="col-md-6">
+                        <div class="profile-card h-100">
+                            <h2 class="h5 fw-bold">Detection Metrics</h2>
+                            <dl class="row mb-0">
+                                <dt class="col-7">Suspicious detected</dt><dd class="col-5">{{ evaluation_result.detection.suspicious_profiles_detected }}</dd>
+                                <dt class="col-7">Precision</dt><dd class="col-5">{{ evaluation_result.detection.detection_precision|floatformat:3 }}</dd>
+                                <dt class="col-7">Recall</dt><dd class="col-5">{{ evaluation_result.detection.detection_recall|floatformat:3 }}</dd>
+                                <dt class="col-7">F1</dt><dd class="col-5">{{ evaluation_result.detection.detection_f1|floatformat:3 }}</dd>
+                                <dt class="col-7">False positive rate</dt><dd class="col-5">{{ evaluation_result.detection.false_positive_rate|floatformat:3 }}</dd>
+                            </dl>
                         </div>
                     </div>
-                {% endif %}
-
-            {% else %}
-
-                <div class="integration-notice">
-                    <strong>Evaluation Integration Ready</strong>
-                    <p class="mb-0 mt-2 text-secondary">
-                        The dashboard is prepared to display real clean, attacked and defended evaluation metrics when the evaluation backend is connected to RMRS. Run <code>experiments/build_experiment_results.py</code> to populate this page with real results.
-                    </p>
-                </div>
-
-                <div class="profile-card mt-4">
-                    <h2 class="h5 fw-bold mb-3">Experiment Comparison</h2>
-
-                    <div class="table-responsive">
-                        <table class="table align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Condition</th>
-                                    <th>RMSE</th>
-                                    <th>MAE</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr><td class="fw-semibold">Clean</td><td class="text-secondary">Pending</td><td class="text-secondary">Pending</td></tr>
-                                <tr><td class="fw-semibold">Attacked</td><td class="text-secondary">Pending</td><td class="text-secondary">Pending</td></tr>
-                                <tr><td class="fw-semibold">Defended</td><td class="text-secondary">Pending</td><td class="text-secondary">Pending</td></tr>
-                            </tbody>
-                        </table>
+                    <div class="col-md-6">
+                        <div class="profile-card h-100">
+                            <h2 class="h5 fw-bold">Defence Metrics</h2>
+                            <dl class="row mb-0">
+                                <dt class="col-7">Users removed</dt><dd class="col-5">{{ evaluation_result.defence.users_removed }}</dd>
+                                <dt class="col-7">Ratings removed</dt><dd class="col-5">{{ evaluation_result.defence.ratings_removed }}</dd>
+                                <dt class="col-7">Users after</dt><dd class="col-5">{{ evaluation_result.defence.users_after }}</dd>
+                                <dt class="col-7">Ratings after</dt><dd class="col-5">{{ evaluation_result.defence.ratings_after }}</dd>
+                            </dl>
+                        </div>
                     </div>
                 </div>
-
+            {% else %}
+                <div class="integration-notice"><strong>Evaluation has not been run.</strong><p class="mb-0 mt-2 text-secondary">Complete Attack → Detection → Defence, then press <b>Run Evaluation</b>. The results shown here will come from the current live experiment, not an old CSV.</p></div>
             {% endif %}
-
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}
