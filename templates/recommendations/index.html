@@ -108,21 +108,75 @@
 
         </div>
 
-        <div class="profile-card mb-4">
+        <details class="profile-card mb-4 robustness-protection-summary">
 
-            <div class="row g-3">
+    <summary class="robustness-protection-summary-toggle">
 
-                <div class="col-md-3">
+        <div>
+            <span class="eyebrow">
+                STAFF PROTECTION SUMMARY
+            </span>
+
+            <strong class="d-block mt-1">
+                Robustness Protection Details
+            </strong>
+
+            <span class="small text-secondary">
+                {% if active_mode == "attacked" %}
+                    Protection is bypassed for this demonstration.
+                {% else %}
+                    Detection and defence are active.
+                {% endif %}
+            </span>
+        </div>
+
+        <span
+            class="robustness-protection-summary-state
+            {% if active_mode == 'attacked' %}
+                robustness-summary-off
+            {% else %}
+                robustness-summary-on
+            {% endif %}"
+        >
+            {% if active_mode == "attacked" %}
+                OFF
+            {% else %}
+                ON
+            {% endif %}
+        </span>
+
+    </summary>
+
+    <div class="robustness-protection-summary-content">
+
+        <div class="row g-3">
+
+            <!-- Detection status -->
+            <div class="col-6 col-lg-3">
+
+                <div class="robustness-summary-metric">
+
                     <strong>
-                        {{ robustness_demo.attack.fake_profiles }}
+                        {% if active_mode == "attacked" %}
+                            Bypassed
+                        {% else %}
+                            Active
+                        {% endif %}
                     </strong>
 
                     <div class="small text-secondary">
-                        Fake profiles generated
+                        Detection status
                     </div>
+
                 </div>
 
-                <div class="col-md-3">
+            </div>
+
+            <!-- Suspicious profiles -->
+            <div class="col-6 col-lg-3">
+
+                <div class="robustness-summary-metric">
+
                     <strong>
                         {{ robustness_demo.detection.suspicious_profiles_detected }}
                     </strong>
@@ -130,9 +184,16 @@
                     <div class="small text-secondary">
                         Suspicious profiles detected
                     </div>
+
                 </div>
 
-                <div class="col-md-3">
+            </div>
+
+            <!-- Removed profiles -->
+            <div class="col-6 col-lg-3">
+
+                <div class="robustness-summary-metric">
+
                     <strong>
                         {{ robustness_demo.defence.users_removed }}
                     </strong>
@@ -140,22 +201,63 @@
                     <div class="small text-secondary">
                         Profiles removed
                     </div>
+
                 </div>
 
-                <div class="col-md-3">
+            </div>
+
+            <!-- Protected targets -->
+            <div class="col-6 col-lg-3">
+
+                <div class="robustness-summary-metric">
+
                     <strong>
-                        {{ robustness_demo.attack.attack_size_percent_per_target }}%
+                        {% if active_mode == "attacked" %}
+                            0
+                        {% else %}
+                            {{ robustness_demo.target_movements|length }}
+                        {% endif %}
                     </strong>
 
                     <div class="small text-secondary">
-                        Attack size per target
+                        Targeted movies protected
                     </div>
+
                 </div>
 
             </div>
 
         </div>
 
+        <div class="robustness-summary-extra mt-3">
+
+            <span>
+                Attack:
+                <strong>
+                    {{ robustness_demo.attack.type }}
+                </strong>
+            </span>
+
+            <span>
+                Attack size per target:
+                <strong>
+                    {{ robustness_demo.attack.attack_size_percent_per_target }}%
+                </strong>
+            </span>
+
+            <span>
+                Fake profiles generated:
+                <strong>
+                    {{ robustness_demo.attack.fake_profiles }}
+                </strong>
+            </span>
+
+        </div>
+
+    </div>
+
+</details>
+                
     {% endif %}
 
     {% if results %}
