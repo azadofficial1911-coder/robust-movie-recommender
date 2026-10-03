@@ -302,11 +302,11 @@
 
                                     <div class="fw-semibold">
 
-                                        {% firstof item.display_name item.title "Movie" %}
+                                        {% firstof item.title item.display_name "Movie" %}
 
                                         {% if item.role == 'target' %}
                                             <span class="badge text-bg-danger ms-2">
-                                                TARGET
+                                                TARGETED
                                             </span>
                                         {% endif %}
 

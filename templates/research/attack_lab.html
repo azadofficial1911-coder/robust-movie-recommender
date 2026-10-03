@@ -3,90 +3,51 @@
 {% block title %}Attack Lab | RMRS{% endblock %}
 
 {% block content %}
-
 <div class="container py-5">
+    <a href="{% url 'research:lab' %}" class="btn btn-outline-secondary mb-4">← Back to Robustness Lab</a>
 
-    <a href="{% url 'research:lab' %}" class="btn btn-outline-secondary mb-4">
-        ← Back to Robustness Lab
-    </a>
-
-    <div class="eyebrow mb-2">
-        ROBUSTNESS ANALYSIS
-    </div>
-
-    <h1 class="display-6 fw-bold">
-        Attack Laboratory
-    </h1>
-
-    <p class="text-secondary mb-4">
-        Configure a shilling attack experiment for the RMRS research environment.
-    </p>
+    <div class="eyebrow mb-2">LIVE ROBUSTNESS WORKFLOW · STEP 1</div>
+    <h1 class="display-6 fw-bold">Attack Laboratory</h1>
+    <p class="text-secondary mb-4">Generate a real shilling attack against the MovieLens training data. Starting a new attack resets later detection, defence and evaluation results for this browser session.</p>
 
     {% if errors %}
-        <div class="alert alert-danger">
-            <strong>Please check the experiment configuration:</strong>
-
-            <ul class="mb-0 mt-2">
-                {% for error in errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+        <div class="alert alert-danger"><strong>Attack failed:</strong><ul class="mb-0 mt-2">{% for error in errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
     {% endif %}
 
     <div class="row g-4">
-
         <div class="col-lg-5">
-
-            <div class="profile-card h-100">
-
-                <div class="d-flex align-items-center gap-3 mb-4">
-                    <div class="research-icon" aria-hidden="true">A</div>
-                    <div>
-                        <div class="eyebrow mb-1">ATTACK SETUP</div>
-                        <h2 class="h4 fw-bold mb-0">Experiment Configuration</h2>
-                    </div>
-                </div>
+            <div class="profile-card">
+                <div class="eyebrow mb-1">ATTACK SETUP</div>
+                <h2 class="h4 fw-bold mb-4">Run Attack</h2>
 
                 <form method="post">
-
                     {% csrf_token %}
-
                     <div class="mb-3">
                         <label class="form-label">Attack Type</label>
-
                         <select class="form-select" name="attack_type">
-                            <option value="random" {% if form_data.attack_type == "random" %}selected{% endif %}>
-                                Random Push
-                            </option>
-                            <option value="average" {% if form_data.attack_type == "average" %}selected{% endif %}>
-                                Average Push
-                            </option>
+                            <option value="random" {% if form_data.attack_type == "random" %}selected{% endif %}>Random Push</option>
+                            <option value="average" {% if form_data.attack_type == "average" %}selected{% endif %}>Average Push</option>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Target Movie</label>
-
                         <select class="form-select" name="target_movie_id" required>
                             <option value="">Select Movie</option>
-
                             {% for movie in movies %}
-                                <option value="{{ movie.id }}" {% if form_data.target_movie_id|stringformat:"s" == movie.id|stringformat:"s" %}selected{% endif %}>
-                                    {{ movie.title }}
-                                </option>
+                                <option value="{{ movie.id }}" {% if form_data.target_movie_id|stringformat:"s" == movie.id|stringformat:"s" %}selected{% endif %}>{{ movie.title }} (ID {{ movie.id }})</option>
                             {% endfor %}
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Attack Size (%)</label>
-                        <input class="form-control" type="number" name="attack_size_percent" min="1" max="100" step="0.1" value="{{ form_data.attack_size_percent }}" required>
+                        <input class="form-control" type="number" name="attack_size_percent" min="0.1" max="100" step="0.1" value="{{ form_data.attack_size_percent }}" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Filler Size (%)</label>
-                        <input class="form-control" type="number" name="filler_size_percent" min="1" max="100" step="0.1" value="{{ form_data.filler_size_percent }}" required>
+                        <input class="form-control" type="number" name="filler_size_percent" min="0.1" max="100" step="0.1" value="{{ form_data.filler_size_percent }}" required>
                     </div>
 
                     <div class="mb-4">
@@ -94,72 +55,48 @@
                         <input class="form-control" type="number" name="random_seed" min="0" value="{{ form_data.random_seed }}" required>
                     </div>
 
-                    <button class="btn btn-primary w-100" type="submit">
-                        Validate Configuration
-                    </button>
-
+                    <button class="btn btn-primary w-100" type="submit">Run Real Attack</button>
                 </form>
-
             </div>
-
         </div>
 
         <div class="col-lg-7">
-
-            {% if config_valid %}
-
+            {% if attack_result %}
                 <div class="profile-card">
-                    <div class="eyebrow mb-2">CONFIGURATION VALID</div>
-                    <h2 class="h4 fw-bold mb-3">Attack Configuration Validated</h2>
+                    <div class="eyebrow mb-2">ATTACK EXECUTED</div>
+                    <h2 class="h4 fw-bold mb-3">Attacked Dataset Created</h2>
 
-                    <p class="text-secondary">
-                        The experiment configuration is valid and ready to be passed to the attack-generation backend.
-                    </p>
+                    <div class="row g-3 mb-4">
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">Fake Profiles</div><div class="h3 mb-0">{{ attack_result.fake_profiles }}</div></div></div>
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">Fake Ratings</div><div class="h3 mb-0">{{ attack_result.fake_ratings }}</div></div></div>
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">Users Before</div><div class="h3 mb-0">{{ attack_result.genuine_users }}</div></div></div>
+                        <div class="col-6"><div class="border rounded p-3"><div class="text-secondary small">Users After Attack</div><div class="h3 mb-0">{{ attack_result.attacked_users }}</div></div></div>
+                    </div>
 
-                    <dl class="row mb-0">
-                        <dt class="col-sm-5">Attack Type</dt>
-                        <dd class="col-sm-7">
-                            {% if form_data.attack_type == "random" %}Random Push{% else %}Average Push{% endif %}
-                        </dd>
-
-                        <dt class="col-sm-5">Target Movie ID</dt>
-                        <dd class="col-sm-7">{{ form_data.target_movie_id }}</dd>
-
-                        <dt class="col-sm-5">Attack Size</dt>
-                        <dd class="col-sm-7">{{ form_data.attack_size_percent }}%</dd>
-
-                        <dt class="col-sm-5">Filler Size</dt>
-                        <dd class="col-sm-7">{{ form_data.filler_size_percent }}%</dd>
-
-                        <dt class="col-sm-5">Random Seed</dt>
-                        <dd class="col-sm-7">{{ form_data.random_seed }}</dd>
+                    <dl class="row mb-4">
+                        <dt class="col-sm-5">Attack Type</dt><dd class="col-sm-7 text-capitalize">{{ attack_result.attack_type }}</dd>
+                        <dt class="col-sm-5">Target Movie ID</dt><dd class="col-sm-7">{{ attack_result.target_movie_id }}</dd>
+                        <dt class="col-sm-5">Attack Size</dt><dd class="col-sm-7">{{ attack_result.attack_size_percent }}%</dd>
+                        <dt class="col-sm-5">Filler Size</dt><dd class="col-sm-7">{{ attack_result.filler_size_percent }}%</dd>
+                        <dt class="col-sm-5">Seed</dt><dd class="col-sm-7">{{ attack_result.random_seed }}</dd>
                     </dl>
+
+                    <a class="btn btn-primary" href="{% url 'research:detection' %}">Continue to Detection →</a>
                 </div>
-
-            {% elif attack_requested and not errors %}
-
-                <div class="integration-notice">
-                    <strong>Attack Backend Integration Pending</strong>
-                    <p class="mb-0 mt-2 text-secondary">
-                        The configuration was received successfully. Real Random Push or Average Push results will appear here when the processed dataset and attack backend are connected.
-                    </p>
+            {% elif workflow_status.has_attack %}
+                <div class="profile-card">
+                    <div class="eyebrow mb-2">CURRENT SESSION</div>
+                    <h2 class="h4 fw-bold">Attack Already Available</h2>
+                    <p class="text-secondary">A real attacked dataset exists in this session. Run another attack to replace it, or continue.</p>
+                    <a class="btn btn-primary" href="{% url 'research:detection' %}">Continue to Detection →</a>
                 </div>
-
             {% else %}
-
                 <div class="integration-notice">
-                    <strong>Attack Configuration</strong>
-                    <p class="mb-0 mt-2 text-secondary">
-                        Configure the experiment on the left. RMRS will validate the parameters before they are passed to the attack-generation backend.
-                    </p>
+                    <strong>No attack has been run yet.</strong>
+                    <p class="mb-0 mt-2 text-secondary">Configure the experiment and press <b>Run Real Attack</b>. The system will generate synthetic profiles and combine them with the genuine training ratings.</p>
                 </div>
-
             {% endif %}
-
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}
