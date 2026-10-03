@@ -117,6 +117,13 @@
         letter-spacing: .05em;
         margin-bottom: .45rem;
     }
+    .recommend-empty {
+        border: 1px solid #303030;
+        border-radius: .75rem;
+        background: #191919;
+        padding: 1rem 1.1rem;
+        color: #cfcfcf;
+    }
     .alphabet-jump {
         display: flex;
         flex-wrap: wrap;
@@ -167,12 +174,13 @@
 
     <div class="container catalogue-shell">
 
-        {% if recommended %}
         <section class="catalogue-row">
             <div class="catalogue-row-head">
                 <h2>Recommended For You</h2>
                 <a class="link-light" href="{% url 'recommendations:index' %}">View recommendation details →</a>
             </div>
+
+            {% if recommended %}
             <div class="catalogue-strip recommend-strip">
                 {% for item in recommended %}
                 <a class="catalogue-card" href="{% url 'movies:detail' item.movie_id %}">
@@ -191,8 +199,12 @@
                 </a>
                 {% endfor %}
             </div>
+            {% else %}
+            <div class="recommend-empty">
+                Rate more movies to build your personalised recommendation shelf. Your real MovieLens catalogue remains available below.
+            </div>
+            {% endif %}
         </section>
-        {% endif %}
 
         <section class="catalogue-row">
             <div class="catalogue-row-head">
