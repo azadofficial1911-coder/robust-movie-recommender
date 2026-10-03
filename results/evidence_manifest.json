@@ -1,0 +1,493 @@
+{
+  "generated_at": "2026-09-23T01:13:12+00:00",
+  "git_commit": "d69568938f6e5bc578ec2b019b1f80525525315c",
+  "python": "3.11.15",
+  "pandas": "3.0.6",
+  "status": "PASS",
+  "summary": {
+    "PASS": 21,
+    "WARN": 0,
+    "FAIL": 0
+  },
+  "setup": {
+    "attack_config": {
+      "attack_type": "random",
+      "target_movie_id": 758,
+      "attack_size_percent": 5,
+      "filler_size_percent": 5,
+      "target_rating": 5,
+      "random_seed": 42,
+      "rating_min": 1,
+      "rating_max": 5,
+      "status": "week6_pilot"
+    },
+    "detection_config": {
+      "target_movie_id": 758,
+      "threshold": 0.5,
+      "rating_min": 1,
+      "rating_max": 5,
+      "status": "week6_pilot"
+    },
+    "recommender": {
+      "algorithm": "user-based collaborative filtering, mean-centred cosine similarity",
+      "module": "recommender/baseline_recommender.py",
+      "top_k_neighbours": 30,
+      "min_neighbours": 3,
+      "rating_range": [
+        1.0,
+        5.0
+      ]
+    },
+    "defence": {
+      "method": "remove_suspicious_profiles",
+      "module": "defence/remove_profiles.py",
+      "decision_column": "predicted_label"
+    },
+    "primary_evaluation_users": [
+      49,
+      117,
+      246,
+      366,
+      374,
+      417,
+      457
+    ],
+    "target_frequency_sample_users": [
+      26,
+      33,
+      43,
+      48,
+      64,
+      67,
+      71,
+      74,
+      76,
+      90,
+      101,
+      112,
+      126,
+      142,
+      145,
+      164,
+      171,
+      180,
+      199,
+      216,
+      217,
+      223,
+      226,
+      239,
+      243,
+      247,
+      262,
+      267,
+      268,
+      289,
+      300,
+      308,
+      321,
+      325,
+      330,
+      341,
+      361,
+      364,
+      368,
+      370,
+      379,
+      397,
+      413,
+      432,
+      438,
+      460,
+      466,
+      471,
+      477,
+      487,
+      488,
+      496,
+      498,
+      511,
+      523,
+      525,
+      540,
+      550,
+      555,
+      566,
+      569,
+      584,
+      588,
+      590,
+      593,
+      609,
+      615,
+      616,
+      617,
+      641,
+      652,
+      667,
+      676,
+      683,
+      696,
+      710,
+      725,
+      726,
+      745,
+      753,
+      755,
+      765,
+      770,
+      785,
+      795,
+      832,
+      841,
+      842,
+      851,
+      853,
+      858,
+      872,
+      887,
+      893,
+      897,
+      901,
+      923,
+      926,
+      937,
+      942
+    ]
+  },
+  "checks": [
+    {
+      "check": "attacked_is_clean_plus_fakes[random]",
+      "status": "PASS",
+      "detail": "84024 attacked rows = 80029 clean genuine rows + 3995 rows from 47 fake profiles"
+    },
+    {
+      "check": "attacked_is_clean_plus_fakes[average]",
+      "status": "PASS",
+      "detail": "84024 attacked rows = 80029 clean genuine rows + 3995 rows from 47 fake profiles"
+    },
+    {
+      "check": "same_attack_setup_across_scenarios",
+      "status": "PASS",
+      "detail": "target movie 758, 47 fake profiles per scenario, [85] ratings each, target rated [5.0]"
+    },
+    {
+      "check": "defended_equals_attacked_minus_predicted[random]",
+      "status": "PASS",
+      "detail": "84024 - rows of 47 predicted-suspicious users = 80029 defended rows"
+    },
+    {
+      "check": "defence_ignores_true_label[random]",
+      "status": "PASS",
+      "detail": "re-running the defence with every true_label flipped gives the identical defended dataset"
+    },
+    {
+      "check": "attacked_dataset_preserved[random]",
+      "status": "PASS",
+      "detail": "random_pilot.csv still contains all 47 fake profiles; defended data written separately to random_defended.csv"
+    },
+    {
+      "check": "defended_equals_attacked_minus_predicted[average]",
+      "status": "PASS",
+      "detail": "84024 - rows of 47 predicted-suspicious users = 80029 defended rows"
+    },
+    {
+      "check": "defence_ignores_true_label[average]",
+      "status": "PASS",
+      "detail": "re-running the defence with every true_label flipped gives the identical defended dataset"
+    },
+    {
+      "check": "attacked_dataset_preserved[average]",
+      "status": "PASS",
+      "detail": "average_pilot.csv still contains all 47 fake profiles; defended data written separately to average_defended.csv"
+    },
+    {
+      "check": "same_genuine_test_set",
+      "status": "PASS",
+      "detail": "all 5 conditions scored on the same 19971 genuine test ratings; no train/test leakage"
+    },
+    {
+      "check": "same_evaluation_users[primary]",
+      "status": "PASS",
+      "detail": "identical 7 genuine users in all 5 conditions"
+    },
+    {
+      "check": "same_evaluation_users[target_frequency]",
+      "status": "PASS",
+      "detail": "identical 100 genuine users in all 5 conditions"
+    },
+    {
+      "check": "detection_metrics_recompute[random]",
+      "status": "PASS",
+      "detail": "TP=47 FP=0 TN=943 FN=0, precision=1.000 recall=1.000 F1=1.000 FPR=0.000"
+    },
+    {
+      "check": "detection_metrics_recompute[average]",
+      "status": "PASS",
+      "detail": "TP=47 FP=0 TN=943 FN=0, precision=1.000 recall=1.000 F1=1.000 FPR=0.000"
+    },
+    {
+      "check": "defence_summary_recompute[random]",
+      "status": "PASS",
+      "detail": "47 users / 3995 ratings removed (990\u2192943 users)"
+    },
+    {
+      "check": "defence_summary_recompute[average]",
+      "status": "PASS",
+      "detail": "47 users / 3995 ratings removed (990\u2192943 users)"
+    },
+    {
+      "check": "target_metrics_recompute_from_per_user",
+      "status": "PASS",
+      "detail": "mean/median target rank, target score and hit rate recompute from per-user rows"
+    },
+    {
+      "check": "attack_and_defence_runs_agree",
+      "status": "PASS",
+      "detail": "clean/random/average rows identical in attack_effect_pilot_summary.csv and defence_effect_pilot_summary.csv"
+    },
+    {
+      "check": "target_frequency_recompute_from_per_user",
+      "status": "PASS",
+      "detail": "target frequency @10/@50/@100 and ranks recompute from per-user rows"
+    },
+    {
+      "check": "master_results_match_sources",
+      "status": "PASS",
+      "detail": "102 values in experiment_results.csv match their source tables and config"
+    },
+    {
+      "check": "served_figures_match_generated",
+      "status": "PASS",
+      "detail": "6 figures served by Django are byte-identical to results/figures"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "data/processed/train_ratings.csv",
+      "exists": true,
+      "sha256": "cc9092647c41e1bbbc56cb28136dde55cb82dcd77bce63705344616cbf63aee3",
+      "bytes": 1584036,
+      "rows": 80029
+    },
+    {
+      "path": "data/processed/test_ratings.csv",
+      "exists": true,
+      "sha256": "3e2b88ea7443744788cb6abd037d3f803dc73c29ce219f521796e67ae4ab645e",
+      "bytes": 395205,
+      "rows": 19971
+    },
+    {
+      "path": "experiments/configs/attack_config.json",
+      "exists": true,
+      "sha256": "519dcb1878966fb110a0877d96bd7b09ec4c44b752848b2c9bf06ec97e01638e",
+      "bytes": 220
+    },
+    {
+      "path": "experiments/configs/detection_config.json",
+      "exists": true,
+      "sha256": "a8992a82f2308e17204c736a4f57f2c63ad75abf0e94f12744cfd3b3b5de58d4",
+      "bytes": 113
+    },
+    {
+      "path": "data/attacked/fake_profiles/random_pilot.csv",
+      "exists": true,
+      "sha256": "4ddeacc4928878e3a729e7d87e002dc293ab4922a84573daeafd6268105312c4",
+      "bytes": 89379,
+      "rows": 3995
+    },
+    {
+      "path": "data/attacked/labels/random_pilot_labels.csv",
+      "exists": true,
+      "sha256": "8a7a9ae5d82532360d3e90cfe6cf18d5cc302757b3d4a487c6a28121b82cee49",
+      "bytes": 12923,
+      "rows": 990
+    },
+    {
+      "path": "data/attacked/attacked_datasets/random_pilot.csv",
+      "exists": true,
+      "sha256": "1b3a6480448fb0c389d251fb10d56df4d9b7b3e73eb80836add14952e05a26bf",
+      "bytes": 1749397,
+      "rows": 84024
+    },
+    {
+      "path": "results/tables/random_detection_results.csv",
+      "exists": true,
+      "sha256": "2da062423b347d854db05195e976003d64e0134c73a91ec5fe9c03397ef47d8b",
+      "bytes": 28819,
+      "rows": 990
+    },
+    {
+      "path": "data/attacked/fake_profiles/average_pilot.csv",
+      "exists": true,
+      "sha256": "2873de8bae7eb625b5644468a4bed08995e0b9c720db6f75878d8a47189ba9c1",
+      "bytes": 93374,
+      "rows": 3995
+    },
+    {
+      "path": "data/attacked/labels/average_pilot_labels.csv",
+      "exists": true,
+      "sha256": "8a7a9ae5d82532360d3e90cfe6cf18d5cc302757b3d4a487c6a28121b82cee49",
+      "bytes": 12923,
+      "rows": 990
+    },
+    {
+      "path": "data/attacked/attacked_datasets/average_pilot.csv",
+      "exists": true,
+      "sha256": "5b6f4c243190abe675129c3f06c3bd351acaac94c342722d248cb0a4df906f96",
+      "bytes": 1749397,
+      "rows": 84024
+    },
+    {
+      "path": "results/tables/average_detection_results.csv",
+      "exists": true,
+      "sha256": "6744cce73c7ac291bc8c357923e5217dc9fe69bd12856c444abfa5060ab77ce8",
+      "bytes": 28816,
+      "rows": 990
+    }
+  ],
+  "outputs": [
+    {
+      "path": "data/attacked/defended_datasets/random_defended.csv",
+      "exists": true,
+      "sha256": "cc9092647c41e1bbbc56cb28136dde55cb82dcd77bce63705344616cbf63aee3",
+      "bytes": 1584036,
+      "rows": 80029
+    },
+    {
+      "path": "data/attacked/defended_datasets/average_defended.csv",
+      "exists": true,
+      "sha256": "cc9092647c41e1bbbc56cb28136dde55cb82dcd77bce63705344616cbf63aee3",
+      "bytes": 1584036,
+      "rows": 80029
+    },
+    {
+      "path": "results/tables/defence_summary_pilot.csv",
+      "exists": true,
+      "sha256": "efabe37e6d20f143e88295155fce5878fa3a44e156f83a2b4829c81132de1243",
+      "bytes": 268,
+      "rows": 2
+    },
+    {
+      "path": "results/tables/detection_metrics_pilot.csv",
+      "exists": true,
+      "sha256": "71df4629ec7c29db4f76bed9526abbd6042807136722c6dc2c1000463895fc53",
+      "bytes": 194,
+      "rows": 2
+    },
+    {
+      "path": "results/tables/recommender_metrics_pilot.csv",
+      "exists": true,
+      "sha256": "fa117225c2784b8dba7a11dfe514ade11e8d6f6006419eb7f9dbc85ad6c6bc68",
+      "bytes": 440,
+      "rows": 5
+    },
+    {
+      "path": "results/tables/defence_effect_pilot_per_user.csv",
+      "exists": true,
+      "sha256": "52eb42a6c1bdcfab69f20d8f437e847232413964fa34d2ef99c297fab7fe67a3",
+      "bytes": 1515,
+      "rows": 35
+    },
+    {
+      "path": "results/tables/defence_effect_pilot_summary.csv",
+      "exists": true,
+      "sha256": "2635ac9588102dd438eb220f01119e8161fb1e118ca332b1f231091e4661ad33",
+      "bytes": 430,
+      "rows": 5
+    },
+    {
+      "path": "results/tables/target_frequency_per_user.csv",
+      "exists": true,
+      "sha256": "a120d33bcf98e705e30c4c9f47fa49a2eeee190495491d0762b439c983307a22",
+      "bytes": 23052,
+      "rows": 500
+    },
+    {
+      "path": "results/tables/target_frequency_summary.csv",
+      "exists": true,
+      "sha256": "53e9fb22271b069f5955b735e442c4dd377abaa5da22e06aa5c89bca7f61f246",
+      "bytes": 387,
+      "rows": 5
+    },
+    {
+      "path": "results/experiment_results.csv",
+      "exists": true,
+      "sha256": "3697de8dffd577c27a040fdedda72a11e02da3c207a1ed2a18033d132f3158f2",
+      "bytes": 2030,
+      "rows": 5
+    },
+    {
+      "path": "results/figures/clean_attacked_defended.png",
+      "exists": true,
+      "sha256": "d3e3d50585c2e96216984d9154c2475ecb1b24117ecb2f8ae25b19ab2806fef3",
+      "bytes": 27758
+    },
+    {
+      "path": "results/figures/confusion_matrix.png",
+      "exists": true,
+      "sha256": "28084a47eaeef1c709ba66d838abf27b5519e6495ea14486e35d9901dac9b24f",
+      "bytes": 19875
+    },
+    {
+      "path": "results/figures/detection_metrics.png",
+      "exists": true,
+      "sha256": "4771a02c41d88dc1b8843369842e88dbc01f27889484f847d351d8aad60d5733",
+      "bytes": 23217
+    },
+    {
+      "path": "results/figures/genre_distribution.png",
+      "exists": true,
+      "sha256": "aaf7f70e006a45b7f39f48d8c46a9c806fc424500e90c7bf3ced8a027d595eb1",
+      "bytes": 30290
+    },
+    {
+      "path": "results/figures/missing_metadata.png",
+      "exists": true,
+      "sha256": "e6c325d644dd0e04062d58cc094d20e0f00ebdb029f3dc992390acc7980fc882",
+      "bytes": 18241
+    },
+    {
+      "path": "results/figures/movies_by_year.png",
+      "exists": true,
+      "sha256": "b99e979281267ab0e1b9670886052499abbf1262674a1bf81748a14f8fb6da5b",
+      "bytes": 23684
+    },
+    {
+      "path": "results/figures/rating_distribution.png",
+      "exists": true,
+      "sha256": "b1bced6c5d17ea9d63e35891c8d46a72b9e66518265e2a854deeb8634acbbd5f",
+      "bytes": 19369
+    },
+    {
+      "path": "results/figures/ratings_per_movie.png",
+      "exists": true,
+      "sha256": "3a882bcc549a057922d1e499b317ea472a5bed5f948e531ad79a1ff2bdefc75e",
+      "bytes": 19687
+    },
+    {
+      "path": "results/figures/ratings_per_user.png",
+      "exists": true,
+      "sha256": "fe7046e59a821828744931466803e099223e444d350aed5f4c635cafd654231e",
+      "bytes": 18366
+    },
+    {
+      "path": "results/figures/target_frequency.png",
+      "exists": true,
+      "sha256": "92d6d9fe2c4c1660e4bf11e0c27f5b30340ebf261be7f37ccd2dcc896cce977d",
+      "bytes": 30482
+    },
+    {
+      "path": "results/figures/target_hit_rate.png",
+      "exists": true,
+      "sha256": "67c04753741fb3bd8fab631945605bbc5dbab55bbab2ea526a30d90beccab219",
+      "bytes": 26903
+    },
+    {
+      "path": "results/figures/target_rank_comparison.png",
+      "exists": true,
+      "sha256": "f39e785ca2fe6e754451966fb9f6543cd42607537cedd9c63d6c670b3e1379f2",
+      "bytes": 30647
+    }
+  ]
+}
