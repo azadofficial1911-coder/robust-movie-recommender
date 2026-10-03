@@ -2,12 +2,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const desktopToggle = document.getElementById(
         "rmrsRobustnessDesktopToggle"
     );
+
     const mobileButton = document.getElementById(
         "rmrsRobustnessMobileButton"
     );
+
     const sheet = document.getElementById(
         "rmrsRobustnessSheet"
     );
+
     const sheetToggle = document.getElementById(
         "rmrsRobustnessSheetToggle"
     );
@@ -18,6 +21,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const closeButtons = sheet.querySelectorAll(
         "[data-robustness-close]"
+    );
+
+    const dialogPanel = sheet.querySelector(
+        ".rmrs-robustness-sheet-panel"
+    );
+
+    const closeButton = sheet.querySelector(
+        ".rmrs-robustness-sheet-close"
     );
 
     const getCookie = (name) => {
@@ -37,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const toggleRobustness = async () => {
         desktopToggle.disabled = true;
+
         if (sheetToggle) {
             sheetToggle.disabled = true;
         }
@@ -59,10 +71,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             }
 
+            /*
+             * Reload after the backend updates the session.
+             *
+             * A later frontend batch will add the short visual
+             * recommendation transition required by the final UI.
+             */
+            sessionStorage.setItem(
+                "rmrsRobustnessModeChanged",
+                "true"
+            );
+
             window.location.reload();
+
         } catch (error) {
             console.error(error);
+
             desktopToggle.disabled = false;
+
             if (sheetToggle) {
                 sheetToggle.disabled = false;
             }
@@ -71,13 +97,100 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const openSheet = () => {
         sheet.hidden = false;
-        mobileButton.setAttribute("aria-expanded", "true");
+
+        mobileButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        /*
+         * Move keyboard focus into the dialog.
+         */
+        window.requestAnimationFrame(() => {
+            if (closeButton) {
+                closeButton.focus();
+            } else if (sheetToggle) {
+                sheetToggle.focus();
+            }
+        });
     };
 
     const closeSheet = () => {
         sheet.hidden = true;
-        mobileButton.setAttribute("aria-expanded", "false");
+
+        mobileButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        /*
+         * Return keyboard focus to the button
+         * that opened the dialog.
+         */
         mobileButton.focus();
+    };
+
+    const getFocusableElements = () => {
+        if (!dialogPanel) {
+            return [];
+        }
+
+        return Array.from(
+            dialogPanel.querySelectorAll(
+                [
+                    "button:not([disabled])",
+                    "a[href]",
+                    "input:not([disabled])",
+                    "select:not([disabled])",
+                    "textarea:not([disabled])",
+                    '[tabindex]:not([tabindex="-1"])',
+                ].join(",")
+            )
+        );
+    };
+
+    const trapDialogFocus = (event) => {
+        if (
+            event.key !== "Tab"
+            || sheet.hidden
+        ) {
+            return;
+        }
+
+        const focusableElements =
+            getFocusableElements();
+
+        if (!focusableElements.length) {
+            event.preventDefault();
+            return;
+        }
+
+        const firstElement =
+            focusableElements[0];
+
+        const lastElement =
+            focusableElements[
+                focusableElements.length - 1
+            ];
+
+        if (
+            event.shiftKey
+            && document.activeElement
+                === firstElement
+        ) {
+            event.preventDefault();
+            lastElement.focus();
+            return;
+        }
+
+        if (
+            !event.shiftKey
+            && document.activeElement
+                === lastElement
+        ) {
+            event.preventDefault();
+            firstElement.focus();
+        }
     };
 
     desktopToggle.addEventListener(
@@ -104,9 +217,43 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     });
 
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && !sheet.hidden) {
-            closeSheet();
+    document.addEventListener(
+        "keydown",
+        (event) => {
+            if (
+                event.key === "Escape"
+                && !sheet.hidden
+            ) {
+                event.preventDefault();
+                closeSheet();
+                return;
+            }
+
+            trapDialogFocus(event);
         }
-    });
+    );
+
+    const modeChanged =
+    sessionStorage.getItem("rmrsRobustnessModeChanged");
+
+    if (modeChanged === "true") {
+        sessionStorage.removeItem(
+            "rmrsRobustnessModeChanged"
+        );
+
+        const recommendationPanel =
+            document.querySelector(".recommendation-panel");
+
+        if (recommendationPanel) {
+            recommendationPanel.classList.add(
+                "rmrs-rank-transition"
+            );
+
+            window.setTimeout(() => {
+                recommendationPanel.classList.remove(
+                    "rmrs-rank-transition"
+                );
+            }, 450);
+        }
+    }
 });

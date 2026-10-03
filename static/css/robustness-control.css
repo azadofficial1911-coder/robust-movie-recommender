@@ -374,3 +374,233 @@
     }
 
 }
+
+/* =========================================================
+   STAFF PROTECTION SUMMARY
+   ========================================================= */
+
+.robustness-protection-summary {
+    overflow: hidden;
+}
+
+.robustness-protection-summary-toggle {
+    padding: 18px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    cursor: pointer;
+
+    list-style: none;
+}
+
+.robustness-protection-summary-toggle::-webkit-details-marker {
+    display: none;
+}
+
+.robustness-protection-summary-toggle::after {
+    content: "+";
+
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #d9e2ef;
+    border-radius: 10px;
+
+    color: #64748b;
+
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+
+    transition:
+        transform 180ms ease,
+        background-color 180ms ease;
+}
+
+.robustness-protection-summary[open]
+.robustness-protection-summary-toggle::after {
+    content: "−";
+}
+
+.robustness-protection-summary-toggle:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.28);
+    outline-offset: -3px;
+}
+
+.robustness-protection-summary-content {
+    padding: 4px 20px 20px;
+
+    border-top: 1px solid #edf2f7;
+}
+
+.robustness-summary-metric {
+    height: 100%;
+
+    padding: 16px;
+
+    border: 1px solid #e6edf5;
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+.robustness-summary-metric strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #14213d;
+
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.robustness-protection-summary-state {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 48px;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.robustness-summary-on {
+    background: #eafaf7;
+    color: #087f78;
+}
+
+.robustness-summary-off {
+    background: #fff1f2;
+    color: #c24141;
+}
+
+.robustness-summary-extra {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+
+    padding: 14px 16px;
+
+    border-radius: 12px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+.robustness-summary-extra strong {
+    color: #1e293b;
+}
+
+
+/* Tablet / mobile */
+
+@media (max-width: 767.98px) {
+
+    .robustness-protection-summary-toggle {
+        padding: 16px;
+
+        gap: 12px;
+    }
+
+    .robustness-protection-summary-content {
+        padding:
+            4px
+            16px
+            16px;
+    }
+
+    .robustness-summary-metric {
+        padding: 14px;
+    }
+
+    .robustness-summary-extra {
+        flex-direction: column;
+
+        gap: 7px;
+    }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .robustness-protection-summary-toggle::after {
+        transition: none !important;
+    }
+
+}
+
+/* =========================================================
+   ROBUSTNESS MODE / RANK TRANSITION
+   ========================================================= */
+
+.rmrs-rank-transition {
+    animation: rmrsRankRefresh 0.32s ease-out;
+}
+
+.rmrs-rank-transition tbody tr {
+    animation: rmrsRankRowIn 0.28s ease-out both;
+}
+
+.rmrs-rank-transition tbody tr:nth-child(2) {
+    animation-delay: 0.025s;
+}
+
+.rmrs-rank-transition tbody tr:nth-child(3) {
+    animation-delay: 0.05s;
+}
+
+.rmrs-rank-transition tbody tr:nth-child(4) {
+    animation-delay: 0.075s;
+}
+
+.rmrs-rank-transition tbody tr:nth-child(5) {
+    animation-delay: 0.10s;
+}
+
+@keyframes rmrsRankRefresh {
+    from {
+        opacity: 0.72;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes rmrsRankRowIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rmrs-rank-transition,
+    .rmrs-rank-transition tbody tr {
+        animation: none !important;
+        transition: none !important;
+    }
+}
