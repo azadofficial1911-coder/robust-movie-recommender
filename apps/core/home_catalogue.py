@@ -67,9 +67,11 @@ def load_home_movies() -> list[dict]:
         errors="coerce",
     ).fillna(0.0).astype(float)
 
+    # Keep the base catalogue in stable MovieLens ID order. The homepage's
+    # alphabetical shelves sort their own contents separately below.
     movies = []
     for row in movie_stats.sort_values(
-        ["title", "movie_id"],
+        "movie_id",
         kind="stable",
     ).itertuples(index=False):
         movies.append(
@@ -129,7 +131,10 @@ def build_home_catalogue() -> dict:
             {
                 "key": key,
                 "title": f"Movies {key}" if key != "#" else "Movies #",
-                "movies": grouped[key],
+                "movies": sorted(
+                    grouped[key],
+                    key=lambda movie: (movie["title"].lower(), movie["id"]),
+                ),
             }
         )
 
